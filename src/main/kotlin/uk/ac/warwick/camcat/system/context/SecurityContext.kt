@@ -40,6 +40,9 @@ class SecurityContext(
       ?.authorizeRequests {
         it.anyRequest().permitAll()
       }
+      ?.exceptionHandling {
+        it.accessDeniedPage("/error")
+      }
   }
 
   @Bean
