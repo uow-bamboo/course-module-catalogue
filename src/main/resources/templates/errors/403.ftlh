@@ -1,4 +1,4 @@
-<#include '../layout.ftlh'>
+<#include '*/layout.ftlh'>
 
 <@layout title="Permission denied">
   <h1>Permission denied</h1>

@@ -1,4 +1,4 @@
-<#include '../layout.ftlh'>
+<#include '*/layout.ftlh'>
 
 <@layout title="Not found">
   <h1>Not found</h1>

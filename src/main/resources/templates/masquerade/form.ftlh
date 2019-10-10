@@ -1,4 +1,4 @@
-<#include '../layout.ftlh'>
+<#include '*/layout.ftlh'>
 
 <@layout title="Masquerade">
   <h1>Masquerade</h1>

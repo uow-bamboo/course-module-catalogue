@@ -1,5 +1,3 @@
-create extension if not exists "uuid-ossp";
-
 CREATE TABLE objectcache
 (
     KEY         varchar(100) NOT NULL,

@@ -29,7 +29,8 @@ class AppErrorController : ErrorController {
     404 -> ModelAndView("errors/404")
     400 -> ModelAndView("errors/400")
     exception is ServiceException -> ModelAndView("errors/500", mapOf("message" to exception.message))
-    else -> ModelAndView("errors/500",
+    else -> ModelAndView(
+      "errors/500",
       if (auth?.authorities?.contains(Authority.sysadmin) == true)
         mapOf("stackTrace" to ExceptionUtils.getStackTrace(exception))
       else mapOf()
