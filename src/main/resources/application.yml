@@ -1,0 +1,14 @@
+spring.resources.chain.strategy.content:
+  enabled: true
+  paths: /assets/**
+
+server:
+  forward-headers-strategy: native
+  port: 8080
+
+camcat.roles:
+  admin-webgroup: in-camcat-admin
+  sysadmin-webgroup: in-camcat-sysadmin
+  masqueraders-webgroup: in-camcat-masqueraders
+
+
