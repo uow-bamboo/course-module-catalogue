@@ -86,7 +86,7 @@ tasks.register<NpmTask>("assets") {
   inputs.files("webpack.config.babel.js", "package.json").withPathSensitivity(PathSensitivity.RELATIVE)
   inputs.dir("build-tooling").withPathSensitivity(PathSensitivity.RELATIVE)
   inputs.dir("src/main/assets").withPathSensitivity(PathSensitivity.RELATIVE)
-  outputs.dir("build/resounces/main/static/assets")
+  outputs.dir("build/resources/main/static/assets")
   outputs.cacheIf { true }
 
   setArgs(mutableListOf("run", "build"))
