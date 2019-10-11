@@ -10,11 +10,11 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.authentication.preauth.RequestAttributeAuthenticationFilter
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
-import uk.ac.warwick.camcat.system.FilterWithExcludedPrefixes
 import uk.ac.warwick.camcat.system.security.WarwickAuthenticationDetails
 import uk.ac.warwick.camcat.system.security.WarwickAuthenticationManager
 import uk.ac.warwick.sso.client.SSOClientFilter
 import uk.ac.warwick.userlookup.UserLookup
+import javax.inject.Named
 import javax.servlet.Filter
 
 @Configuration
@@ -22,12 +22,13 @@ import javax.servlet.Filter
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 class SecurityContext(
   private val userLookup: UserLookup,
-  private val authenticationManager: WarwickAuthenticationManager
+  private val authenticationManager: WarwickAuthenticationManager,
+  @Named("ssoClientFilter") private val ssoClientFilter: Filter
 ) : WebSecurityConfigurerAdapter() {
   override fun configure(http: HttpSecurity?) {
     http
       ?.addFilter(requestAttributeAuthenticationFilter())
-      ?.addFilterBefore(ssoClientFilter(), requestAttributeAuthenticationFilter().javaClass)
+      ?.addFilterBefore(ssoClientFilter, requestAttributeAuthenticationFilter().javaClass)
       ?.sessionManagement {
         it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       }
@@ -53,17 +54,6 @@ class SecurityContext(
     filter.setAuthenticationManager(authenticationManager)
     filter.setAuthenticationDetailsSource(::WarwickAuthenticationDetails)
     return filter
-  }
-
-  @Bean
-  fun ssoClientFilter(): Filter {
-    val filter = SSOClientFilter()
-    filter.userLookup = userLookup
-
-    return FilterWithExcludedPrefixes(
-      filter,
-      excludedPrefixes = listOf("/favicon.ico", "/assets", "/service")
-    )
   }
 }
 

@@ -1,5 +1,6 @@
 package uk.ac.warwick.camcat.services
 
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder
@@ -7,16 +8,15 @@ import uk.ac.warwick.camcat.controllers.HomeController
 import uk.ac.warwick.camcat.controllers.MasqueradeController
 import uk.ac.warwick.camcat.controllers.SysadminController
 import uk.ac.warwick.camcat.system.security.Authority
-import uk.ac.warwick.camcat.system.security.WarwickAuthentication
 import kotlin.reflect.KClass
 
 interface NavigationService {
-  fun navigation(authentication: WarwickAuthentication?): List<NavigationItem>
+  fun navigation(authentication: Authentication?): List<NavigationItem>
 }
 
 @Service
 class NavigationServiceImpl : NavigationService {
-  override fun navigation(authentication: WarwickAuthentication?): List<NavigationItem> {
+  override fun navigation(authentication: Authentication?): List<NavigationItem> {
     fun hasAuthority(authority: GrantedAuthority): Boolean =
       authentication?.authorities?.contains(authority) == true
 

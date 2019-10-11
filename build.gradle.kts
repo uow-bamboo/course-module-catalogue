@@ -55,6 +55,7 @@ dependencies {
   runtimeOnly("org.postgresql:postgresql")
   annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
   testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("org.springframework.security:spring-security-test")
   implementation("org.flywaydb:flyway-core:6.0.3")
   implementation("uk.ac.warwick.sso:sso-client:2.76")
   implementation("uk.ac.warwick.util:warwickutils-core:20190916")

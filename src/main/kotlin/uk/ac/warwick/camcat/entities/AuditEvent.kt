@@ -1,7 +1,6 @@
 package uk.ac.warwick.camcat.entities
 
 import org.hibernate.annotations.AnyMetaDef
-import org.hibernate.annotations.MetaValue
 import java.time.OffsetDateTime
 import java.util.*
 import javax.persistence.*

@@ -2,6 +2,7 @@ package uk.ac.warwick.camcat.controllers
 
 import org.apache.commons.lang3.exception.ExceptionUtils
 import org.springframework.boot.web.servlet.error.ErrorController
+import org.springframework.security.core.Authentication
 import org.springframework.security.web.WebAttributes
 import org.springframework.security.web.csrf.CsrfException
 import org.springframework.stereotype.Controller
@@ -19,7 +20,7 @@ class AppErrorController : ErrorController {
   fun error(
     request: HttpServletRequest,
     exception: Exception,
-    auth: WarwickAuthentication?
+    auth: Authentication?
   ): ModelAndView {
     if (request.getAttribute(WebAttributes.ACCESS_DENIED_403) is CsrfException) {
       return ModelAndView("errors/csrf")
@@ -29,12 +30,14 @@ class AppErrorController : ErrorController {
       return ModelAndView("errors/500", mapOf("message" to exception.message))
     }
 
+    val warwickAuth = auth as? WarwickAuthentication
+
     return when (request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE)) {
       403 -> ModelAndView(
         "errors/403",
         mapOf(
-          "identity" to auth?.user?.firstName,
-          "actualIdentity" to auth?.actualUser?.firstName
+          "identity" to warwickAuth?.user?.firstName,
+          "actualIdentity" to warwickAuth?.actualUser?.firstName
         ).filterValues { !it.isNullOrBlank() }
       )
       404 -> ModelAndView("errors/404")

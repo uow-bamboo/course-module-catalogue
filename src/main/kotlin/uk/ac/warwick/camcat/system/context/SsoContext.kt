@@ -5,20 +5,20 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import uk.ac.warwick.sso.client.LogoutServlet
-import uk.ac.warwick.sso.client.SSOConfigLoader
+import uk.ac.warwick.camcat.system.FilterWithExcludedPrefixes
+import uk.ac.warwick.sso.client.*
 import uk.ac.warwick.sso.client.SSOConfigLoader.SSO_CACHE_KEY
 import uk.ac.warwick.sso.client.SSOConfigLoader.SSO_CONFIG_KEY
-import uk.ac.warwick.sso.client.SSOConfiguration
-import uk.ac.warwick.sso.client.ShireServlet
 import uk.ac.warwick.sso.client.cache.UserCache
 import uk.ac.warwick.sso.client.cache.spring.DatabaseUserCache
 import uk.ac.warwick.userlookup.GroupService
 import uk.ac.warwick.userlookup.UserLookup
 import uk.ac.warwick.userlookup.webgroups.WarwickGroupsService
+import javax.servlet.Filter
 import javax.sql.DataSource
 
 @Configuration
+@Profile("!test")
 class SsoContext(private val dataSource: DataSource) {
   @Bean
   fun shireServlet(): ServletRegistrationBean<ShireServlet> =
@@ -41,8 +41,18 @@ class SsoContext(private val dataSource: DataSource) {
       it.setAttribute(SSO_CACHE_KEY, userCache())
     }
 
+  @Bean("ssoClientFilter")
+  fun ssoClientFilter(): Filter {
+    val filter = SSOClientFilter()
+    filter.userLookup = userLookup()
+
+    return FilterWithExcludedPrefixes(
+      filter,
+      excludedPrefixes = listOf("/favicon.ico", "/assets", "/service")
+    )
+  }
+
   @Bean
-  @Profile("!test")
   fun ssoConfiguration(): SSOConfiguration {
     val config = SSOConfigLoader().loadSSOConfig("/sso-config.xml")
     config.addOverride("cluster.enabled", "true")
@@ -50,7 +60,6 @@ class SsoContext(private val dataSource: DataSource) {
   }
 
   @Bean
-  @Profile("!test")
   fun userCache(): UserCache {
     val cache = DatabaseUserCache(ssoConfiguration())
     cache.dataSource = dataSource
