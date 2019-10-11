@@ -2,8 +2,8 @@ package uk.ac.warwick.camcat.system
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Statistic
+import org.springframework.boot.actuate.health.HealthContributorRegistry
 import org.springframework.boot.actuate.health.HealthIndicator
-import org.springframework.boot.actuate.health.HealthIndicatorRegistry
 import org.springframework.boot.actuate.health.Status
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -17,10 +17,10 @@ import java.time.format.DateTimeFormatter
 @Controller
 @RequestMapping("/service")
 class ServiceController(
-  private val healthIndicatorRegistry: HealthIndicatorRegistry,
+  private val healthContributorRegistry: HealthContributorRegistry,
   private val meterRegistry: MeterRegistry
 ) {
-  private val healthIndicator: HealthIndicator = healthIndicatorRegistry.get("db")
+  private val healthIndicator: HealthIndicator = healthContributorRegistry.find { it.name == "db" }?.contributor as HealthIndicator
 
   @RequestMapping("/gtg", produces = [MediaType.TEXT_PLAIN_VALUE])
   fun gtg() =
@@ -35,21 +35,23 @@ class ServiceController(
   fun healthcheck() =
     ResponseEntity.ok(mapOf(
       "success" to true,
-      "data" to healthIndicatorRegistry.all.map { entry ->
-        val health = entry.value.health()
+      "data" to healthContributorRegistry
+        .filter { it.contributor is HealthIndicator }
+        .map { entry ->
+          val health = (entry.contributor as HealthIndicator).health()
 
-        mapOf(
-          "name" to entry.key,
-          "status" to when (health.status) {
-            Status.UP -> "okay"
-            Status.DOWN -> "error"
-            Status.OUT_OF_SERVICE -> "warning"
-            else -> "unknown"
-          },
-          "message" to health.details.toString(),
-          "testedAt" to ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)
-        )
-      }
+          mapOf(
+            "name" to entry.name,
+            "status" to when (health.status) {
+              Status.UP -> "okay"
+              Status.DOWN -> "error"
+              Status.OUT_OF_SERVICE -> "warning"
+              else -> "unknown"
+            },
+            "message" to health.details.toString(),
+            "testedAt" to ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)
+          )
+        }
     ))
 
   @RequestMapping("/metrics", produces = [MediaType.APPLICATION_JSON_VALUE])
