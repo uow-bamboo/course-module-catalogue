@@ -66,7 +66,7 @@ dependencies {
   implementation("org.apache.tomcat.embed:tomcat-embed-websocket:9.0.27")
 
   implementation("net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1")
-  compileOnly("uk.ac.warwick:warwick-logging:1.2:all")
+  compile("uk.ac.warwick:warwick-logging:1.2:all")
   compileOnly("ch.qos.logback:logback-classic:1.2.3")
   compileOnly("net.logstash.logback:logstash-logback-encoder:5.3") {
     exclude(group = "com.fasterxml.jackson.core")
