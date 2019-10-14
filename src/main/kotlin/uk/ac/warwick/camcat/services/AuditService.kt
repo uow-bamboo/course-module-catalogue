@@ -6,11 +6,19 @@ import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.entities.AuditEvent
 import uk.ac.warwick.camcat.entities.AuditEventTarget
 import uk.ac.warwick.camcat.repositories.AuditEventRepository
+import uk.ac.warwick.util.logging.AuditLogger
 import java.time.OffsetDateTime
 
+interface AuditService {
+  fun <A> audit(operation: String, target: AuditEventTarget, data: Map<String, Any>?, op: () -> A): A
+}
+
 @Service
-class AuditService(private val repository: AuditEventRepository) {
-  fun <A> audit(operation: String, target: AuditEventTarget, data: Any?, op: () -> A): A {
+class AuditServiceImpl(
+  private val repository: AuditEventRepository,
+  private val auditLogger: AuditLogger
+) : AuditService {
+  override fun <A> audit(operation: String, target: AuditEventTarget, data: Map<String, Any>?, op: () -> A): A {
     val principal = SecurityContextHolder.getContext().authentication.principal as? String
       ?: throw IllegalStateException("Unknown principal for audit event")
 
@@ -18,6 +26,11 @@ class AuditService(private val repository: AuditEventRepository) {
 
     try {
       val result = op()
+
+      auditLogger.log(
+        AuditLogger.RequestInformation.forEventType(operation).withUsername(principal),
+        data?.mapKeys { AuditLogger.Field(it.key) }
+      )
 
       repository.save(
         AuditEvent(

@@ -11,4 +11,4 @@ camcat.roles:
   sysadmin-webgroup: in-camcat-sysadmin
   masqueraders-webgroup: in-camcat-masqueraders
 
-
+audit.application-key: camcat
