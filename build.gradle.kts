@@ -58,6 +58,7 @@ dependencies {
   testImplementation("org.springframework.security:spring-security-test")
   implementation("org.flywaydb:flyway-core:6.0.3")
   implementation("uk.ac.warwick.sso:sso-client:2.76")
+  implementation("net.spy:spymemcached:2.12.3")
   implementation("uk.ac.warwick.util:warwickutils-core:20190916")
   implementation("uk.ac.warwick.util:warwickutils-web:20190916")
 
