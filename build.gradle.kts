@@ -61,6 +61,10 @@ dependencies {
   implementation("uk.ac.warwick.util:warwickutils-core:20190916")
   implementation("uk.ac.warwick.util:warwickutils-web:20190916")
   implementation("net.logstash.logback:logstash-logback-encoder:5.3")
+
+  implementation("org.apache.tomcat.embed:tomcat-embed-core:9.0.27")
+  implementation("org.apache.tomcat.embed:tomcat-embed-el:9.0.27")
+  implementation("org.apache.tomcat.embed:tomcat-embed-websocket:9.0.27")
 }
 
 tasks.withType<KotlinCompile> {
