@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <httpbasic>
+    <allow>false</allow>
+  </httpbasic>
+  <mode>new</mode>
+
+  <origin>
+    <login>
+      <location>https://websignon.warwick.ac.uk/origin/hs</location>
+    </login>
+    <logout>
+      <location>https://websignon.warwick.ac.uk/origin/logout</location>
+    </logout>
+    <attributeauthority>
+      <location>https://websignon.warwick.ac.uk/origin/aa</location>
+    </attributeauthority>
+  </origin>
+
+  <shire>
+    <filteruserkey>SSO_USER</filteruserkey>
+    <uri-header>x-requested-uri</uri-header>
+    <location>https://swordfish.warwick.ac.uk/sso/acs</location>
+    <sscookie>
+      <name>SSO-SSC-Tabula</name>
+      <path>/</path>
+      <domain>swordfish.warwick.ac.uk</domain>
+      <secure>true</secure>
+    </sscookie>
+    <providerid>urn:swordfish.warwick.ac.uk:start:service</providerid>
+  </shire>
+
+
+  <logout>
+    <location>https://swordfish.warwick.ac.uk/sso/logout</location>
+  </logout>
+
+
+  <oauth>
+    <enabled>false</enabled>
+    <!-- Location of the OAuth service -->
+    <service>
+      <location>https://websignon.warwick.ac.uk/origin/oauth/service</location>
+    </service>
+  </oauth>
+
+  <credentials>
+    <certificate>file:/Users/alec/warwick/ssl/swordfish.warwick.ac.uk.crt</certificate>
+    <key>file:/Users/alec/warwick/ssl/swordfish.warwick.ac.uk.key</key>
+    <chain>file:/Users/alec/warwick/ssl/intermediates/quovadis256.pem</chain>
+  </credentials>
+
+
+  <trustedapps>
+    <publickey>
+      MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz682B1TCxQGMR5sYpnC4oLfqvjm0imUy4coMCuviJtNKhDNS+OX4FvLFjsC0jd4t05H8hGWoo8io8LcD4cKmEEHkOsqpcDprDZn2xFy26LIcUtwx1yWzCgrO3mL/iXtnnTbCcABOFOmQazf2gEQJ53BAsS3ZDcJV++E7LJBi9HqhiyYtcawvufB41vU9JukAtI+j5cvO+taJOImQ6sJlf9KS57j2zjzAJmtNLscEEKymfWykGec/53PlRzA+pZfG31yxve4GLpZUSa1wbDDqYLwQuLfOYLt6K7ujKggjJ3E9RBKufW85umxidV41wRZHlLRoRJ1ITfr07MvwCfWMEQIDAQAB
+    </publickey>
+    <privatekey>
+      MIIEowIBAAKCAQEAz682B1TCxQGMR5sYpnC4oLfqvjm0imUy4coMCuviJtNKhDNS+OX4FvLFjsC0jd4t05H8hGWoo8io8LcD4cKmEEHkOsqpcDprDZn2xFy26LIcUtwx1yWzCgrO3mL/iXtnnTbCcABOFOmQazf2gEQJ53BAsS3ZDcJV++E7LJBi9HqhiyYtcawvufB41vU9JukAtI+j5cvO+taJOImQ6sJlf9KS57j2zjzAJmtNLscEEKymfWykGec/53PlRzA+pZfG31yxve4GLpZUSa1wbDDqYLwQuLfOYLt6K7ujKggjJ3E9RBKufW85umxidV41wRZHlLRoRJ1ITfr07MvwCfWMEQIDAQABAoIBABVHk5aetbIv3Wq81oK/S/uTvKavDPOdOOBvrlo0HyDxR1JSW+8KySe4yks9LYLXwARMkf4S2HunpL+9UNWB9zf1OGhZuZC5O5zSKLmn8knXbhWDYEv2HekqgFXC+QHiNhSitrt5HIcCA30o58XussEW/FnrI7FINz0ur7x6Mtlvw/pM3yZe/1v+rGU1+514YpWqwQLaXzg4NIPuNCfvpSpBnkxi2G2QTH/0x+jgXSUlKLwpwjrlwjPnkPeugt1YKmE6iTw3FtTEiyCXzFPHKoo2YaUPdTGHVnRXyFuCoFydI13n6xp4ssmcOZdvbva2wtzxEyt2lsRRuC5XaW79pdECgYEA6VKzh6XbHALUU2vWLyO7V6R8F7ZHFfOUOseouwBZ9OgIPMGcOJHB691i34Gqw8QvZXMJtz6PQkV83R9z110n72fXHkNpthvzsZ/YKjh7aCl+xXvekK7fF/VbaLUFtrk2SYJFuKdtnVVp1H+b0VMO0lL2OfEIdmStlg8Hn1sz/kUCgYEA496Yo8Qvtcds9A2DcNmCXnPygbdz3o677km8bJzpBuFDSBTCs8ZYXPLc5XlAd7/NNC497iqG4QPCxO8Q5xQrE8Nt2HQjSVSTKUXMsw+gEjG26eQrT7pN1xLMKu357Ud6RrZaSL1sk2x7UonK1y0deLMCr1D1wm/IpKsT9sWWyV0CgYEAsw1BMqbH584QDNijbFd6bD6Q8E10bdcX+KfBx4f0gKoTsDRP42WPsKabOrQyTLtgN/U5DoOWwp+6u6JobmxRujow7kuDczouIDBvXa8snPnDDGALo3JfR+6FMGxCrz+g9nZfdN4fk265oVYwSEn6BNOfm0VqXhjS0WZFTjhaRRUCgYBjwCDPp+U+zRMb7wJ4Fy9jy5wAPt+hMJiCIpMydKnp0hiS6EunSQ+LeOFMLv0SrsrUqd2AcetjezL65LBgh8qntyhR1d1Qj45wRdbrF875x/uLfc+b8jF7EgaAUHbU8TJM3Cy/pPRvwNBnfFxoP56kJLDrMCS1Phv2QdHWd/6fHQKBgH5NT7FdWQ9Lg5lVe6hg1gY4bbaBCGTA1TKo+k4evQq6TVzwpyt9mUJM9aRUxlOw8qnzA5ABOkIEyIBGKn1LYVDqRlhK4yWvS8S7b1H5Wvybf0HeNggjfpEw9W71PJpF0X9GxOj5xxymC2JE6KZY53qDhKnvZHuFbjfE87yRruRY
+    </privatekey>
+    <app>
+      <providerid>urn:wellbeing-test.warwick.ac.uk:case-management:service</providerid>
+      <publickey>
+        MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxlTM3SkvWG7WHJnltdFoYtdyf+FKddtwSDWiSRZHN3NWNBTrbBx8BCh5fs4NkYQQ9w8OZo6ArFHl0vDO+Wsn5jkWRYw0PN/hoU8T+GiiD+Fp1pd1uxAHDnBgowk24+Yt/Of+kURJ5W28e7zySsE66wzn7T1QofH2FJMOwiRKDqHN/yRbTpL5J7TptlsEseYLIfT0zh9V/kIdomS1tgynszo77FhKETrAuHK7bavRpF4gYrG0B5EotDmRD0lG38D6++K4m3+n0sKy7eoNeg19haczqUTjjv00t3fSPsBjSmXos6efp6TugsDKgRK3lyIjmia3akB/dAORySw0CVlsmQIDAQAB
+      </publickey>
+    </app>
+  </trustedapps>
+
+  <masquerade>
+    <group>in-elab</group>
+  </masquerade>
+</config>
