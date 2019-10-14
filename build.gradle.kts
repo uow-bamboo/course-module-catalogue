@@ -75,6 +75,8 @@ dependencies {
   compile("org.slf4j:log4j-over-slf4j:1.7.26")
   compile("org.slf4j:jcl-over-slf4j:1.7.26")
   compileOnly("commons-logging:commons-logging:1.2")
+
+  testImplementation("io.zonky.test:embedded-database-spring-test:1.5.1")
 }
 
 tasks.withType<KotlinCompile> {
