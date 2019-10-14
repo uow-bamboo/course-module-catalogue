@@ -1,10 +1,10 @@
-import $ from 'jquery'
-import log from 'loglevel'
-import _ from 'lodash-es'
-import 'bootstrap-3-typeahead'
-import { postJsonWithCredentials } from '@universityofwarwick/serverpipe'
-import RichResultField from './rich-result-field'
-import MultiplePickers from './multiple-picker'
+import $ from 'jquery';
+import log from 'loglevel';
+import _ from 'lodash-es';
+import 'bootstrap-3-typeahead';
+import { postJsonWithCredentials } from '@universityofwarwick/serverpipe';
+import RichResultField from './rich-result-field';
+import MultiplePickers from './multiple-picker';
 
 /**
  * An AJAX autocomplete-style picker that can return a variety of different
@@ -16,44 +16,44 @@ import MultiplePickers from './multiple-picker'
  * Requires Bootstrap with the Typeahead plugin.
  */
 export default class FlexiPicker {
-  constructor (input, {
+  constructor(input, {
     includeUsers = true,
     includeGroups = false,
     prefixGroups = '',
     universityId = false,
     selectOnBlur = true,
   } = {}) {
-    const self = this
-    const $element = $(input)
+    const self = this;
+    const $element = $(input);
 
     // Might have manually wired this element up with FlexiPicker,
     // but add the class for CSS style purposes.
     if (!$element.hasClass('flexi-picker')) {
-      $element.addClass('flexi-picker')
+      $element.addClass('flexi-picker');
     }
 
     // Disable browser autocomplete dropdowns, it gets in the way.
-    $element.attr('autocomplete', 'off')
+    $element.attr('autocomplete', 'off');
 
-    this.includeUsers = includeUsers
-    this.includeGroups = includeGroups
-    this.prefixGroups = prefixGroups
-    this.universityId = universityId
+    this.includeUsers = includeUsers;
+    this.includeGroups = includeGroups;
+    this.prefixGroups = prefixGroups;
+    this.universityId = universityId;
 
-    this.richResultField = new RichResultField(input)
-    this.currentQuery = null
-    this.doSearch = this.doSearch.bind(this)
+    this.richResultField = new RichResultField(input);
+    this.currentQuery = null;
+    this.doSearch = this.doSearch.bind(this);
 
     $element.typeahead({
       source: (query, callback) => {
-        this.doSearch(query, {}, callback)
+        this.doSearch(query, {}, callback);
       },
       delay: 200,
       matcher: () => true, // All data received from the server matches the query
       displayText: (item) => {
-        let icon = ''
-        if (item.type === 'user') icon = 'fa-user'
-        else if (item.type === 'group') icon = 'fa-globe'
+        let icon = '';
+        if (item.type === 'user') icon = 'fa-user';
+        else if (item.type === 'group') icon = 'fa-globe';
 
         if (item.photo) {
           return `
@@ -67,7 +67,7 @@ export default class FlexiPicker {
                   ${(typeof (item.description) !== 'undefined' ? _.escape(item.description) : '')}
                 </div>
               </div>
-            </div>`
+            </div>`;
         }
 
         return `
@@ -78,7 +78,7 @@ export default class FlexiPicker {
             <div class="description">
               ${(typeof (item.description) !== 'undefined' ? _.escape(item.description) : '')}
             </div>
-          </div>`
+          </div>`;
       },
       highlighter: html => html,
       changeInputOnMove: false,
@@ -86,46 +86,46 @@ export default class FlexiPicker {
       afterSelect: (item) => {
         const description = (
           typeof (item.description) !== 'undefined' ? ` (${_.escape(item.description)})` : ''
-        )
-        const text = `${item.title}${description}`
-        self.richResultField.store(item.value, text)
-        $element.data('item', item)
+        );
+        const text = `${item.title}${description}`;
+        self.richResultField.store(item.value, text);
+        $element.data('item', item);
       },
-    })
+    });
 
     // On load, look up the existing value and give it human-friendly text if possible
     // NOTE: this relies on the fact that the saved value is itself a valid search term
     // (excluding the prefix on webgroup, which is handled by getQuery() method).
-    const currentValue = $element.val()
+    const currentValue = $element.val();
     if (currentValue && currentValue.trim().length > 0) {
       const searchQuery = (this.prefixGroups && currentValue.indexOf(this.prefixGroups) === 0)
-        ? currentValue.substring(this.prefixGroups.length) : currentValue
-      this.doSearch(searchQuery, {exact: true}, (results) => {
+        ? currentValue.substring(this.prefixGroups.length) : currentValue;
+      this.doSearch(searchQuery, { exact: true }, (results) => {
         if (results.length > 0) {
-          self.richResultField.storeText(`${results[0].title} (${results[0].description})`)
+          self.richResultField.storeText(`${results[0].title} (${results[0].description})`);
         }
-      })
+      });
     }
   }
 
-  static transformItem (input) {
-    const item = input
+  static transformItem(input) {
+    const item = input;
 
     if (item.type === 'user') {
-      item.title = item.name
-      item.description = `${item.value}, ${item.userType}`
+      item.title = item.name;
+      item.description = `${item.value}, ${item.userType}`;
 
       if (item.department !== null) {
-        item.description += `, ${item.department}`
+        item.description += `, ${item.department}`;
       }
     } else if (item.type === 'group') {
-      item.description = item.title
-      item.title = item.value
+      item.description = item.title;
+      item.title = item.value;
     }
   }
 
-  doSearch (query, options, callback) {
-    this.currentQuery = query
+  doSearch(query, options, callback) {
+    this.currentQuery = query;
 
     postJsonWithCredentials('/flexipicker', {
       includeUsers: this.includeUsers,
@@ -136,25 +136,25 @@ export default class FlexiPicker {
     })
       .then(response => response.json())
       .catch((e) => {
-        log.error(e)
-        return []
+        log.error(e);
+        return [];
       })
       .then((response) => {
         // Return the items only if the user hasn't since made a different query
         if (this.currentQuery === query) {
-          $.each(response.data.results, (i, item) => FlexiPicker.transformItem(item))
-          callback(response.data.results || [])
+          $.each(response.data.results, (i, item) => FlexiPicker.transformItem(item));
+          callback(response.data.results || []);
         }
-      })
+      });
   }
 }
 
 // The jQuery plugin
-$.fn.flexiPicker = function initFlexiPicker (options = {}) {
+$.fn.flexiPicker = function initFlexiPicker(options = {}) {
   return this.each((i, element) => {
-    const $this = $(element)
+    const $this = $(element);
     if ($this.data('flexi-picker')) {
-      throw new Error('FlexiPicker has already been added to this element')
+      throw new Error('FlexiPicker has already been added to this element');
     }
 
     const allOptions = {
@@ -163,18 +163,18 @@ $.fn.flexiPicker = function initFlexiPicker (options = {}) {
       prefixGroups: $this.data('prefix-groups') || '',
       universityId: $this.data('universityid'),
       selectOnBlur: $this.data('select-on-blur') !== false,
-    }
-    $.extend(allOptions, options)
-    $this.data('flexi-picker', new FlexiPicker(element, allOptions))
-  })
-}
+    };
+    $.extend(allOptions, options);
+    $this.data('flexi-picker', new FlexiPicker(element, allOptions));
+  });
+};
 
-export function bindTo ($scope) {
-  $('.flexi-picker', $scope).flexiPicker()
+export function bindTo($scope) {
+  $('.flexi-picker', $scope).flexiPicker();
 
   $('.flexi-picker-collection', $scope).each((i, collection) => {
     MultiplePickers(collection, (element) => {
-      $(element).flexiPicker()
-    })
-  })
+      $(element).flexiPicker();
+    });
+  });
 }

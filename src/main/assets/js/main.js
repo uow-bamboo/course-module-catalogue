@@ -1,8 +1,8 @@
 /* eslint-env browser */
-import './polyfills'
+import './polyfills';
 
-import $ from 'jquery'
-import * as flexiPicker from './flexi-picker'
+import $ from 'jquery';
+import * as flexiPicker from './flexi-picker';
 
 /**
  * Attach handlers to all elements inside $scope. All jQuery selects
@@ -11,48 +11,48 @@ import * as flexiPicker from './flexi-picker'
  * that's just been loaded, or a piece of HTML you've just loaded into the
  * document dynamically)
  */
-function bindTo ($scope) {
-  $('[data-toggle="popover"]', $scope).popover()
+function bindTo($scope) {
+  $('[data-toggle="popover"]', $scope).popover();
 
-  flexiPicker.bindTo($scope)
+  flexiPicker.bindTo($scope);
 }
 
 $(() => {
-  const $html = $('html')
+  const $html = $('html');
 
   // Apply to all content loaded non-AJAXically
-  bindTo($('#main'))
+  bindTo($('#main'));
 
   // Any selectors below should only be for things that we know won't be inserted into the
   // page after DOM ready.
 
   // Dismiss popovers when clicking away
-  function closePopover ($popover) {
-    const $creator = $popover.data('creator')
+  function closePopover($popover) {
+    const $creator = $popover.data('creator');
     if ($creator) {
-      $creator.popover('hide')
+      $creator.popover('hide');
     }
   }
 
   $html
     .on('shown.bs.popover', (e) => {
-      const $po = $(e.target).popover().data('bs.popover').tip()
-      $po.data('creator', $(e.target))
+      const $po = $(e.target).popover().data('bs.popover').tip();
+      $po.data('creator', $(e.target));
     })
     .on('click.popoverDismiss', (e) => {
-      const $target = $(e.target)
+      const $target = $(e.target);
 
       // if clicking anywhere other than the popover itself
       if ($target.closest('.popover').length === 0 && $(e.target).closest('.has-popover').length === 0) {
-        $('.popover').each((i, popover) => closePopover($(popover)))
+        $('.popover').each((i, popover) => closePopover($(popover)));
       } else if ($target.closest('.close').length > 0) {
-        closePopover($target.closest('.popover'))
+        closePopover($target.closest('.popover'));
       }
     })
     .on('keyup.popoverDismiss', (e) => {
-      const key = e.which || e.keyCode
+      const key = e.which || e.keyCode;
       if (key === 27) {
-        $('.popover').each((i, popover) => closePopover($(popover)))
+        $('.popover').each((i, popover) => closePopover($(popover)));
       }
-    })
-})
+    });
+});

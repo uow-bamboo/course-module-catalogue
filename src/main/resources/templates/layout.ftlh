@@ -26,7 +26,7 @@
           rel="stylesheet" type="text/css">
 
     <!-- ID7 -->
-    <link rel="stylesheet" href="<@spring.url "/assets/main.css" />">
+    <link rel="stylesheet" href="<@spring.url "/assets/style.css" />">
   </head>
   <body>
   <div class="id7-left-border"></div>

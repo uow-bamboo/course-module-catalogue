@@ -19,7 +19,7 @@ const paths = {
     'main': './src/main/assets/js/main.js',
   },
   CSS_ENTRY: {
-    'main': './src/main/assets/css/main.less',
+    'style': './src/main/assets/css/main.less',
   },
   CSS: './src/main/assets/css',
   IMAGES: './src/main/assets/images',
