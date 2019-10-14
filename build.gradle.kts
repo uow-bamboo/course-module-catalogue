@@ -60,11 +60,21 @@ dependencies {
   implementation("uk.ac.warwick.sso:sso-client:2.76")
   implementation("uk.ac.warwick.util:warwickutils-core:20190916")
   implementation("uk.ac.warwick.util:warwickutils-web:20190916")
-  implementation("net.logstash.logback:logstash-logback-encoder:5.3")
 
   implementation("org.apache.tomcat.embed:tomcat-embed-core:9.0.27")
   implementation("org.apache.tomcat.embed:tomcat-embed-el:9.0.27")
   implementation("org.apache.tomcat.embed:tomcat-embed-websocket:9.0.27")
+
+  implementation("net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1")
+  compileOnly("uk.ac.warwick:warwick-logging:1.2:all")
+  compileOnly("ch.qos.logback:logback-classic:1.2.3")
+  compileOnly("net.logstash.logback:logstash-logback-encoder:5.3") {
+    exclude(group = "com.fasterxml.jackson.core")
+  }
+  compileOnly("org.slf4j:slf4j-api:1.7.26")
+  compile("org.slf4j:log4j-over-slf4j:1.7.26")
+  compile("org.slf4j:jcl-over-slf4j:1.7.26")
+  compileOnly("commons-logging:commons-logging:1.2")
 }
 
 tasks.withType<KotlinCompile> {
