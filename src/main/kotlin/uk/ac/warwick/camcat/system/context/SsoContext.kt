@@ -54,7 +54,7 @@ class SsoContext(private val dataSource: DataSource) {
 
   @Bean
   fun ssoConfiguration(): SSOConfiguration {
-    val config = SSOConfigLoader().loadSSOConfig("/sso-config.xml")
+    val config = SSOConfigLoader().loadSSOConfig("/camcat-sso-config.xml")
     config.addOverride("cluster.enabled", "true")
     return config
   }

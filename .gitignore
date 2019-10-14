@@ -32,5 +32,5 @@ out/
 .vscode/
 
 /application.yml
-/external-conf/sso-config.xml
+/external-conf/camcat-sso-config.xml
 /node_modules
