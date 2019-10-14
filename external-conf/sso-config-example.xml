@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <httpbasic>
+    <allow>false</allow>
+  </httpbasic>
+  <mode>new</mode>
+
+  <origin>
+    <login>
+      <location>https://websignon.warwick.ac.uk/origin/hs</location>
+    </login>
+    <logout>
+      <location>https://websignon.warwick.ac.uk/origin/logout</location>
+    </logout>
+    <attributeauthority>
+      <location>https://websignon.warwick.ac.uk/origin/aa</location>
+    </attributeauthority>
+  </origin>
+
+  <shire>
+    <filteruserkey>SSO_USER</filteruserkey>
+    <uri-header>x-requested-uri</uri-header>
+    <location>https://example.warwick.ac.uk/sso/acs</location>
+    <sscookie>
+      <name>SSO-SSC-CAMCAT</name>
+      <path>/</path>
+      <domain>example.warwick.ac.uk</domain>
+      <secure>true</secure>
+    </sscookie>
+    <providerid>urn:example.warwick.ac.uk:camcat:service</providerid>
+  </shire>
+
+  <logout>
+    <location>https://example.warwick.ac.uk/sso/logout</location>
+  </logout>
+
+  <oauth>
+    <enabled>false</enabled>
+    <service>
+      <location>https://websignon.warwick.ac.uk/origin/oauth/service</location>
+    </service>
+  </oauth>
+
+  <credentials>
+    <certificate>file:/var/warwick/ssl/example.warwick.ac.uk.crt</certificate>
+    <key>file:/var/warwick/ssl/example.warwick.ac.uk.key</key>
+    <chain>file:/var/warwick/ssl/intermediates/xyz.pem</chain>
+  </credentials>
+
+  <trustedapps>
+    <publickey>...</publickey>
+    <privatekey>...</privatekey>
+    <app></app>
+  </trustedapps>
+
+  <masquerade>
+    <group>in-camcat-masqueraders</group>
+  </masquerade>
+</config>

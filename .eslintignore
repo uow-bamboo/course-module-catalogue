@@ -1,0 +1,2 @@
+**/*.js
+!/src/main/assets/js/**/*.js
