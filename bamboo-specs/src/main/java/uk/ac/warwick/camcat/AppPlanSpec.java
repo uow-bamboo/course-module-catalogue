@@ -86,7 +86,7 @@ public class AppPlanSpec extends AbstractWarwickBuildSpec {
   @Override
   protected Collection<Plan> builds() {
     return Collections.singletonList(
-      build(PROJECT, "ALL", "Spring Boot Kotlin test project")
+      build(PROJECT, "ALL", "Course and Module Catalogue")
         .linkedRepository(LINKED_REPOSITORY)
         .description("Run checks and build executable jar")
         .stage(buildStage())
@@ -98,7 +98,7 @@ public class AppPlanSpec extends AbstractWarwickBuildSpec {
   @Override
   protected Collection<Deployment> deployments() {
     return Collections.singleton(
-      deployment(PROJECT, "ALL", "Spring Boot Kotlin test project")
+      deployment(PROJECT, "ALL", "Course and Module Catalogue")
         .environment(new Environment("Development")
           .description("courses-dev.warwick.ac.uk")
           .tasks(
