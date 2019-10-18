@@ -4,11 +4,11 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
-  kotlin("plugin.jpa") version "1.3.31"
-  id("org.springframework.boot") version "2.2.0.RC1"
-  id("io.spring.dependency-management") version "1.0.7.RELEASE"
-  kotlin("jvm") version "1.3.31"
-  kotlin("plugin.spring") version "1.3.31"
+  id("org.springframework.boot") version "2.2.0.RELEASE"
+  id("io.spring.dependency-management") version "1.0.8.RELEASE"
+  kotlin("jvm") version "1.3.50"
+  kotlin("plugin.spring") version "1.3.50"
+  kotlin("plugin.jpa") version "1.3.50"
   id("com.moowork.node") version "1.3.1"
 }
 
@@ -30,7 +30,6 @@ val nexusUser: String by project
 val nexusPassword: String by project
 
 repositories {
-  maven { url = uri("https://repo.spring.io/milestone") }
   mavenCentral()
   maven {
     credentials {
@@ -61,10 +60,6 @@ dependencies {
   implementation("net.spy:spymemcached:2.12.3")
   implementation("uk.ac.warwick.util:warwickutils-core:20190916")
   implementation("uk.ac.warwick.util:warwickutils-web:20190916")
-
-  implementation("org.apache.tomcat.embed:tomcat-embed-core:9.0.27")
-  implementation("org.apache.tomcat.embed:tomcat-embed-el:9.0.27")
-  implementation("org.apache.tomcat.embed:tomcat-embed-websocket:9.0.27")
 
   implementation("net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1")
   compile("uk.ac.warwick:warwick-logging:1.2:all")
