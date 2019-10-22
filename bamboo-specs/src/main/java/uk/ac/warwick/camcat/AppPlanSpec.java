@@ -36,7 +36,7 @@ public class AppPlanSpec extends AbstractWarwickBuildSpec {
 
   private static final String LINKED_REPOSITORY = "Course and Module Catalogue";
 
-  private static final String SLACK_CHANNEL = "#module-course-cat";
+  private static final String SLACK_CHANNEL = "#course-module-cat";
 
   public static void main(String[] args) throws Exception {
     new AppPlanSpec().publish();
