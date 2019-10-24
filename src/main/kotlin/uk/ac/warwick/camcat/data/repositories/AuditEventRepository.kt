@@ -1,7 +1,7 @@
-package uk.ac.warwick.camcat.repositories
+package uk.ac.warwick.camcat.data.repositories
 
 import org.springframework.data.repository.CrudRepository
-import uk.ac.warwick.camcat.entities.AuditEvent
+import uk.ac.warwick.camcat.data.entities.AuditEvent
 import java.util.*
 
 interface AuditEventRepository : CrudRepository<AuditEvent, UUID>
