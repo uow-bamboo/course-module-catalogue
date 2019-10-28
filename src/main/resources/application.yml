@@ -13,7 +13,7 @@ camcat.roles:
 
 audit.application-key: camcat
 
-spring.sits-datasource:
+spring.datasource.sits:
   data-source-properties:
     oracle.jdbc.fanEnabled: FALSE
 
