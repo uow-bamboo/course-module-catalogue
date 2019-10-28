@@ -21,7 +21,7 @@ import javax.sql.DataSource
 class DataContext {
   @Bean
   @Primary
-  @ConfigurationProperties(prefix = "spring.datasource")
+  @ConfigurationProperties(prefix = "spring.datasource.primary")
   fun dataSource(): DataSource = DataSourceBuilder.create().build()
 
   @Bean

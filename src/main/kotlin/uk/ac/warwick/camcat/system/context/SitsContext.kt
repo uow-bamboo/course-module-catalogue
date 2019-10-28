@@ -20,7 +20,7 @@ import javax.sql.DataSource
 )
 class SitsContext {
   @Bean(name = ["sitsDataSource"])
-  @ConfigurationProperties(prefix = "spring.sits-datasource")
+  @ConfigurationProperties(prefix = "spring.datasource.sits")
   fun dataSource(): DataSource = DataSourceBuilder.create().build()
 
   @Bean(name = ["sitsEntityManagerFactory"])
