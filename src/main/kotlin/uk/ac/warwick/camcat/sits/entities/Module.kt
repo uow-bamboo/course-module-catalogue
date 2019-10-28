@@ -1,11 +1,10 @@
 package uk.ac.warwick.camcat.sits.entities
 
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Where
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Immutable
@@ -19,6 +18,16 @@ data class Module(
   @Column(name = "MOD_NAME")
   val name: String?,
 
-  @Column(name = "MOD_IUSE")
-  val inUse: Boolean?
+  @JoinColumn(name = "DPT_CODE")
+  @ManyToOne
+  val department: Department?,
+
+  @JoinColumn(name = "MOD_CODE")
+  @OneToMany(fetch = FetchType.EAGER)
+  @Fetch(FetchMode.SELECT)
+  val topics: Collection<Topic>,
+
+  @JoinColumn(name = "MAP_CODE")
+  @ManyToOne
+  val assessmentPattern: AssessmentPattern?
 )
