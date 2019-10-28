@@ -18,6 +18,5 @@ class ModuleServiceTest : ContextTest() {
 
     assertEquals("CS118-15", module.code)
     assertEquals("Programming for Computer Scientists", module.name)
-    assertTrue(module.inUse!!)
   }
 }
