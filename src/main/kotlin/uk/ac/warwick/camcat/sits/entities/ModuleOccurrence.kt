@@ -28,7 +28,19 @@ data class ModuleOccurrence(
   val location: Location?,
 
   @Column(name = "MAV_MAVN")
-  val name: String?
+  val name: String?,
+
+  @Column(name = "PRS_CODE")
+  val moduleLeaderPersonnelCode: String?,
+
+  @OneToOne
+  @JoinColumns(
+    JoinColumn(name = "MOD_CODE"),
+    JoinColumn(name = "MAV_OCCUR"),
+    JoinColumn(name = "AYR_CODE"),
+    JoinColumn(name = "PSL_CODE")
+  )
+  val details: ModuleOccurrenceDetails?
 )
 
 @Embeddable

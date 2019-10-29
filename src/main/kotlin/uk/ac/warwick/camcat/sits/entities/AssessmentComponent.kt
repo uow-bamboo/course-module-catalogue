@@ -32,7 +32,7 @@ data class AssessmentComponent(
 
   @JoinColumn(name = "AST_CODE")
   @ManyToOne
-  val assessmentType: AssessmentType?,
+  val type: AssessmentType?,
 
   @ManyToOne
   @JoinColumn(name = "MAB_APAC")
