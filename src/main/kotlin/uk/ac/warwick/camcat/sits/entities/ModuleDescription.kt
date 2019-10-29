@@ -21,7 +21,7 @@ data class ModuleDescription(
   val academicYear: AcademicYear?,
 
   @Column(name = "MDS_DVNC")
-  val dvnc: String,
+  val code: String,
 
   @Column(name = "MDS_TITL")
   val title: String?,

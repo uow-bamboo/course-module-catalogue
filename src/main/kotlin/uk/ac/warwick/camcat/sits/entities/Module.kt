@@ -29,5 +29,8 @@ data class Module(
 
   @JoinColumn(name = "MAP_CODE")
   @ManyToOne
-  val assessmentPattern: AssessmentPattern?
+  val assessmentPattern: AssessmentPattern?,
+
+  @Column(name = "MOD_CRDT")
+  val creditValue: Double?
 )
