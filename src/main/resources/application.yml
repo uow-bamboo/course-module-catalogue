@@ -12,3 +12,8 @@ camcat.roles:
   masqueraders-webgroup: in-camcat-masqueraders
 
 audit.application-key: camcat
+
+spring.datasource.sits:
+  data-source-properties:
+    oracle.jdbc.fanEnabled: FALSE
+

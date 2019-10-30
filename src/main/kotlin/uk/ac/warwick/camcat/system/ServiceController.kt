@@ -4,6 +4,7 @@ import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Statistic
 import org.springframework.boot.actuate.health.HealthContributorRegistry
 import org.springframework.boot.actuate.health.HealthIndicator
+import org.springframework.boot.actuate.health.NamedContributors
 import org.springframework.boot.actuate.health.Status
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -20,7 +21,10 @@ class ServiceController(
   private val healthContributorRegistry: HealthContributorRegistry,
   private val meterRegistry: MeterRegistry
 ) {
-  private val healthIndicator: HealthIndicator = healthContributorRegistry.find { it.name == "db" }?.contributor as HealthIndicator
+  private val databaseContributors =
+    healthContributorRegistry.find { it.name == "db" }?.contributor as NamedContributors<*>
+
+  private val healthIndicator: HealthIndicator = databaseContributors.getContributor("dataSource") as HealthIndicator
 
   @RequestMapping("/gtg", produces = [MediaType.TEXT_PLAIN_VALUE])
   fun gtg() =

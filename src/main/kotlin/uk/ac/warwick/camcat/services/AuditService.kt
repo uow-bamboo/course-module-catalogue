@@ -3,9 +3,9 @@ package uk.ac.warwick.camcat.services
 import com.fasterxml.jackson.databind.json.JsonMapper
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Service
-import uk.ac.warwick.camcat.entities.AuditEvent
-import uk.ac.warwick.camcat.entities.AuditEventTarget
-import uk.ac.warwick.camcat.repositories.AuditEventRepository
+import uk.ac.warwick.camcat.data.entities.AuditEvent
+import uk.ac.warwick.camcat.data.entities.AuditEventTarget
+import uk.ac.warwick.camcat.data.repositories.AuditEventRepository
 import uk.ac.warwick.util.logging.AuditLogger
 import java.time.OffsetDateTime
 

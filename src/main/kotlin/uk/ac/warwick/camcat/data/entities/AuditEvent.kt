@@ -1,4 +1,4 @@
-package uk.ac.warwick.camcat.entities
+package uk.ac.warwick.camcat.data.entities
 
 import org.hibernate.annotations.AnyMetaDef
 import java.time.OffsetDateTime
