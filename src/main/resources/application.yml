@@ -17,3 +17,13 @@ spring.datasource.sits:
   data-source-properties:
     oracle.jdbc.fanEnabled: FALSE
 
+spring.quartz:
+  scheduler-name: camcat
+  job-store-type: jdbc
+  auto-startup: false
+
+---
+
+spring.profiles: scheduling
+spring.quartz.auto-startup: true
+
