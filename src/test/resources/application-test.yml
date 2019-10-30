@@ -1,0 +1,3 @@
+spring.datasource.sits:
+  driver-class-name: org.h2.Driver
+  jdbc-url: jdbc:h2:mem:sits;MODE=ORACLE;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=FALSE
