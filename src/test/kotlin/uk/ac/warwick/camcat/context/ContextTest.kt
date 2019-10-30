@@ -8,7 +8,7 @@ import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.context.jdbc.SqlConfig
 import org.springframework.test.context.junit4.SpringRunner
 
-@ActiveProfiles("test")
+@ActiveProfiles("integrationTest")
 @AutoConfigureEmbeddedDatabase(beanName = "dataSource")
 @RunWith(SpringRunner::class)
 @SpringBootTest

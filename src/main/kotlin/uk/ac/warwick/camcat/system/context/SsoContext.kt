@@ -18,7 +18,7 @@ import javax.servlet.Filter
 import javax.sql.DataSource
 
 @Configuration
-@Profile("!test")
+@Profile("!integrationTest")
 class SsoContext(private val dataSource: DataSource) {
   @Bean
   fun shireServlet(): ServletRegistrationBean<ShireServlet> =
