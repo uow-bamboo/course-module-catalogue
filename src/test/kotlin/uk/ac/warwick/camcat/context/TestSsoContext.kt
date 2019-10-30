@@ -14,7 +14,7 @@ import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 
 @Configuration
-@Profile("test")
+@Profile("integrationTest")
 class TestSsoContext {
   @Bean
   fun ssoConfiguration(): SSOConfiguration =

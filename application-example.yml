@@ -10,3 +10,9 @@ spring.datasource:
 
 logging.level:
   org.hibernate.SQL: DEBUG
+
+spring.profiles.active:
+  - dev
+  - app
+  - api
+  - scheduling
