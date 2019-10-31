@@ -7,7 +7,7 @@ This is a [Spring Boot](https://spring.io/projects/spring-boot) application writ
 ## Getting started
 
 1. Copy `application-example.yml` to `application.yml` and replace the example PostgreSQL database details with your own
-1. Copy `external-conf/camcat-sso-config-example.xml` to `conf/camcat-sso-config.xml` and add your own details
+1. Copy `external-conf/camcat-sso-config-example.xml` to `external-conf/camcat-sso-config.xml` and add your own details
 1. Run `./gradlew bootRun` to install dependencies, build assets and compile and run the application
 1. Run `./gradlew test` to run the tests
 
