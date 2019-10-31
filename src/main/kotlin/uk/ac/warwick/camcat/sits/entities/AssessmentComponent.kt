@@ -1,15 +1,15 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import org.hibernate.annotations.Formula
-import org.hibernate.annotations.Immutable
-import org.hibernate.annotations.Type
+import org.hibernate.annotations.*
 import uk.ac.warwick.camcat.system.serializers.AcademicYearSerializer
 import uk.ac.warwick.camcat.system.serializers.DurationSerializer
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.io.Serializable
 import java.time.Duration
 import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Immutable
@@ -32,10 +32,12 @@ data class AssessmentComponent(
 
   @JoinColumn(name = "AST_CODE")
   @ManyToOne
+  @NotFound(action = NotFoundAction.IGNORE)
   val type: AssessmentType?,
 
   @ManyToOne
   @JoinColumn(name = "MAB_APAC")
+  @NotFound(action = NotFoundAction.IGNORE)
   val paper: AssessmentPaper?,
 
   @Column(name = "MAB_ADVC")

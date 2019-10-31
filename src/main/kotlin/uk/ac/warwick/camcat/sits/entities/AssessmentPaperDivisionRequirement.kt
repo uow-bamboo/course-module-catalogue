@@ -1,6 +1,8 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
 import java.io.Serializable
 import javax.persistence.*
 
@@ -13,6 +15,7 @@ data class AssessmentPaperDivisionRequirement(
 
   @JoinColumn(name = "ADR_ARQC", referencedColumnName = "ARQ_CODE")
   @ManyToOne
+  @NotFound(action = NotFoundAction.IGNORE)
   val requirement: AssessmentPaperRequirement?,
 
   @Column(name = "ADR_NUMO")
