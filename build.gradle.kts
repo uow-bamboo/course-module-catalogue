@@ -63,6 +63,8 @@ dependencies {
   implementation("uk.ac.warwick.util:warwickutils-core:20190916")
   implementation("uk.ac.warwick.util:warwickutils-web:20190916")
   implementation("org.springframework.boot:spring-boot-starter-quartz")
+  implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+  implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.0")
 
   implementation("net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1")
   compile("uk.ac.warwick:warwick-logging:1.2:all")

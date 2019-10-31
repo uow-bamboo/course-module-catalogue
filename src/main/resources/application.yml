@@ -21,6 +21,9 @@ spring.quartz:
   scheduler-name: camcat
   job-store-type: jdbc
   auto-startup: false
+  overwrite-existing-jobs: true
+  properties:
+    org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
 
 ---
 
