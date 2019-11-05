@@ -1,6 +1,7 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.Type
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -15,5 +16,9 @@ data class Level(
   val code: String,
 
   @Column(name = "LEV_NAME")
-  val name: String?
+  val name: String?,
+
+  @Column(name = "LEV_IUSE")
+  @Type(type = "yes_no")
+  val inUse: Boolean?
 )
