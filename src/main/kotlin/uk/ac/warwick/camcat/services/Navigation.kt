@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder
 import uk.ac.warwick.camcat.controllers.HomeController
 import uk.ac.warwick.camcat.controllers.MasqueradeController
+import uk.ac.warwick.camcat.controllers.ModulesController
 import uk.ac.warwick.camcat.controllers.SysadminController
 import uk.ac.warwick.camcat.system.security.Authority
 import kotlin.reflect.KClass
@@ -24,6 +25,9 @@ class NavigationServiceImpl : NavigationService {
 
     if (hasAuthority(Authority.user))
       items += NavigationPage("Home", path(on(HomeController::class).home()))
+
+    if (hasAuthority(Authority.user))
+      items += NavigationPage("Modules", path(on(ModulesController::class).index()))
 
     if (hasAuthority(Authority.masquerader))
       items += NavigationPage("Masquerade", path(on(MasqueradeController::class).form()))

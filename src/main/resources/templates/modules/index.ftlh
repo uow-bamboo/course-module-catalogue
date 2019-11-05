@@ -5,6 +5,18 @@
 
   <form method="get">
     <div class="form-group">
+        <@spring.bind "query.academicYear" />
+      <label for="academicYear">Academic year</label>
+      <select name="${spring.status.expression}" id="academicYear" class="form-control">
+          <#list academicYears as academicYear>
+            <option value="${academicYear.startYear?c}"
+                    <#if (spring.status.value!"") == academicYear.startYear?c>selected</#if>
+            >${academicYear.label}</option>
+          </#list>
+      </select>
+    </div>
+
+    <div class="form-group">
         <@spring.bind "query.code" />
       <label for="code">Module code</label>
       <input type="text" class="form-control" id="code" name="${spring.status.expression}"
@@ -85,18 +97,6 @@
             </label>
           </div>
         </#list>
-    </div>
-
-    <div class="form-group">
-        <@spring.bind "query.academicYear" />
-      <label for="academicYear">Academic year</label>
-      <select name="${spring.status.expression}" id="academicYear" class="form-control">
-          <#list academicYears as academicYear>
-            <option value="${academicYear.startYear?c}"
-                    <#if (spring.status.value!"") == academicYear.startYear?c>selected</#if>
-            >${academicYear.label}</option>
-          </#list>
-      </select>
     </div>
 
     <div class="form-group">

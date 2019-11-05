@@ -36,7 +36,7 @@ class ModulesController(
   fun assessmentTypes() = assessmentTypeRepository.findAll()
 
   @GetMapping
-  fun index(@ModelAttribute("query") query: ModuleQuery): ModelAndView {
+  fun index(@ModelAttribute("query") query: ModuleQuery? = null): ModelAndView {
     return ModelAndView("modules/index")
   }
 }
