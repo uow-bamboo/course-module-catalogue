@@ -4,15 +4,16 @@ import org.springframework.stereotype.Component
 import uk.ac.warwick.camcat.sits.entities.Module
 import uk.ac.warwick.camcat.sits.entities.ModuleDescription
 import uk.ac.warwick.camcat.sits.entities.ModuleOccurrence
+import java.math.BigDecimal
 
 @Component
 class ModulePresenterFactory(private val userPresenterFactory: UserPresenterFactory) {
   fun build(
     module: Module,
-    occurrenceCollection: Collection<ModuleOccurrence>,
+    occurrences: Collection<ModuleOccurrence>,
     descriptions: Collection<ModuleDescription>
   ) = ModulePresenter(
-    module, occurrenceCollection, descriptions, userPresenterFactory
+    module, occurrences, descriptions, userPresenterFactory
   )
 }
 
@@ -22,8 +23,8 @@ class ModulePresenter(
   descriptions: Collection<ModuleDescription>,
   userPresenterFactory: UserPresenterFactory
 ) {
-  private val sortedOccurrences = occurrenceCollection.sortedBy { it.key.occurrence }
-  private val primaryOccurrence = sortedOccurrences.find { it.key.occurrence == "A" } ?: sortedOccurrences.first()
+  private val sortedOccurrences = occurrenceCollection.sortedBy { it.key.occurrenceCode }
+  private val primaryOccurrence = sortedOccurrences.find { it.key.occurrenceCode == "A" } ?: sortedOccurrences.first()
 
   private val descriptionsByCode = descriptions.groupBy { it.code }.mapValues { it.value.sortedBy { it.key.sequence } }
 
@@ -33,22 +34,20 @@ class ModulePresenter(
 
   val code = module.code
   val stemCode = module.code.take(5)
-  val name = module.name ?: "Untitled module"
-  val creditValue = module.creditValue ?: module.code.takeLastWhile { it != '-' }
+  val title = module.title ?: "Untitled module"
+  val creditValue = module.creditValue ?: module.code.takeLastWhile { it != '-' }.let { BigDecimal(it) }
 
   val department = module.department
   val faculty = module.department?.faculty
 
-  val moduleLeader =
-    primaryOccurrence.moduleLeaderPersonnelCode?.let { userPresenterFactory.buildFromPersonnelCode(it) }
+  val level = primaryOccurrence.level
 
   val learningOutcomes: List<String> = descriptionTextList(code = "MA011")
   val introductoryDescription = descriptionText(code = "MA002")
   val moduleAims = descriptionText(code = "TMB003")
   val outlineSyllabus = descriptionText(code = "MA003")
 
-  // TODO replace with presenter
-  val occurrences = sortedOccurrences
+  val occurrences = sortedOccurrences.map { ModuleOccurrencePresenter(it, userPresenterFactory) }
 
   // TODO replace with presenter
   val assessmentComponents =
@@ -59,3 +58,9 @@ class ModulePresenter(
       ?: listOf()
 }
 
+class ModuleOccurrencePresenter(occurrence: ModuleOccurrence, userPresenterFactory: UserPresenterFactory) {
+  val code = occurrence.key.occurrenceCode
+  val periodSlotCode = occurrence.key.periodSlotCode
+  val location = occurrence.location
+  val moduleLeader = occurrence.moduleLeaderPersonnelCode?.let { userPresenterFactory.buildFromPersonnelCode(it) }
+}

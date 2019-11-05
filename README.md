@@ -12,3 +12,7 @@ This is a [Spring Boot](https://spring.io/projects/spring-boot) application writ
 1. Run `./gradlew test` to run the tests
 
 To run within IDEA, edit the run configuration and set Environment > VM options to `-classpath $ProjectFileDir$/external-conf:$Classpath$`.
+
+Use Docker to run a local Elasticsearch instance:
+
+```docker run -p 9200:9200 -e "discovery.type=single-node" elasticsearch:6.8.4```
