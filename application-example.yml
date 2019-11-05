@@ -10,8 +10,6 @@ spring.datasource:
 
 spring.elasticsearch.rest:
   uris: http://127.0.0.1:9200
-  username: ...
-  password: ...
 
 logging.level:
   org.hibernate.SQL: DEBUG
