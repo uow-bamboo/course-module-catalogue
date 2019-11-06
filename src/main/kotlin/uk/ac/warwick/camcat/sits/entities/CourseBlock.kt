@@ -24,7 +24,7 @@ data class CourseBlock(
   val useForKeyInformationSet: Boolean?,
 
   @Column(name = "CBK_YEAR")
-  val yearOfCourse:Int?
+  val yearOfCourse: Int?
 )
 
 @Embeddable

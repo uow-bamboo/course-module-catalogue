@@ -1,10 +1,7 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.*
-import uk.ac.warwick.camcat.system.serializers.AcademicYearSerializer
-import uk.ac.warwick.camcat.system.serializers.DurationSerializer
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.io.Serializable
 import java.time.Duration
@@ -49,7 +46,6 @@ data class AssessmentComponent(
 
   @Column(name = "MAB_HOHM")
   @Type(type = "uk.ac.warwick.camcat.sits.types.DurationType")
-  @JsonSerialize(using = DurationSerializer::class)
   val duration: Duration?,
 
   @Column(name = "MAB_UDF1")
@@ -63,13 +59,8 @@ data class AssessmentComponent(
 
   @Column(name = "MAB_UDF4")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
-  @JsonSerialize(using = AcademicYearSerializer::class)
-  @JsonIgnore
   val introducedAcademicYear: AcademicYear?
-) {
-  val introducedYear: String?
-    get() = introducedAcademicYear.toString()
-}
+)
 
 @Embeddable
 data class AssessmentComponentKey(
