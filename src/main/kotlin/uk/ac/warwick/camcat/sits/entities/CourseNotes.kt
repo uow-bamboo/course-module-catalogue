@@ -3,6 +3,8 @@ package uk.ac.warwick.camcat.sits.entities
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
 import org.hibernate.annotations.Type
 import uk.ac.warwick.camcat.system.serializers.AcademicYearSerializer
 import uk.ac.warwick.util.termdates.AcademicYear
@@ -11,24 +13,24 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_MDS")
-data class ModuleDescription(
+@Table(schema = "INTUIT", name = "SRS_CRN")
+data class CourseNotes(
   @EmbeddedId
-  val key: ModuleDescriptionKey,
+  val key: CourseNotesKey,
 
-  @Column(name = "MDS_AYRC")
+  @Column(name = "CRN_AYRC")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
   @JsonSerialize(using = AcademicYearSerializer::class)
   @JsonIgnore
   val academicYear: AcademicYear?,
 
-  @Column(name = "MDS_DVNC")
-  val code: String,
+  @Column(name = "CRN_DVNC")
+  val descriptionVersion: String,
 
-  @Column(name = "MDS_TITL")
+  @Column(name = "CRN_TITL")
   val title: String?,
 
-  @Column(name = "MOD_DESC")
+  @Column(name = "CRN_DESC")
   val description: String?
 ) {
   val acadYear: String
@@ -36,10 +38,12 @@ data class ModuleDescription(
 }
 
 @Embeddable
-data class ModuleDescriptionKey(
-  @Column(name = "MOD_CODE")
-  val moduleCode: String,
+data class CourseNotesKey(
+  @ManyToOne
+  @NotFound(action = NotFoundAction.IGNORE)
+  @JoinColumn(name = "CRN_CRSC")
+  val course: Course,
 
-  @Column(name = "MDS_SEQN")
+  @Column(name = "CRN_SEQN")
   val sequence: String
 ) : Serializable

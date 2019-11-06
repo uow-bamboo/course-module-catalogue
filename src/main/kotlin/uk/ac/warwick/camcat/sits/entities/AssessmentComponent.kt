@@ -1,5 +1,6 @@
 package uk.ac.warwick.camcat.sits.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.*
 import uk.ac.warwick.camcat.system.serializers.AcademicYearSerializer
@@ -36,7 +37,7 @@ data class AssessmentComponent(
   val type: AssessmentType?,
 
   @ManyToOne
-  @JoinColumn(name = "MAB_APAC")
+  @JoinColumn(referencedColumnName = "APA_CODE", name = "MAB_APAC")
   @NotFound(action = NotFoundAction.IGNORE)
   val paper: AssessmentPaper?,
 
@@ -63,8 +64,12 @@ data class AssessmentComponent(
   @Column(name = "MAB_UDF4")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
   @JsonSerialize(using = AcademicYearSerializer::class)
+  @JsonIgnore
   val introducedAcademicYear: AcademicYear?
-)
+) {
+  val introducedYear: String?
+    get() = introducedAcademicYear.toString()
+}
 
 @Embeddable
 data class AssessmentComponentKey(

@@ -1,5 +1,6 @@
 package uk.ac.warwick.camcat.sits.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
@@ -59,8 +60,12 @@ data class ModuleOccurrenceKey(
   @Column(name = "AYR_CODE")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
   @JsonSerialize(using = AcademicYearSerializer::class)
+  @JsonIgnore
   val academicYear: AcademicYear,
 
   @Column(name = "PSL_CODE")
   val periodSlotCode: String
-) : Serializable
+) : Serializable {
+  val acadYear: String
+    get() = academicYear.toString()
+}

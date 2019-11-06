@@ -27,4 +27,7 @@ data class Topic(
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "DPT_CODE")
   val teachingDepartment: Department?
-)
+) {
+  val moduleCode: String?
+    get() = module?.code
+}
