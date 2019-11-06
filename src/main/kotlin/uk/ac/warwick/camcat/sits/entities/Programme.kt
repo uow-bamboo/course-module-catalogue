@@ -1,7 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Immutable
 import javax.persistence.*
 

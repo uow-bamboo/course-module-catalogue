@@ -1,11 +1,10 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.annotations.*
+import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
 import java.io.Serializable
 import javax.persistence.*
-import javax.persistence.Entity
-import javax.persistence.Table
 
 @Entity
 @Immutable
