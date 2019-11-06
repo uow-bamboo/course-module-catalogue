@@ -107,7 +107,6 @@ data class CourseBlockOccurrence(
 data class CourseBlockOccurrenceKey(
   @Column(name = "CBO_AYRC")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
-
   val academicYear: AcademicYear,
 
   @ManyToOne

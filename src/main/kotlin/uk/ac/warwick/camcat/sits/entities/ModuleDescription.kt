@@ -15,7 +15,6 @@ data class ModuleDescription(
 
   @Column(name = "MDS_AYRC")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
-
   val academicYear: AcademicYear?,
 
   @Column(name = "MDS_DVNC")
