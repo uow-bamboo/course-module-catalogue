@@ -20,6 +20,7 @@ data class Course(
   val title: String?,
 
   @Column(name = "CRS_IUSE")
+  @Type(type = "yes_no")
   val inUse: Boolean?,
 
   @Column(name = "CRS_BEGD")
@@ -61,9 +62,11 @@ data class Course(
   val teacherTrainerIdentifierCode: String?,
 
   @Column(name = "CRS_BURS")
+  @Type(type = "yes_no")
   val eligibleForNhsBursary: Boolean?,
 
   @Column(name = "CRS_RESH")
+  @Type(type = "yes_no")
   val isResearchCourse: Boolean?,
 
   @Column(name = "CRS_CTYC")

@@ -3,6 +3,7 @@ package uk.ac.warwick.camcat.sits.entities
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.Type
 import javax.persistence.*
 
 @Entity
@@ -14,6 +15,7 @@ data class FormedModuleCollection(
   val code: String,
 
   @Column(name = "FMC_IUSE")
+  @Type(type = "yes_no")
   val inUse: Boolean?,
 
   @Column(name = "FMC_NAME")

@@ -1,6 +1,7 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.Type
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -18,5 +19,6 @@ data class ModeOfAttendance(
   val name: String?,
 
   @Column(name = "MOA_IUSE")
+  @Type(type = "yes_no")
   val inUse: Boolean?
 )

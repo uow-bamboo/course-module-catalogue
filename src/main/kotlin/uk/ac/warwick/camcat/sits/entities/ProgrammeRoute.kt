@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
+import org.hibernate.annotations.Type
 import java.io.Serializable
 import javax.persistence.*
 
@@ -15,6 +16,7 @@ data class ProgrammeRoute(
   val key: ProgrammeRouteKey,
 
   @Column(name = "PRU_IUSE")
+  @Type(type = "yes_no")
   val inuse: Boolean?
 )
 
