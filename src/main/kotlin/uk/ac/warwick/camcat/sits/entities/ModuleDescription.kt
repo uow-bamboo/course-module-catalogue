@@ -1,10 +1,7 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
-import uk.ac.warwick.camcat.system.serializers.AcademicYearSerializer
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.io.Serializable
 import javax.persistence.*
@@ -18,8 +15,6 @@ data class ModuleDescription(
 
   @Column(name = "MDS_AYRC")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
-  @JsonSerialize(using = AcademicYearSerializer::class)
-  @JsonIgnore
   val academicYear: AcademicYear?,
 
   @Column(name = "MDS_DVNC")
@@ -30,10 +25,7 @@ data class ModuleDescription(
 
   @Column(name = "MOD_DESC")
   val description: String?
-) {
-  val acadYear: String
-    get() = academicYear.toString()
-}
+)
 
 @Embeddable
 data class ModuleDescriptionKey(

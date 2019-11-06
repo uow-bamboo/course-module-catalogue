@@ -1,11 +1,9 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
-import uk.ac.warwick.camcat.system.serializers.DurationSerializer
 import java.io.Serializable
 import java.time.Duration
 import javax.persistence.*
@@ -19,12 +17,10 @@ data class AssessmentPaperDivision(
 
   @Column(name = "ADV_DURA")
   @Type(type = "uk.ac.warwick.camcat.sits.types.DurationType")
-  @JsonSerialize(using = DurationSerializer::class)
   val duration: Duration?,
 
   @Column(name = "ADV_RDTM")
   @Type(type = "uk.ac.warwick.camcat.sits.types.DurationType")
-  @JsonSerialize(using = DurationSerializer::class)
   val readingTime: Duration?,
 
   @OneToMany(fetch = FetchType.EAGER)

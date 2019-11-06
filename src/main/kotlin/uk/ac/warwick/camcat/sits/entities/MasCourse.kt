@@ -1,11 +1,6 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonBackReference
-import com.fasterxml.jackson.annotation.JsonManagedReference
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.*
-import uk.ac.warwick.camcat.system.serializers.AcademicYearSerializer
-import uk.ac.warwick.util.termdates.AcademicYear
 import javax.persistence.*
 import javax.persistence.Entity
 import javax.persistence.Table

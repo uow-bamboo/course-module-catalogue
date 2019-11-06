@@ -1,10 +1,9 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import org.hibernate.annotations.*
-import java.io.Serializable
+import org.hibernate.annotations.Fetch
+import org.hibernate.annotations.FetchMode
+import org.hibernate.annotations.Immutable
 import javax.persistence.*
-import javax.persistence.Entity
-import javax.persistence.Table
 
 @Entity
 @Immutable

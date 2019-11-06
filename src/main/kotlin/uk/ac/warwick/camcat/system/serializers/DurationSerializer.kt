@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer
 import org.springframework.stereotype.Component
 import java.time.Duration
 
-@Component
 class DurationSerializer : StdSerializer<Duration>(Duration::class.java) {
   override fun serialize(value: Duration?, gen: JsonGenerator?, provider: SerializerProvider?) {
     if (value != null) {

@@ -1,11 +1,7 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonManagedReference
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import org.hibernate.annotations.*
-import uk.ac.warwick.camcat.system.serializers.AcademicYearSerializer
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.io.Serializable
 import java.time.LocalDate
@@ -47,8 +43,6 @@ data class CourseBlockOccurrence(
 
   @Column(name = "CBO_NAYR")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
-  @JsonSerialize(using = AcademicYearSerializer::class)
-  @JsonIgnore
   val nextAcademicYear: AcademicYear?,
 
   @ManyToOne
@@ -107,17 +101,12 @@ data class CourseBlockOccurrence(
 ) {
   val nextCourseCode: String?
     get() = nextCourse?.code
-
-  val nextAcadYear: String?
-    get() = nextAcademicYear?.toString()
 }
 
 @Embeddable
 data class CourseBlockOccurrenceKey(
   @Column(name = "CBO_AYRC")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
-  @JsonSerialize(using = AcademicYearSerializer::class)
-  @JsonIgnore
   val academicYear: AcademicYear,
 
   @ManyToOne
@@ -139,7 +128,4 @@ data class CourseBlockOccurrenceKey(
    */
   @Column(name = "CBO_OCCL")
   val occurrence: String
-) : Serializable {
-  val acadYear: String
-    get() = academicYear.toString()
-}
+) : Serializable
