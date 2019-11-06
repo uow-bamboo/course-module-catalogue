@@ -1,6 +1,8 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
 import javax.persistence.*
 
 @Entity
@@ -16,5 +18,6 @@ data class Department(
 
   @JoinColumn(name = "DPT_FACC", referencedColumnName = "FAC_CODE")
   @ManyToOne
+  @NotFound(action = NotFoundAction.IGNORE)
   val faculty: Faculty?
 )

@@ -1,25 +1,26 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.Immutable
-import org.hibernate.annotations.Where
+import org.hibernate.annotations.*
+import java.math.BigDecimal
 import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Immutable
 @Table(schema = "INTUIT", name = "INS_MOD")
-@Where(clause = "MOD_IUSE = 'Y'")
+@Where(clause = "MOD_CODE LIKE '%-%'")
 data class Module(
   @Id
   @Column(name = "MOD_CODE")
   val code: String,
 
   @Column(name = "MOD_NAME")
-  val name: String?,
+  val title: String?,
 
   @JoinColumn(name = "DPT_CODE")
   @ManyToOne
+  @NotFound(action = NotFoundAction.IGNORE)
   val department: Department?,
 
   @JoinColumn(name = "MOD_CODE")
@@ -29,8 +30,9 @@ data class Module(
 
   @JoinColumn(name = "MAP_CODE")
   @ManyToOne
+  @NotFound(action = NotFoundAction.IGNORE)
   val assessmentPattern: AssessmentPattern?,
 
   @Column(name = "MOD_CRDT")
-  val creditValue: Double?
+  val creditValue: BigDecimal?
 )
