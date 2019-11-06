@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
+import org.hibernate.annotations.Type
 import java.io.Serializable
 import javax.persistence.*
 
@@ -23,6 +24,7 @@ data class ValidAdmissionRoute(
   val route: Route,
 
   @Column(name = "VAR_IUSE")
+  @Type(type = "yes_no")
   val inUse: Boolean?
 )
 

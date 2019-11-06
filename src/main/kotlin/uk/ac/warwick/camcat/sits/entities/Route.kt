@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.Type
 import javax.persistence.*
 
 @Entity
@@ -18,12 +19,15 @@ data class Route(
   val name: String,
 
   @Column(name = "ROU_GSPY")
+  @Type(type = "yes_no")
   val generatePathway: Boolean?,
 
   @Column(name = "ROU_UROE")
+  @Type(type = "yes_no")
   val useRouteElement: Boolean?,
 
   @Column(name = "ROU_IUSE")
+  @Type(type = "yes_no")
   val inUse: Boolean?,
 
   @OneToMany(fetch = FetchType.EAGER)

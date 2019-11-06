@@ -72,6 +72,7 @@ data class CourseBlockOccurrence(
   val nextOccurrenceLetter: String?,
 
   @Column(name = "CBO_EHCF")
+  @Type(type = "yes_no")
   val eligibleForHefceCoreFunding: Boolean?,
 
   @Column(name = "CBO_YTYP")

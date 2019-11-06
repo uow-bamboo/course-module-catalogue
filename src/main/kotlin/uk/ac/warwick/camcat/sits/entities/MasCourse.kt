@@ -67,6 +67,7 @@ data class MasCourse(
   val firstTutorCode: String,
 
   @Column(name = "MCR_IUSE")
+  @Type(type = "yes_no")
   val inUse: Boolean?
 
 )

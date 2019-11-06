@@ -41,6 +41,7 @@ data class AssessmentComponent(
   val paperDivisionCode: String?,
 
   @Column(name = "MAB_FAYN")
+  @Type(type = "yes_no")
   val final: Boolean?,
 
   @Column(name = "MAB_HOHM")
@@ -48,12 +49,15 @@ data class AssessmentComponent(
   val duration: Duration?,
 
   @Column(name = "MAB_UDF1")
+  @Type(type = "yes_no")
   val inUse: Boolean?,
 
   @Column(name = "MAB_UDF2")
+  @Type(type = "yes_no")
   val canSelfCertify: Boolean?,
 
   @Formula("CASE WHEN MAB_UDF3 IS NOT NULL THEN 1 ELSE 0 END")
+  @Type(type = "yes_no")
   val reassessment: Boolean,
 
   @Column(name = "MAB_UDF4")
