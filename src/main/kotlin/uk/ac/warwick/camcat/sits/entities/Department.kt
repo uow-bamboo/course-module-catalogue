@@ -3,6 +3,7 @@ package uk.ac.warwick.camcat.sits.entities
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
+import org.hibernate.annotations.Type
 import javax.persistence.*
 
 @Entity
@@ -14,7 +15,14 @@ data class Department(
   val code: String,
 
   @Column(name = "DPT_NAME")
-  val title: String?,
+  val name: String?,
+
+  @Column(name = "DPT_TYPE")
+  val type: String?,
+
+  @Column(name = "DPT_IUSE")
+  @Type(type = "yes_no")
+  val inUse: Boolean?,
 
   @JoinColumn(name = "DPT_FACC", referencedColumnName = "FAC_CODE")
   @ManyToOne

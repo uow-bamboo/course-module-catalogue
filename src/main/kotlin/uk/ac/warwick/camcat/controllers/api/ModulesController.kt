@@ -14,7 +14,7 @@ import uk.ac.warwick.camcat.sits.entities.ModuleOccurrence
 import uk.ac.warwick.camcat.sits.services.ModuleService
 import uk.ac.warwick.util.termdates.AcademicYear
 
-@RestController
+@RestController("apiModulesController")
 @RequestMapping("/api/v1/modules/{moduleCode}", produces = ["application/json"])
 class ModulesController(private val moduleService: ModuleService) {
   @GetMapping
@@ -22,7 +22,7 @@ class ModulesController(private val moduleService: ModuleService) {
     moduleService.findByModuleCode(moduleCode)
 }
 
-@RestController
+@RestController("apiModuleYearsController")
 @RequestMapping("/api/v1/modules/{moduleCode}/{academicYear}", produces = ["application/json"])
 class ModuleYearsController(
   private val moduleService: ModuleService,

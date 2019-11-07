@@ -24,13 +24,13 @@ class NavigationServiceTest : ContextTest() {
 
   @Test
   @WithMockUser
-  fun testUser() = assertEquals(listOf(NavigationPage("Home", "http://localhost/")), nav())
+  fun testUser() = assertEquals(listOf(NavigationPage("Home", "http://localhost/"), NavigationPage("Modules", "http://localhost/modules/")), nav())
 
   @Test
   @WithMockUser(roles = [Role.user, Role.masquerader])
-  fun testMasquerader() = assertEquals(listOf("Home", "Masquerade"), nav().map { it.label })
+  fun testMasquerader() = assertEquals(listOf("Home", "Modules", "Masquerade"), nav().map { it.label })
 
   @Test
   @WithMockUser(roles = [Role.user, Role.sysadmin])
-  fun testSysadmin() = assertEquals(listOf("Home", "Sysadmin"), nav().map { it.label })
+  fun testSysadmin() = assertEquals(listOf("Home", "Modules", "Sysadmin"), nav().map { it.label })
 }

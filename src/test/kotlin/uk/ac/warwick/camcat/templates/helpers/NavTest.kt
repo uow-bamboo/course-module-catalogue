@@ -1,18 +1,12 @@
 package uk.ac.warwick.camcat.templates.helpers
 
-import freemarker.template.Configuration
 import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
-import uk.ac.warwick.camcat.context.ContextTest
 import uk.ac.warwick.camcat.services.NavigationDropdown
 import uk.ac.warwick.camcat.services.NavigationPage
 import uk.ac.warwick.camcat.services.NavigationPresenter
-import uk.ac.warwick.camcat.templates.FreeMarkerRendering
+import uk.ac.warwick.camcat.templates.TemplateTest
 
-class NavTest : ContextTest(), FreeMarkerRendering {
-  @Autowired
-  override lateinit var configuration: Configuration
-
+class NavTest : TemplateTest() {
   @Test
   fun testRenders() {
     val template = "<#import '*/helpers/nav.ftlh' as nav>" +

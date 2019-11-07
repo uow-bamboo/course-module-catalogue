@@ -7,7 +7,7 @@ import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.get
 import uk.ac.warwick.camcat.system.security.Role
 
-class HomeMvcTest : MvcTest() {
+class HomeIntegrationTest : IntegrationTest() {
   @Test
   @WithMockUser(roles = [Role.user])
   fun homeSignedIn() {
