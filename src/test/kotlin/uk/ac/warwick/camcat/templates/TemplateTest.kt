@@ -2,10 +2,13 @@ package uk.ac.warwick.camcat.templates
 
 import freemarker.template.Configuration
 import freemarker.template.Template
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils
+import uk.ac.warwick.camcat.context.ContextTest
 
-interface FreeMarkerRendering {
-  val configuration: Configuration
+abstract class TemplateTest : ContextTest() {
+  @Autowired
+  lateinit var configuration: Configuration
 
   fun renderTemplate(name: String, model: Any): String {
     val template = configuration.getTemplate(name)

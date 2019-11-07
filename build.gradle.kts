@@ -79,6 +79,7 @@ dependencies {
 
   testImplementation("io.zonky.test:embedded-database-spring-test:1.5.1")
   testImplementation("pl.allegro.tech:embedded-elasticsearch:2.7.0")
+  testImplementation("net.sourceforge.htmlunit:htmlunit")
 }
 
 tasks.withType<KotlinCompile> {

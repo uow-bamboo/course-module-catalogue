@@ -3,7 +3,7 @@
 <@layout title="Modules">
   <h1>Modules</h1>
 
-  <form method="get">
+  <form method="get" name="modules">
     <div class="form-group">
         <@spring.bind "query.academicYear" />
       <label for="academicYear">Academic year</label>

@@ -18,10 +18,6 @@ data class AssessmentType(
   @Column(name = "AST_NAME")
   val name: String?,
 
-  @Column(name = "AST_PNAM")
-  @Type(type = "yes_no")
-  val printName: Boolean?,
-
   @Column(name = "AST_IUSE")
   @Type(type = "yes_no")
   val inUse: Boolean?
