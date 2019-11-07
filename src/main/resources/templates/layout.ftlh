@@ -27,6 +27,11 @@
 
     <!-- ID7 -->
     <link rel="stylesheet" href="<@spring.url "/assets/style.css" />">
+
+    <#if _csrf??>
+      <meta name="_csrf_header" content="X-XSRF-TOKEN">
+      <meta name="_csrf" content="${_csrf.token}">
+    </#if>
   </head>
   <body>
   <div class="id7-left-border"></div>
