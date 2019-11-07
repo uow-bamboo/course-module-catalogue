@@ -2,10 +2,7 @@ package uk.ac.warwick.camcat.system
 
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Statistic
-import org.springframework.boot.actuate.health.HealthContributorRegistry
-import org.springframework.boot.actuate.health.HealthIndicator
-import org.springframework.boot.actuate.health.NamedContributors
-import org.springframework.boot.actuate.health.Status
+import org.springframework.boot.actuate.health.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -35,6 +32,18 @@ class ServiceController(
         .body(healthIndicator.health().status.code)
     }
 
+  private fun healthData(health: Health, name: String): Map<String, String> = mapOf(
+    "name" to name,
+    "status" to when (health.status) {
+      Status.UP -> "okay"
+      Status.DOWN -> "error"
+      Status.OUT_OF_SERVICE -> "warning"
+      else -> "unknown"
+    },
+    "message" to health.details.toString(),
+    "testedAt" to ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)
+  )
+
   @RequestMapping("/healthcheck", produces = [MediaType.APPLICATION_JSON_VALUE])
   fun healthcheck() =
     ResponseEntity.ok(mapOf(
@@ -42,20 +51,16 @@ class ServiceController(
       "data" to healthContributorRegistry
         .filter { it.contributor is HealthIndicator }
         .map { entry ->
-          val health = (entry.contributor as HealthIndicator).health()
-
-          mapOf(
-            "name" to entry.name,
-            "status" to when (health.status) {
-              Status.UP -> "okay"
-              Status.DOWN -> "error"
-              Status.OUT_OF_SERVICE -> "warning"
-              else -> "unknown"
-            },
-            "message" to health.details.toString(),
-            "testedAt" to ZonedDateTime.now().withZoneSameInstant(ZoneOffset.UTC).format(DateTimeFormatter.ISO_DATE_TIME)
+          healthData(
+            health = (entry.contributor as HealthIndicator).health(),
+            name = entry.name
           )
-        }
+        } + listOf("dataSource", "sitsDataSource").map {
+        healthData(
+          health = (databaseContributors.getContributor(it) as HealthIndicator).health(),
+          name = it
+        )
+      }
     ))
 
   @RequestMapping("/metrics", produces = [MediaType.APPLICATION_JSON_VALUE])
