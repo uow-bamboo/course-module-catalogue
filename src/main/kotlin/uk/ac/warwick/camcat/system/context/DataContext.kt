@@ -34,6 +34,9 @@ class DataContext {
       .dataSource(dataSource)
       .packages("uk.ac.warwick.camcat.data")
       .persistenceUnit("primary")
+      .properties(mapOf(
+        "hibernate.dialect" to "org.hibernate.dialect.PostgreSQL10Dialect"
+      ))
       .build()
 
   @Bean

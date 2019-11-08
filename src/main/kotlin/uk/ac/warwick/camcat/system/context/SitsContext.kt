@@ -31,6 +31,9 @@ class SitsContext {
       .dataSource(dataSource())
       .packages("uk.ac.warwick.camcat.sits")
       .persistenceUnit("sits")
+      .properties(mapOf(
+        "hibernate.dialect" to "org.hibernate.dialect.Oracle12cDialect"
+      ))
       .build()
 
   @Bean(name = ["sitsTransactionManager"])
