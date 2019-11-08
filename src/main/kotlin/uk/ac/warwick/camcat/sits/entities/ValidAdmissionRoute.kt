@@ -10,7 +10,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_VAR")
+@Table(name = "SRS_VAR")
 data class ValidAdmissionRoute(
   @EmbeddedId
   val key: ValidAdmissionRouteKey,

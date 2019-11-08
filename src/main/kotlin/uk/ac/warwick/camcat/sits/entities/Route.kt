@@ -9,7 +9,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "INS_ROU")
+@Table(name = "INS_ROU")
 data class Route(
   @Id
   @Column(name = "ROU_CODE")

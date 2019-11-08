@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_FAC")
+@Table(name = "SRS_FAC")
 data class Faculty(
   @Id
   @Column(name = "FAC_CODE")

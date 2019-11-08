@@ -9,7 +9,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_PDM")
+@Table(name = "CAM_PDM")
 data class PathwayDietModule(
   @EmbeddedId
   val key: PathwayDietModuleKey,

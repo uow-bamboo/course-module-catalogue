@@ -9,7 +9,7 @@ import javax.persistence.Table
 @Entity
 @Immutable
 // known and referred to as SRS_PWY, but actual tabla is INS_PWY
-@Table(schema = "INTUIT", name = "INS_PWY")
+@Table(name = "INS_PWY")
 data class Pathway(
 
   @Id

@@ -8,7 +8,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "INS_MOD")
+@Table(name = "INS_MOD")
 @Where(clause = "MOD_CODE LIKE '%-%'")
 data class Module(
   @Id

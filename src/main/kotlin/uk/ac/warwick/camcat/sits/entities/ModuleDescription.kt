@@ -8,7 +8,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_MDS")
+@Table(name = "CAM_MDS")
 data class ModuleDescription(
   @EmbeddedId
   val key: ModuleDescriptionKey,

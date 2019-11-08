@@ -10,7 +10,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "INS_PRU")
+@Table(name = "INS_PRU")
 data class ProgrammeRoute(
   @EmbeddedId
   val key: ProgrammeRouteKey,

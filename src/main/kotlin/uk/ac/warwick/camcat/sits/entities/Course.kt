@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_CRS")
+@Table(name = "SRS_CRS")
 @Where(clause = "CRS_IUSE = 'Y'")
 data class Course(
   @Id

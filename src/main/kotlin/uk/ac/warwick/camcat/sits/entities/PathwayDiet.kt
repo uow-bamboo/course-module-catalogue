@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_PDT")
+@Table(name = "CAM_PDT")
 data class PathwayDiet(
 
   @Id

@@ -8,7 +8,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_COH")
+@Table(name = "SRS_COH")
 data class Cohort(
   @Id
   @Column(name = "COH_CODE")

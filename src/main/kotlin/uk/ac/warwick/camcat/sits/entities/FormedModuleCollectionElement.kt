@@ -8,7 +8,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_FME")
+@Table(name = "CAM_FME")
 data class FormedModuleCollectionElement(
   @EmbeddedId
   val key: FormedModuleCollectionElementKey,

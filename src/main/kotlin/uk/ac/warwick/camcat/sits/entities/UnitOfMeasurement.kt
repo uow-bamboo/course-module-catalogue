@@ -8,7 +8,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_UOM")
+@Table(name = "SRS_UOM")
 data class UnitOfMeasurement(
   @Id
   @Column(name = "UOM_CODE")

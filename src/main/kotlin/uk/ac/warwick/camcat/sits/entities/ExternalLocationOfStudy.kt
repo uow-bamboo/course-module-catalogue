@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_ELS")
+@Table(name = "SRS_ELS")
 data class ExternalLocationOfStudy(
   @Id
   @Column(name = "ELS_CODE")

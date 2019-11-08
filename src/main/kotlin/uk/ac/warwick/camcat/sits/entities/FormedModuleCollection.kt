@@ -8,7 +8,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_FMC")
+@Table(name = "CAM_FMC")
 data class FormedModuleCollection(
   @Id
   @Column(name = "FMC_CODE")

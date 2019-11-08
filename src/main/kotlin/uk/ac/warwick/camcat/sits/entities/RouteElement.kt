@@ -9,7 +9,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "INS_ROE")
+@Table(name = "INS_ROE")
 data class RouteElement(
   @EmbeddedId
   val key: RouteElementKey,
