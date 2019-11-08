@@ -17,4 +17,4 @@ Use Docker to run a local Elasticsearch instance with Kibana:
 
 ```docker-compose up```
 
-Kibana is available at http://localhost:5601.
+Elasticsearch listens on ports 9200 and 9300. Kibana is available at http://localhost:5601.
