@@ -5,7 +5,7 @@ import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import uk.ac.warwick.camcat.context.ContextTest
 import java.io.ByteArrayOutputStream
-import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 
 class PdfServiceTest : ContextTest() {
   @Autowired
@@ -18,7 +18,7 @@ class PdfServiceTest : ContextTest() {
     val outputStream = ByteArrayOutputStream()
     service.write(html, outputStream)
 
-    val signature = outputStream.toByteArray().take(5).toByteArray().toString(Charset.forName("ISO-8859-1"))
+    val signature = outputStream.toByteArray().take(5).toByteArray().toString(StandardCharsets.ISO_8859_1)
 
     assertEquals("%PDF-", signature)
   }
