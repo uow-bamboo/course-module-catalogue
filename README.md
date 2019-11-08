@@ -13,6 +13,8 @@ This is a [Spring Boot](https://spring.io/projects/spring-boot) application writ
 
 To run within IDEA, edit the run configuration and set Environment > VM options to `-classpath $ProjectFileDir$/external-conf:$Classpath$`.
 
-Use Docker to run a local Elasticsearch instance:
+Use Docker to run a local Elasticsearch instance with Kibana:
 
-```docker run -p 9200:9200 -e "discovery.type=single-node" elasticsearch:6.8.4```
+```docker-compose up```
+
+Elasticsearch listens on ports 9200 and 9300. Kibana is available at http://localhost:5601.
