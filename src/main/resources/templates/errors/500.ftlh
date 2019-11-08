@@ -7,16 +7,16 @@
     Sorry, there's been a problem and we weren't able to complete your request.
   </p>
 
-  <#if message??>
-    <p>${message}</p>
+  <#if error??>
+    <p>${error}</p>
   </#if>
 
-  <#if stackTrace??>
+  <#if trace??>
     <p>
       <span class="label label-danger">
         <i class="fad fa-user-secret"></i> Sysadmin only
       </span>
     </p>
-    <pre>${stackTrace}</pre>
+    <pre>${trace}</pre>
   </#if>
 </@layout>
