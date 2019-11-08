@@ -8,7 +8,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_RCL")
+@Table(name = "CAM_RCL")
 data class RuleClass(
   @Id
   @Column(name = "RCL_CODE")
