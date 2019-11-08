@@ -10,7 +10,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_MAV")
+@Table(name = "CAM_MAV")
 data class ModuleOccurrence(
   @EmbeddedId
   val key: ModuleOccurrenceKey,

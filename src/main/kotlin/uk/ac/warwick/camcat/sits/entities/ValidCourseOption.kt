@@ -10,7 +10,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_VCO")
+@Table(name = "SRS_VCO")
 data class ValidCourseOption(
   @EmbeddedId
   val key: ValidCourseOptionKey,

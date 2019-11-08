@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_MAP")
+@Table(name = "CAM_MAP")
 data class AssessmentPattern(
   @Id
   @Column(name = "MAP_CODE")

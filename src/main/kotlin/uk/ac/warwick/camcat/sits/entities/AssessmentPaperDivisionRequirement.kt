@@ -8,7 +8,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_ADR")
+@Table(name = "CAM_ADR")
 data class AssessmentPaperDivisionRequirement(
   @EmbeddedId
   val key: AssessmentPaperDivisionRequirementKey,

@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "CAM_APA")
+@Table(name = "CAM_APA")
 data class AssessmentPaper(
   @Id
   @Column(name = "APA_CODE")

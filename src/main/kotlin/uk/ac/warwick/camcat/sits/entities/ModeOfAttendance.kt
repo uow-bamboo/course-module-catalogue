@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "INS_MOA")
+@Table(name = "INS_MOA")
 data class ModeOfAttendance(
   @Id
   @Column(name = "MOA_CODE")

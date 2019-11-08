@@ -8,7 +8,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_CSD")
+@Table(name = "SRS_CSD")
 data class CourseSubjectDepartment(
   @EmbeddedId
   val key: CourseSubjectDepartmentKey,

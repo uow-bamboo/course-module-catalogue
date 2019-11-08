@@ -10,7 +10,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_CRN")
+@Table(name = "SRS_CRN")
 data class CourseNotes(
   @EmbeddedId
   val key: CourseNotesKey,

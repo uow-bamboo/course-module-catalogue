@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "INS_ESB")
+@Table(name = "INS_ESB")
 data class ExternalSubject(
   @Id
   @Column(name = "ESB_CODE")

@@ -11,7 +11,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_CBO")
+@Table(name = "SRS_CBO")
 @Where(clause = "CBO_AYRC not like '0%/0%' and CBO_AYRC not like '0%/1%' and length(CBO_AYRC) = 5")
 data class CourseBlockOccurrence(
   @EmbeddedId

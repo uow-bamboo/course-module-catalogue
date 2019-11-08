@@ -6,7 +6,7 @@ import javax.persistence.*
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "INS_PRG")
+@Table(name = "INS_PRG")
 data class Programme(
   @Id
   @Column(name = "PRG_CODE")

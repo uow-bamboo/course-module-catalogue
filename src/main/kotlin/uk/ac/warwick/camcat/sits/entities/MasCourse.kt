@@ -7,7 +7,7 @@ import javax.persistence.Table
 
 @Entity
 @Immutable
-@Table(schema = "INTUIT", name = "SRS_MCR")
+@Table(name = "SRS_MCR")
 data class MasCourse(
   @Id
   @Column(name = "MCR_CODE")
