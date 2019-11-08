@@ -65,6 +65,8 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-quartz")
   implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.0")
+  implementation("com.itextpdf:kernel:7.1.8")
+  implementation("com.itextpdf:html2pdf:2.1.5")
 
   implementation("net.rakugakibox.spring.boot:logback-access-spring-boot-starter:2.7.1")
   compile("uk.ac.warwick:warwick-logging:1.2:all")
