@@ -2,7 +2,6 @@ package uk.ac.warwick.camcat.services
 
 import com.itextpdf.html2pdf.ConverterProperties
 import com.itextpdf.html2pdf.HtmlConverter
-import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider
 import org.springframework.stereotype.Service
 import java.io.OutputStream
 

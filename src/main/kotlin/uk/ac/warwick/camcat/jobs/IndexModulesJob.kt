@@ -14,6 +14,7 @@ import uk.ac.warwick.camcat.sits.services.ModuleService
 import uk.ac.warwick.camcat.system.Logging
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.time.LocalDate
+import uk.ac.warwick.camcat.sits.entities.Module as SitsModule
 
 @DisallowConcurrentExecution
 class IndexModulesJob(
@@ -33,13 +34,14 @@ class IndexModulesJob(
 
   override fun execute(context: JobExecutionContext?) {
     try {
-      var pageRequest: Pageable = PageRequest.of(1, 50, Sort.by("code"))
+      var pageRequest: Pageable = PageRequest.of(0, 50, Sort.by("code"))
 
       do {
         val page = moduleService.findAll(pageRequest)
-        logger.info("Fetched ${page.size} modules from page ${pageRequest.pageNumber} of ${page.totalPages}")
+        logger.info("Fetched ${page.numberOfElements} modules from page ${pageRequest.pageNumber + 1} of ${page.totalPages}")
 
         page.forEach { module ->
+          logger.debug("Indexing ${module.code} ${module.title}")
           academicYears.forEach { academicYear ->
             try {
               moduleSearchRepository.indexWithoutRefresh(createDocument(module, academicYear))
@@ -56,7 +58,7 @@ class IndexModulesJob(
     }
   }
 
-  private fun createDocument(mod: uk.ac.warwick.camcat.sits.entities.Module, academicYear: AcademicYear): Module {
+  private fun createDocument(mod: SitsModule, academicYear: AcademicYear): Module {
     val module = modulePresenterFactory.build(
       module = mod,
       occurrences = moduleService.findOccurrences(mod.code, academicYear),

@@ -3,6 +3,25 @@
 <@layout title="Modules">
   <h1>Modules</h1>
 
+    <#if results??>
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th>Module code</th>
+          <th>Module title</th>
+        </tr>
+        </thead>
+        <tbody>
+        <#list results as result>
+          <tr>
+            <td>${result.code}</td>
+            <td>${result.title}</td>
+          </tr>
+        </#list>
+        </tbody>
+      </table>
+    </#if>
+
   <form method="get" name="modules">
     <div class="form-group">
         <@spring.bind "query.academicYear" />
