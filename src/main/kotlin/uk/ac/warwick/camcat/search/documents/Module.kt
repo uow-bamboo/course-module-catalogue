@@ -16,6 +16,7 @@ data class Module(
   val stemCode: String,
   val creditValue: BigDecimal,
   @Field(type = Keyword) val departmentCode: String?,
+  @Field(type = Keyword) val departmentName: String?,
   @Field(type = Keyword) val facultyCode: String?,
   @Field(type = Keyword) val levelCode: String?,
   val text: String,

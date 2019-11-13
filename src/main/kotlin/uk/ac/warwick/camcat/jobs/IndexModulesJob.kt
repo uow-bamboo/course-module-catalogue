@@ -73,6 +73,7 @@ class IndexModulesJob(
       stemCode = module.stemCode,
       creditValue = module.creditValue,
       departmentCode = module.department?.code,
+      departmentName = module.department?.veryShortName,
       facultyCode = module.faculty?.code,
       levelCode = module.level?.code,
       occurrences = module.occurrences.map {

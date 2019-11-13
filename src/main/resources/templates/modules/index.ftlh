@@ -7,15 +7,15 @@
       <table class="table table-striped">
         <thead>
         <tr>
-          <th>Module code</th>
-          <th>Module title</th>
+          <th>Module</th>
+          <th>Department</th>
         </tr>
         </thead>
         <tbody>
-        <#list results as result>
+        <#list results as module>
           <tr>
-            <td>${result.code}</td>
-            <td>${result.title}</td>
+            <td>${module.code} ${module.title}</td>
+            <td>${module.departmentName!(module.departmentCode)}</td>
           </tr>
         </#list>
         </tbody>
