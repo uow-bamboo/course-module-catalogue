@@ -1,19 +1,21 @@
 package uk.ac.warwick.camcat.presenters
 
 import org.springframework.stereotype.Component
+import uk.ac.warwick.camcat.services.WarwickDepartmentsService
+import uk.ac.warwick.camcat.sits.entities.Department
 import uk.ac.warwick.camcat.sits.entities.Module
 import uk.ac.warwick.camcat.sits.entities.ModuleDescription
 import uk.ac.warwick.camcat.sits.entities.ModuleOccurrence
 import java.math.BigDecimal
 
 @Component
-class ModulePresenterFactory(private val userPresenterFactory: UserPresenterFactory) {
+class ModulePresenterFactory(private val userPresenterFactory: UserPresenterFactory, private val warwickDepartmentsService: WarwickDepartmentsService) {
   fun build(
     module: Module,
     occurrences: Collection<ModuleOccurrence>,
     descriptions: Collection<ModuleDescription>
   ) = ModulePresenter(
-    module, occurrences, descriptions, userPresenterFactory
+    module, occurrences, descriptions, userPresenterFactory, warwickDepartmentsService
   )
 }
 
@@ -21,7 +23,8 @@ class ModulePresenter(
   module: Module,
   occurrenceCollection: Collection<ModuleOccurrence>,
   descriptions: Collection<ModuleDescription>,
-  userPresenterFactory: UserPresenterFactory
+  userPresenterFactory: UserPresenterFactory,
+  warwickDepartmentsService: WarwickDepartmentsService
 ) {
   private val sortedOccurrences = occurrenceCollection.sortedBy { it.key.occurrenceCode }
   private val primaryOccurrence = sortedOccurrences.find { it.key.occurrenceCode == "A" } ?: sortedOccurrences.first()
@@ -37,7 +40,7 @@ class ModulePresenter(
   val title = module.title ?: "Untitled module"
   val creditValue = module.creditValue ?: module.code.takeLastWhile { it != '-' }.let { BigDecimal(it) }
 
-  val department = module.department
+  val department = if (module.department != null) DepartmentPresenter(module.department, warwickDepartmentsService.findByDepartmentCode(module.department.code)) else null
   val faculty = module.department?.faculty
 
   val level = primaryOccurrence.level
@@ -63,4 +66,11 @@ class ModuleOccurrencePresenter(occurrence: ModuleOccurrence, userPresenterFacto
   val periodSlotCode = occurrence.key.periodSlotCode
   val location = occurrence.location
   val moduleLeader = occurrence.moduleLeaderPersonnelCode?.let { userPresenterFactory.buildFromPersonnelCode(it) }
+}
+
+class DepartmentPresenter(department: Department, warwickDepartment: uk.ac.warwick.camcat.services.Department?) {
+  val code = department.code
+  val name = warwickDepartment?.name ?: department.name
+  val shortName = warwickDepartment?.shortName ?: department.name
+  val veryShortName = warwickDepartment?.veryShortName ?: department.name
 }
