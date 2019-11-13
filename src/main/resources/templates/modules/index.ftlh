@@ -8,7 +8,7 @@
         <thead>
         <tr>
           <th>Module</th>
-          <th>Department</th>
+          <th>Dept</th>
         </tr>
         </thead>
         <tbody>
