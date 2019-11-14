@@ -3,6 +3,7 @@ package uk.ac.warwick.camcat.sits.entities
 import org.hibernate.annotations.Fetch
 import org.hibernate.annotations.FetchMode
 import org.hibernate.annotations.Immutable
+import java.io.Serializable
 import javax.persistence.*
 
 @Entity
@@ -20,4 +21,4 @@ data class AssessmentPattern(
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "MAP_CODE")
   val components: Collection<AssessmentComponent>
-)
+) : Serializable

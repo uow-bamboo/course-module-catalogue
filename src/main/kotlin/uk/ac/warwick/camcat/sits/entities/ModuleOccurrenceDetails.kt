@@ -1,6 +1,7 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import org.hibernate.annotations.Immutable
+import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.EmbeddedId
 import javax.persistence.Entity
@@ -30,5 +31,5 @@ data class ModuleOccurrenceDetails(
 
   @Column(name = "MAV_UDFK")
   val assessmentStudyHours: Int?
-)
+) : Serializable
 

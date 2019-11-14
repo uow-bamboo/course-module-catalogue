@@ -2,6 +2,7 @@ package uk.ac.warwick.camcat.sits.entities
 
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.Type
+import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -21,4 +22,4 @@ data class Faculty(
   @Column(name = "FAC_IUSE")
   @Type(type = "yes_no")
   val inUse: Boolean?
-)
+) : Serializable

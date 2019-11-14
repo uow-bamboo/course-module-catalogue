@@ -1,6 +1,7 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import org.hibernate.annotations.Immutable
+import java.io.Serializable
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
@@ -16,4 +17,4 @@ data class AssessmentPaperRequirement(
 
   @Column(name = "ARQ_NAME")
   val name: String?
-)
+) : Serializable

@@ -30,13 +30,22 @@ val nexusUser: String by project
 val nexusPassword: String by project
 
 repositories {
+  mavenLocal()
   mavenCentral()
+  // Spring milestone repo for spring-cloud release candidates (for memcached starer)
+  maven { url = uri("https://repo.spring.io/milestone/") }
   maven {
     credentials {
       username = nexusUser
       password = nexusPassword
     }
     url = uri("https://mvn.elab.warwick.ac.uk/nexus/content/groups/public")
+  }
+}
+
+dependencyManagement {
+  imports {
+    mavenBom("org.springframework.cloud:spring-cloud-dependencies:Hoxton.RC2")
   }
 }
 
@@ -59,7 +68,10 @@ dependencies {
   testImplementation("org.springframework.security:spring-security-test")
   implementation("org.flywaydb:flyway-core:6.0.3")
   implementation("uk.ac.warwick.sso:sso-client:2.76")
-  implementation("net.spy:spymemcached:2.12.3")
+  implementation("io.sixhours:memcached-spring-boot-starter:2.0.0-SNAPSHOT")
+  implementation("io.sixhours:memcached-spring-boot-autoconfigure:2.0.0-SNAPSHOT")
+  // TODO bin this off, it should be optional
+  runtimeOnly("org.springframework.cloud:spring-cloud-context")
   implementation("uk.ac.warwick.util:warwickutils-core:20190916")
   implementation("uk.ac.warwick.util:warwickutils-web:20190916")
   implementation("org.springframework.boot:spring-boot-starter-quartz")

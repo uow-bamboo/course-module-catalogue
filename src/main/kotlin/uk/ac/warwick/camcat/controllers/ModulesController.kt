@@ -13,31 +13,35 @@ import uk.ac.warwick.camcat.sits.repositories.AssessmentTypeRepository
 import uk.ac.warwick.camcat.sits.repositories.DepartmentRepository
 import uk.ac.warwick.camcat.sits.repositories.FacultyRepository
 import uk.ac.warwick.camcat.sits.repositories.LevelRepository
+import uk.ac.warwick.camcat.sits.services.AssessmentTypeService
+import uk.ac.warwick.camcat.sits.services.DepartmentService
+import uk.ac.warwick.camcat.sits.services.FacultyService
+import uk.ac.warwick.camcat.sits.services.LevelService
 import uk.ac.warwick.util.termdates.AcademicYear
 
 @Controller
 @RequestMapping("/modules")
 class ModulesController(
-  private val departmentRepository: DepartmentRepository,
-  private val facultyRepository: FacultyRepository,
-  private val levelRepository: LevelRepository,
-  private val assessmentTypeRepository: AssessmentTypeRepository,
+  private val departmentService: DepartmentService,
+  private val facultyService: FacultyService,
+  private val levelService: LevelService,
+  private val assessmentTypeService: AssessmentTypeService,
   private val moduleSearchService: ModuleSearchService
 ) {
   @ModelAttribute("departments")
-  fun departments() = departmentRepository.findAllAcademicDepartments()
+  fun departments() = departmentService.findAllAcademic()
 
   @ModelAttribute("faculties")
-  fun faculties() = facultyRepository.findAll()
+  fun faculties() = facultyService.findAll()
 
   @ModelAttribute("levels")
-  fun levels() = levelRepository.findAll()
+  fun levels() = levelService.findAll()
 
   @ModelAttribute("academicYears")
   fun academicYears() = listOf(AcademicYear.starting(2019))
 
   @ModelAttribute("assessmentTypes")
-  fun assessmentTypes() = assessmentTypeRepository.findAll()
+  fun assessmentTypes() = assessmentTypeService.findAll()
 
   @ModelAttribute("results")
   fun results(@ModelAttribute("query") query: ModuleQuery? = null, page: Pageable): List<Module>? {

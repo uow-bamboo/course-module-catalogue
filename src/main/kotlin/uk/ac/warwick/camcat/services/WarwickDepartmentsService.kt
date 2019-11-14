@@ -3,13 +3,13 @@ package uk.ac.warwick.camcat.services
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import org.apache.http.client.HttpClient
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.util.EntityUtils
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
+import java.io.Serializable
 
 @Service
 class WarwickDepartmentsService(
@@ -36,8 +36,6 @@ class WarwickDepartmentsRepository(
   }
 }
 
-
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Department(
   val inUse: Boolean,
@@ -45,4 +43,4 @@ data class Department(
   val name: String,
   val shortName: String,
   val veryShortName: String
-)
+) : Serializable

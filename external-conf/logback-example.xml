@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property name="LOG_FILE" value="logs/server.log" />
+  <include resource="org/springframework/boot/logging/logback/base.xml" />
+  <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook" />
+
+  <!-- Your custom config here -->
+</configuration>

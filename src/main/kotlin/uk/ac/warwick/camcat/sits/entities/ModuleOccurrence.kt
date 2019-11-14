@@ -44,7 +44,7 @@ data class ModuleOccurrence(
     JoinColumn(name = "PSL_CODE")
   )
   val details: ModuleOccurrenceDetails?
-)
+) : Serializable
 
 @Embeddable
 data class ModuleOccurrenceKey(

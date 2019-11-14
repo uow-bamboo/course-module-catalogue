@@ -63,7 +63,7 @@ data class AssessmentComponent(
   @Column(name = "MAB_UDF4")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
   val introducedAcademicYear: AcademicYear?
-)
+) : Serializable
 
 @Embeddable
 data class AssessmentComponentKey(

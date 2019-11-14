@@ -4,6 +4,7 @@ import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
 import org.hibernate.annotations.Type
+import java.io.Serializable
 import javax.persistence.*
 
 @Entity
@@ -28,4 +29,4 @@ data class Department(
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   val faculty: Faculty?
-)
+) : Serializable

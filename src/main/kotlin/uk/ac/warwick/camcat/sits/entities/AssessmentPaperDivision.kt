@@ -30,7 +30,7 @@ data class AssessmentPaperDivision(
     JoinColumn(name = "ADR_ADVC", referencedColumnName = "ADV_CODE")
   )
   val requirements: Collection<AssessmentPaperDivisionRequirement>
-)
+) : Serializable
 
 @Embeddable
 data class AssessmentPaperDivisionKey(

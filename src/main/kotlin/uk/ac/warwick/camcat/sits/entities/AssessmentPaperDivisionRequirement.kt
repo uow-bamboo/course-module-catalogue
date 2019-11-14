@@ -20,7 +20,7 @@ data class AssessmentPaperDivisionRequirement(
 
   @Column(name = "ADR_NUMO")
   val quantity: Int?
-)
+) : Serializable
 
 @Embeddable
 data class AssessmentPaperDivisionRequirementKey(

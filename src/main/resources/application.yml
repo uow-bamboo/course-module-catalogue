@@ -26,6 +26,11 @@ spring.quartz:
   properties:
     org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
 
+memcached.cache:
+  # By default, cache everything for 1 day. This is a *hard* TTL, if you need soft TTLs, consider using VariableTtlCacheHelper
+  expirations: 86400
+  operation-timeout: 250
+
 ---
 
 spring.profiles: scheduling

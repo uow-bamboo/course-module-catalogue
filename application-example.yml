@@ -19,3 +19,6 @@ spring.profiles.active:
   - app
   - api
   - scheduling
+
+memcached.cache:
+  servers: 127.0.0.1:11211

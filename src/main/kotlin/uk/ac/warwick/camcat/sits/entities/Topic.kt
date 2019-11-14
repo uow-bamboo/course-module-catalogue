@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
+import java.io.Serializable
 import javax.persistence.*
 
 @Entity
@@ -27,7 +28,7 @@ data class Topic(
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "DPT_CODE")
   val teachingDepartment: Department?
-) {
+) : Serializable {
   val moduleCode: String?
     get() = module?.code
 }

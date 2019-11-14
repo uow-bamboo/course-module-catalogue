@@ -1,6 +1,7 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import org.hibernate.annotations.*
+import java.io.Serializable
 import java.math.BigDecimal
 import javax.persistence.*
 import javax.persistence.Entity
@@ -35,4 +36,7 @@ data class Module(
 
   @Column(name = "MOD_CRDT")
   val creditValue: BigDecimal?
-)
+) : Serializable {
+  // Prevent infinite loop fun with cyclic collections
+  override fun toString(): String = "Module[$code]"
+}

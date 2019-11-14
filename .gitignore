@@ -33,4 +33,6 @@ out/
 
 /application.yml
 /external-conf/camcat-sso-config.xml
+/external-conf/logback.xml
+/logs
 /node_modules

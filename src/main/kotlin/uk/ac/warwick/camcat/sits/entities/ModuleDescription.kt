@@ -25,7 +25,7 @@ data class ModuleDescription(
 
   @Column(name = "MOD_DESC")
   val description: String?
-)
+) : Serializable
 
 @Embeddable
 data class ModuleDescriptionKey(
