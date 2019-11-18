@@ -40,7 +40,7 @@
     </dd>
   </dl>
 
-    <div class="clearfix"></div>
+  <div class="clearfix"></div>
 
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active">
@@ -197,11 +197,11 @@
             <td>${occurrence.code}</td>
             <td>${occurrence.location.name}</td>
             <td>
-              <#if occurrence.moduleLeader??>
-                ${occurrence.moduleLeader.name}
-              <#else>
-                Unknown
-              </#if>
+                <#if occurrence.moduleLeader??>
+                    ${occurrence.moduleLeader.name}
+                <#else>
+                  Unknown
+                </#if>
             </td>
           </tr>
         </#list>
@@ -328,14 +328,15 @@
         </thead>
         <tbody>
         <#list module.costs as cost>
-        <tr>
-          <td>${cost.category}</td>
-          <td>
-              ${renderMarkdown(cost.description)}
-          </td>
-          <td>${cost.fundedBy}</td>
-          <td>${cost.costToStudent?string.currency}</td>
-            </#list>
+          <tr>
+            <td>${cost.category}</td>
+            <td>
+                ${renderMarkdown(cost.description)}
+            </td>
+            <td>${cost.fundedBy}</td>
+            <td>${cost.costToStudent?string.currency}</td>
+          </tr>
+        </#list>
         </tbody>
       </table>
     </div>
