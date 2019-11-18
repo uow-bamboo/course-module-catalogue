@@ -24,7 +24,23 @@ data class ModuleDescription(
   val title: String?,
 
   @Column(name = "MOD_DESC")
-  val description: String?
+  val description: String?,
+
+  @Column(name = "MDS_UDF1")
+  val udf1: String?,
+
+  @Column(name = "MDS_UDF2")
+  val udf2: String?,
+
+  @Column(name = "MDS_UDF3")
+  val udf3: String?,
+
+  @Column(name = "MDS_UDF4")
+  val udf4: String?,
+
+  @Column(name = "MDS_UDF5")
+  @Type(type = "yes_no")
+  val udf5: Boolean?
 )
 
 @Embeddable

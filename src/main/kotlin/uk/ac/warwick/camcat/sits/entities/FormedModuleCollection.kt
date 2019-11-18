@@ -1,10 +1,10 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import org.hibernate.annotations.Fetch
-import org.hibernate.annotations.FetchMode
-import org.hibernate.annotations.Immutable
-import org.hibernate.annotations.Type
+import com.fasterxml.jackson.annotation.JsonIgnore
+import org.hibernate.annotations.*
 import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Immutable
@@ -27,5 +27,12 @@ data class FormedModuleCollection(
   @OneToMany(fetch = FetchType.EAGER)
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "FMC_CODE", referencedColumnName = "FMC_CODE")
-  val formedModuleCollectionElements: Collection<FormedModuleCollectionElement>?
+  val formedModuleCollectionElements: Collection<FormedModuleCollectionElement>?,
+
+  @OneToMany
+  @Fetch(FetchMode.SELECT)
+  @NotFound(action = NotFoundAction.IGNORE)
+  @JoinColumn(name = "FMC_CODE")
+  @JsonIgnore
+  val moduleRuleElements: Collection<ModuleRuleBody>
 )

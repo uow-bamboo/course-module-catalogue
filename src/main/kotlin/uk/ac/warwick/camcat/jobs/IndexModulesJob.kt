@@ -59,11 +59,7 @@ class IndexModulesJob(
   }
 
   private fun createDocument(mod: SitsModule, academicYear: AcademicYear): Module {
-    val module = modulePresenterFactory.build(
-      module = mod,
-      occurrences = moduleService.findOccurrences(mod.code, academicYear),
-      descriptions = moduleService.findDescriptions(mod.code, academicYear)
-    )
+    val module = modulePresenterFactory.build(mod.code, academicYear)!!
 
     return Module(
       id = "${module.code}-$academicYear",
@@ -86,7 +82,7 @@ class IndexModulesJob(
       text = listOfNotNull(
         *(module.learningOutcomes.toTypedArray()),
         module.introductoryDescription,
-        module.moduleAims,
+        module.aims,
         module.outlineSyllabus
       ).joinToString(separator = "\n")
     )

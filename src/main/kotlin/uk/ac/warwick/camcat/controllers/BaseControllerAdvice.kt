@@ -3,6 +3,7 @@ package uk.ac.warwick.camcat.controllers
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ModelAttribute
+import uk.ac.warwick.camcat.system.MarkdownTemplateMethod
 import uk.ac.warwick.camcat.helpers.RomanNumerals
 import uk.ac.warwick.camcat.services.NavigationPresenter
 import uk.ac.warwick.camcat.services.NavigationService
@@ -20,8 +21,12 @@ import javax.servlet.http.HttpServletRequest
 @ControllerAdvice(basePackageClasses = [HomeController::class])
 class BaseControllerAdvice(
   private val navigationService: NavigationService,
-  private val ssoConfiguration: SSOConfiguration
+  private val ssoConfiguration: SSOConfiguration,
+  private val markdownTemplateMethod: MarkdownTemplateMethod
 ) {
+  @ModelAttribute("renderMarkdown")
+  fun renderMarkdown() = markdownTemplateMethod
+
   @ModelAttribute("navigation")
   fun navigation(request: HttpServletRequest, auth: Authentication?) =
     NavigationPresenter(request.servletPath, navigationService.navigation(auth))

@@ -37,13 +37,6 @@ class ModuleYearsController(
     moduleService.findDescriptions(moduleCode, academicYear)
 
   @GetMapping("/present")
-  fun presentModule(@PathVariable moduleCode: String, @PathVariable academicYear: AcademicYear): ModulePresenter {
-    val module = moduleService.findByModuleCode(moduleCode) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-
-    return modulePresenterFactory.build(
-      module,
-      moduleService.findOccurrences(moduleCode, academicYear),
-      moduleService.findDescriptions(moduleCode, academicYear)
-    )
-  }
+  fun presentModule(@PathVariable moduleCode: String, @PathVariable academicYear: AcademicYear): ModulePresenter =
+    modulePresenterFactory.build(moduleCode, academicYear) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 }

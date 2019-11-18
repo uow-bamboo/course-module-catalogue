@@ -1,5 +1,6 @@
 package uk.ac.warwick.camcat.sits.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.*
 import java.math.BigDecimal
 import javax.persistence.*
@@ -23,16 +24,18 @@ data class Module(
   @NotFound(action = NotFoundAction.IGNORE)
   val department: Department?,
 
-  @JoinColumn(name = "MOD_CODE")
-  @OneToMany(fetch = FetchType.EAGER)
-  @Fetch(FetchMode.SELECT)
-  val topics: Collection<Topic>,
-
   @JoinColumn(name = "MAP_CODE")
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   val assessmentPattern: AssessmentPattern?,
 
   @Column(name = "MOD_CRDT")
-  val creditValue: BigDecimal?
+  val creditValue: BigDecimal?,
+
+  @OneToMany
+  @Fetch(FetchMode.SELECT)
+  @NotFound(action = NotFoundAction.IGNORE)
+  @JoinColumn(name = "FME_MODP", referencedColumnName = "MOD_CODE")
+  @JsonIgnore
+  val formedModuleCollectionElements: Collection<FormedModuleCollectionElement>
 )

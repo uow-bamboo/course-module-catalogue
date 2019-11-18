@@ -1,28 +1,47 @@
 package uk.ac.warwick.camcat.presenters
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.stereotype.Component
+import uk.ac.warwick.camcat.helpers.DurationFormatter
 import uk.ac.warwick.camcat.services.WarwickDepartmentsService
-import uk.ac.warwick.camcat.sits.entities.Department
-import uk.ac.warwick.camcat.sits.entities.Module
-import uk.ac.warwick.camcat.sits.entities.ModuleDescription
-import uk.ac.warwick.camcat.sits.entities.ModuleOccurrence
+import uk.ac.warwick.camcat.sits.entities.*
+import uk.ac.warwick.camcat.sits.services.ModuleService
+import uk.ac.warwick.camcat.sits.services.RelatedModules
+import uk.ac.warwick.util.termdates.AcademicYear
 import java.math.BigDecimal
+import java.time.Duration
 
 @Component
-class ModulePresenterFactory(private val userPresenterFactory: UserPresenterFactory, private val warwickDepartmentsService: WarwickDepartmentsService) {
-  fun build(
-    module: Module,
-    occurrences: Collection<ModuleOccurrence>,
-    descriptions: Collection<ModuleDescription>
-  ) = ModulePresenter(
-    module, occurrences, descriptions, userPresenterFactory, warwickDepartmentsService
-  )
+class ModulePresenterFactory(
+  private val userPresenterFactory: UserPresenterFactory,
+  private val warwickDepartmentsService: WarwickDepartmentsService,
+  private val moduleService: ModuleService
+) {
+  fun build(moduleCode: String, academicYear: AcademicYear): ModulePresenter? {
+    val module = moduleService.findByModuleCode(moduleCode)
+
+    if (module != null) {
+      return ModulePresenter(
+        module = module,
+        occurrenceCollection = moduleService.findOccurrences(module.code, academicYear),
+        descriptions = moduleService.findDescriptions(module.code, academicYear),
+        relatedModules = moduleService.findRelatedModules(module.code, academicYear),
+        topics = moduleService.findTopics(module.code, academicYear),
+        userPresenterFactory = userPresenterFactory,
+        warwickDepartmentsService = warwickDepartmentsService
+      )
+    }
+
+    return null
+  }
 }
 
 class ModulePresenter(
   module: Module,
   occurrenceCollection: Collection<ModuleOccurrence>,
   descriptions: Collection<ModuleDescription>,
+  relatedModules: RelatedModules,
+  topics: Collection<Topic>,
   userPresenterFactory: UserPresenterFactory,
   warwickDepartmentsService: WarwickDepartmentsService
 ) {
@@ -31,34 +50,119 @@ class ModulePresenter(
 
   private val descriptionsByCode = descriptions.groupBy { it.code }.mapValues { it.value.sortedBy { it.key.sequence } }
 
-  private fun descriptionText(code: String): String? = descriptionsByCode[code]?.firstOrNull()?.description
-  private fun descriptionTextList(code: String): List<String> =
-    descriptionsByCode[code]?.mapNotNull { it.description } ?: listOf()
+  private fun descriptions(code: String): List<ModuleDescription> = descriptionsByCode[code] ?: listOf()
+  private fun description(code: String): ModuleDescription? = descriptions(code).firstOrNull()
+  private fun descriptionText(code: String): String? = description(code)?.description
 
   val code = module.code
   val stemCode = module.code.take(5)
   val title = module.title ?: "Untitled module"
   val creditValue = module.creditValue ?: module.code.takeLastWhile { it != '-' }.let { BigDecimal(it) }
 
-  val department = if (module.department != null) DepartmentPresenter(module.department, warwickDepartmentsService.findByDepartmentCode(module.department.code)) else null
+  val department = if (module.department != null) DepartmentPresenter(
+    module.department,
+    warwickDepartmentsService.findByDepartmentCode(module.department.code)
+  ) else null
   val faculty = module.department?.faculty
 
   val level = primaryOccurrence.level
 
-  val learningOutcomes: List<String> = descriptionTextList(code = "MA011")
-  val introductoryDescription = descriptionText(code = "MA002")
-  val moduleAims = descriptionText(code = "TMB003")
-  val outlineSyllabus = descriptionText(code = "MA003")
+  val duration = "???" // TODO MA-634
+  val locations = descriptions("MA010").map { StudyLocation(it) }
+    .sortedWith(compareBy(StudyLocation::primary).reversed().thenBy(StudyLocation::name))
+
+  val aims = descriptionText("TMB003")
+  val assessmentFeedback = "???" // TODO MA-635
+  val indicativeReadingList = descriptionText("MA004")
+  val interdisciplinary = descriptionText("MA008")
+  val international = descriptionText("MA009")
+  val introductoryDescription = descriptionText("MA002")
+  val learningOutcomes = descriptions("MA011").mapNotNull { it.description }
+  val mustPassAllAssessmentComponents = true // TODO MA-636
+  val otherActivityDescription = descriptionText("MA023")
+  val outlineSyllabus = descriptionText("MA003")
+  val privateStudyDescription = descriptionText("MA026")
+  val readingListUrl = description("MA004")?.title
+  val researchElement = descriptionText("MA007")
+  val subjectSpecificSkills = descriptionText("MA005")
+  val transferableSkills = descriptionText("MA006")
+  val url = descriptionText("TMB005")
+
+  val studyAmounts = listOfNotNull(
+    description("MA013")?.let { SessionStudyAmount("Lectures", it) },
+    description("MA014")?.let { SessionStudyAmount("Seminars", it) },
+    description("MA015")?.let { SessionStudyAmount("Tutorials", it) },
+    description("MA016")?.let { SessionStudyAmount("Project supervision", it) },
+    description("MA017")?.let { SessionStudyAmount("Demonstrations", it) },
+    description("MA018")?.let { SessionStudyAmount("Practical classes", it) },
+    description("MA019")?.let { SessionStudyAmount("Supervised practical classes", it) },
+    description("MA020")?.let { SessionStudyAmount("Fieldwork", it) },
+    description("MA021")?.let { SessionStudyAmount("External visits", it) },
+    description("MA022")?.let { SessionStudyAmount("Work-based learning", it) },
+    description("MA026")?.let {
+      DurationStudyAmount(
+        "Private study",
+        Duration.ofHours(BigDecimal(it.title).longValueExact())
+      )
+    }
+  ).filterNot { it.zero }
 
   val occurrences = sortedOccurrences.map { ModuleOccurrencePresenter(it, userPresenterFactory) }
 
-  // TODO replace with presenter
-  val assessmentComponents =
+  val preRequisiteModules = relatedModules.preRequisites.map { AssociatedModulePresenter(it) }
+  val postRequisiteModules = relatedModules.postRequisites.map { AssociatedModulePresenter(it) }
+  val antiRequisiteModules = relatedModules.antiRequisites.map { AssociatedModulePresenter(it) }
+
+  val assessmentGroups =
     module.assessmentPattern?.components
-      ?.filter { it.inUse == true }
-      ?.filter { it.assessmentGroup == module.assessmentPattern.defaultAssessmentGroup }
-      ?.sortedBy { it.key.sequence }
+      ?.filter { it.inUse == true && it.assessmentGroup != null }
+      ?.groupBy { it.assessmentGroup }
+      ?.map { AssessmentGroupPresenter(module.assessmentPattern, it.value) }
+      ?.sortedWith(compareBy(AssessmentGroupPresenter::default).reversed().thenBy(AssessmentGroupPresenter::name))
       ?: listOf()
+
+  val costs = descriptions("MA031").map { ModuleCost(it) }
+
+  val teachingSplits = topics.filter { it.teachingDepartment != null }.map { top ->
+    TopicPresenter(
+      top,
+      DepartmentPresenter(
+        top.teachingDepartment!!,
+        warwickDepartmentsService.findByDepartmentCode(top.teachingDepartment.code)
+      )
+    )
+  }.sortedWith(compareBy(TopicPresenter::weighting).reversed().thenBy { it.department.name })
+}
+
+class TopicPresenter(topic: Topic, val department: DepartmentPresenter) {
+  val weighting = topic.percentage
+}
+
+class StudyLocation(description: ModuleDescription) {
+  val name = description.description ?: description.title ?: "Other"
+  val primary = description.udf5 == true
+}
+
+class AssessmentGroupPresenter(pattern: AssessmentPattern, components: Collection<AssessmentComponent>) {
+  val name = components.first().assessmentGroup!!
+
+  val description = if (name == "AO") "Audit only" else when (name.first()) {
+    'A' -> "Assessed"
+    'B' -> "Examined"
+    'C', 'D' -> "Assessed and examined"
+    'V' -> "Visiting students"
+    else -> "Other"
+  }
+
+  val default = pattern.defaultAssessmentGroup == name
+  val components = components.sortedBy { it.key.sequence }.map { AssessmentComponentPresenter(it) }
+}
+
+class AssessmentComponentPresenter(component: AssessmentComponent) {
+  val name = component.name
+  val type = component.type?.name
+  val weighting = component.weighting
+  val description = component.description?.text
 }
 
 class ModuleOccurrencePresenter(occurrence: ModuleOccurrence, userPresenterFactory: UserPresenterFactory) {
@@ -73,4 +177,55 @@ class DepartmentPresenter(department: Department, warwickDepartment: uk.ac.warwi
   val name = warwickDepartment?.name ?: department.name
   val shortName = warwickDepartment?.shortName ?: department.name
   val veryShortName = warwickDepartment?.veryShortName ?: department.name
+}
+
+class ModuleCost(mds: ModuleDescription) {
+  val category = mds.title
+  val description = mds.description
+  val costToStudent = BigDecimal(mds.udf1)
+  val fundedBy = mds.udf2
+}
+
+interface StudyAmount {
+  val type: String
+  val requiredDescription: String?
+  val optionalDescription: String?
+  val zero: Boolean
+}
+
+class DurationStudyAmount(override val type: String, private val duration: Duration) : StudyAmount {
+  override val requiredDescription = if (!zero) DurationFormatter.format(duration) else null
+
+  override val optionalDescription = null
+
+  override val zero: Boolean
+    @JsonIgnore
+    get() = duration.isZero
+}
+
+class SessionStudyAmount(override val type: String, mds: ModuleDescription) : StudyAmount {
+  private fun duration(value: String?) =
+    Duration.ofMinutes((BigDecimal(value) * BigDecimal(60)).toLong()) ?: Duration.ZERO
+
+  private fun describe(sessions: Int, duration: Duration) =
+    if (sessions == 0) null else "$sessions session${if (sessions != 1) "s" else ""} of ${DurationFormatter.format(
+      duration
+    )}"
+
+  val requiredSessions = mds.udf1?.toInt() ?: 0
+  val requiredSessionDuration: Duration = duration(mds.udf2)
+  override val requiredDescription = describe(requiredSessions, requiredSessionDuration)
+
+  val optionalSessions = mds.udf3?.toInt() ?: 0
+  val optionalSessionDuration: Duration = duration(mds.udf4)
+  override val optionalDescription = describe(optionalSessions, optionalSessionDuration)
+
+  override val zero: Boolean
+    @JsonIgnore
+    get() = requiredSessions == 0 && requiredSessionDuration.isZero && optionalSessions == 0 && optionalSessionDuration.isZero
+}
+
+class AssociatedModulePresenter(module: Module) {
+  val code = module.code
+  val title = module.title
 }
