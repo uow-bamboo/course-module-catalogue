@@ -1,15 +1,16 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.annotations.Immutable
-import org.hibernate.annotations.NotFound
-import org.hibernate.annotations.NotFoundAction
+import org.hibernate.annotations.*
 import java.io.Serializable
 import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Immutable
 @Table(name = "CAM_PDM")
+@Where(clause = "PDM_IUSE = 'Y'")
 data class PathwayDietModule(
   @EmbeddedId
   val key: PathwayDietModuleKey,
@@ -17,16 +18,28 @@ data class PathwayDietModule(
   @Column(name = "PDM_DESC")
   val description: String?,
 
-  @ManyToOne
+  @Column(name = "PDM_IUSE")
+  @Type(type = "yes_no")
+  val inUse: Boolean?,
+
+  @Convert(converter = ModuleSelectionConverter::class)
+  @Column(name = "PDM_SESC")
+  val selectionStatus: ModuleSelection?,
+
+  @ManyToOne(fetch = FetchType.EAGER)
   @NotFound(action = NotFoundAction.IGNORE)
-  @JoinColumn(name = "PDM_FMCC", referencedColumnName = "FMC_CODE")
+  @JoinColumnsOrFormulas(
+    JoinColumnOrFormula(column = JoinColumn(name = "PDM_FMCC", referencedColumnName = "FMC_CODE")),
+    JoinColumnOrFormula(formula = JoinFormula(value = "PDM_IUSE", referencedColumnName = "FMC_IUSE"))
+  )
+  @JsonIgnore
   val formedModuleCollection: FormedModuleCollection?
 )
 
 @Embeddable
 data class PathwayDietModuleKey(
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.EAGER)
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "PDM_PDTC", referencedColumnName = "PDT_CODE")
   @JsonIgnore

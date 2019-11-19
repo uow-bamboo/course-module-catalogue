@@ -1,8 +1,9 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import org.hibernate.annotations.Immutable
-import org.hibernate.annotations.Type
+import org.hibernate.annotations.*
 import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Immutable
@@ -32,5 +33,29 @@ data class Programme(
 
   @Column(name = "PRG_MAWD")
   @Type(type = "yes_no")
-  val allowMultipleAward: Boolean?
+  val allowMultipleAward: Boolean?,
+
+  @ManyToMany(
+    mappedBy = "programmes"
+  )
+  @NotFound(action = NotFoundAction.IGNORE)
+  @Fetch(FetchMode.SELECT)
+  @LazyCollection(LazyCollectionOption.FALSE)
+  val routes: Collection<Route>,
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @NotFound(action = NotFoundAction.IGNORE)
+  @Fetch(FetchMode.SELECT)
+  @LazyCollection(LazyCollectionOption.FALSE)
+  @JoinTable(
+    name = "CAM_PAW",
+    joinColumns = [
+      JoinColumn(name = "PRG_CODE")
+    ],
+    inverseJoinColumns = [
+      JoinColumn(name = "AWD_CODE")
+    ]
+  )
+  val awards: Collection<Award>
+
 )

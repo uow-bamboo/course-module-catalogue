@@ -35,8 +35,8 @@ data class ModuleRuleBody(
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumns(
-    JoinColumn(name = "MOD_CODE", insertable = false, updatable = false),
-    JoinColumn(name = "MMR_CODE", insertable = false, updatable = false)
+    JoinColumn(name = "MOD_CODE", referencedColumnName = "MOD_CODE", insertable = false, updatable = false),
+    JoinColumn(name = "MMR_CODE", referencedColumnName = "MMR_CODE", insertable = false, updatable = false)
   )
   val rule: ModuleRule?
 )

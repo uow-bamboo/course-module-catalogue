@@ -1,6 +1,9 @@
 package uk.ac.warwick.camcat.sits.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
 import org.hibernate.annotations.Type
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.io.Serializable
@@ -45,8 +48,11 @@ data class ModuleDescription(
 
 @Embeddable
 data class ModuleDescriptionKey(
-  @Column(name = "MOD_CODE")
-  val moduleCode: String,
+  @ManyToOne
+  @JoinColumn(name = "MOD_CODE", insertable = false, updatable = false)
+  @NotFound(action = NotFoundAction.IGNORE)
+  @JsonIgnore
+  val module: Module,
 
   @Column(name = "MDS_SEQN")
   val sequence: String

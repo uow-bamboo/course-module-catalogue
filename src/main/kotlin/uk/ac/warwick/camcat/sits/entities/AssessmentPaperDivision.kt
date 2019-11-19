@@ -23,7 +23,7 @@ data class AssessmentPaperDivision(
   @Type(type = "uk.ac.warwick.camcat.sits.types.DurationType")
   val readingTime: Duration?,
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany
   @Fetch(FetchMode.SELECT)
   @JoinColumns(
     JoinColumn(name = "ADR_APAC", referencedColumnName = "ADV_APAC"),

@@ -1,5 +1,6 @@
 package uk.ac.warwick.camcat.sits.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
@@ -38,18 +39,21 @@ data class ModuleOccurrence(
 
   @OneToOne
   @JoinColumns(
-    JoinColumn(name = "MOD_CODE"),
-    JoinColumn(name = "MAV_OCCUR"),
-    JoinColumn(name = "AYR_CODE"),
-    JoinColumn(name = "PSL_CODE")
+    JoinColumn(name = "MOD_CODE", referencedColumnName = "MOD_CODE", insertable = false, updatable = false),
+    JoinColumn(name = "MAV_OCCUR", referencedColumnName = "MAV_OCCUR", insertable = false, updatable = false),
+    JoinColumn(name = "AYR_CODE", referencedColumnName = "AYR_CODE", insertable = false, updatable = false),
+    JoinColumn(name = "PSL_CODE", referencedColumnName = "PSL_CODE", insertable = false, updatable = false)
   )
   val details: ModuleOccurrenceDetails?
 )
 
 @Embeddable
 data class ModuleOccurrenceKey(
-  @Column(name = "MOD_CODE")
-  val moduleCode: String,
+  @ManyToOne
+  @JoinColumn(name = "MOD_CODE", insertable = false, updatable = false)
+  @NotFound(action = NotFoundAction.IGNORE)
+  @JsonIgnore
+  val module: Module,
 
   @Column(name = "MAV_OCCUR")
   val occurrenceCode: String,

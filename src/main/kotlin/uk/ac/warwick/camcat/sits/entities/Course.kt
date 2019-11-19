@@ -108,10 +108,26 @@ data class Course(
   @Column(name = "CRS_FECM")
   val feCourseMarker: String?,
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER)
+  @NotFound(action = NotFoundAction.IGNORE)
   @Fetch(FetchMode.SELECT)
-  @JoinColumn(name = "MCR_CRSC", referencedColumnName = "CRS_CODE")
-  val MasCourses: Collection<MasCourse>
+  @JoinTable(
+    name = "SRS_VCO",
+    joinColumns = [
+      JoinColumn(name = "VCO_CRSC", referencedColumnName = "CRS_CODE")
+    ],
+    inverseJoinColumns = [
+      JoinColumn(name = "VCO_ROUC")
+    ]
+  )
+  val routes: Collection<Route>,
+
+  @OneToMany(fetch = FetchType.LAZY)
+  @Fetch(FetchMode.SELECT)
+  @JoinColumn(name = "CRN_CRSC", referencedColumnName = "CRS_CODE")
+  @JsonIgnore
+  val courseNotes: Collection<CourseNotes>
+
 ) {
   val externalSubjects: List<ExternalSubject>
     get() = listOfNotNull(externalSubject1, externalSubject2, externalSubject3)

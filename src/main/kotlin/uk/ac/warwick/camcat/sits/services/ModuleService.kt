@@ -5,6 +5,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.sits.entities.*
+import uk.ac.warwick.camcat.sits.repositories.*
+import uk.ac.warwick.camcat.sits.entities.*
 import uk.ac.warwick.camcat.sits.repositories.ModuleDescriptionRepository
 import uk.ac.warwick.camcat.sits.repositories.ModuleOccurrenceRepository
 import uk.ac.warwick.camcat.sits.repositories.ModuleRepository
@@ -23,6 +25,15 @@ interface ModuleService {
   fun findTopics(moduleCode: String, academicYear: AcademicYear): Collection<Topic>
 
   fun findRelatedModules(moduleCode: String, academicYear: AcademicYear): RelatedModules
+
+  fun findRules(moduleCode: String, academicYear: AcademicYear): Collection<ModuleRule>
+
+  fun findModulesByCourseYearSelectionBlock(
+    courseCode: String,
+    academicYear: AcademicYear,
+    moduleSelection: ModuleSelection,
+    block: String
+  ): Collection<Module>
 }
 
 @Service
@@ -30,6 +41,7 @@ class DatabaseModuleService(
   private val moduleRepository: ModuleRepository,
   private val descriptionRepository: ModuleDescriptionRepository,
   private val occurrenceRepository: ModuleOccurrenceRepository,
+  private val ruleRepository: ModuleRuleRepository,
   private val topicRepository: TopicRepository
 ) : ModuleService {
   override fun findAll(pageable: Pageable): Page<Module> = moduleRepository.findAll(pageable)
@@ -56,6 +68,24 @@ class DatabaseModuleService(
       postRequisites = moduleRepository.findModulesWithRulesContainingModule(moduleCode, RuleType.PreRequisite, academicYear),
       antiRequisites = moduleRepository.findModulesInRuleForModule(moduleCode, RuleType.AntiRequisite, academicYear)
     )
+
+  @Cacheable("moduleRules")
+  override fun findRules(moduleCode: String, academicYear: AcademicYear): Collection<ModuleRule> =
+    ruleRepository.findAllByModuleCodeAndAcademicYear(moduleCode, academicYear)
+
+  override fun findModulesByCourseYearSelectionBlock(
+    courseCode: String,
+    academicYear: AcademicYear,
+    moduleSelection: ModuleSelection,
+    block: String
+  ): Collection<Module> {
+    return moduleRepository.findAllByCourseCodeAndAcademicYearAndSelectionAndBlock(
+      courseCode = courseCode,
+      academicYear = academicYear,
+      moduleSelection = moduleSelection,
+      block = block
+    )
+  }
 }
 
 data class RelatedModules(
