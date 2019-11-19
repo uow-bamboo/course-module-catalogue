@@ -5,25 +5,33 @@
 
   <dl>
     <dt>Module code</dt>
-    <dd>${module.code}</dd>
+    <dd id="module-code">${module.code}</dd>
 
     <dt>Module title</dt>
-    <dd>${module.title}</dd>
+    <dd id="module-title">${module.title}</dd>
 
-    <dt>Department</dt>
-    <dd>${module.department.name}</dd>
+      <#if module.department??>
+        <dt>Department</dt>
+        <dd id="module-department-name">${module.department.name}</dd>
+      </#if>
 
-    <dt>Faculty</dt>
-    <dd>${module.faculty.name}</dd>
+      <#if module.faculty??>
+        <dt>Faculty</dt>
+        <dd id="module-faculty-name">${module.faculty.name}</dd>
+      </#if>
 
-    <dt>Level</dt>
-    <dd>${module.level.name}</dd>
+      <#if module.level??>
+        <dt>Level</dt>
+        <dd id="module-level-name">${module.level.name}</dd>
+      </#if>
 
     <dt>Credit value</dt>
-    <dd>${module.creditValue}</dd>
+    <dd id="module-credit-value">${module.creditValue}</dd>
 
-    <dt>Module duration</dt>
-    <dd>${module.duration}</dd>
+      <#if module.duration??>
+        <dt>Module duration</dt>
+        <dd>${module.duration}</dd>
+      </#if>
 
     <dt>Study locations</dt>
     <dd>
@@ -67,13 +75,15 @@
 
         <#if module.url??>
           <p>
-            <a href="${module.url}">Module web page</a>
+            <a href="${module.url}" id="module-web-page">Module web page</a>
           </p>
         </#if>
 
         <#if module.aims??>
           <h5>Module aims</h5>
-            ${renderMarkdown(module.aims)}
+          <div id="module-aims">
+              ${renderMarkdown(module.aims)}
+          </div>
         </#if>
 
         <#if module.outlineSyllabus??>
@@ -136,7 +146,7 @@
           <p>
             To take ${module.code} ${module.title}, you must have taken and passed:
           </p>
-          <ul>
+          <ul id="module-pre-requisite-modules">
               <#list module.preRequisiteModules as req>
                 <li>${req.code} ${req.title}</li>
               </#list>
@@ -151,7 +161,7 @@
           <p>
             If you take and pass ${module.code} ${module.title}, you can take:
           </p>
-          <ul>
+          <ul id="module-post-requisite-modules">
               <#list module.postRequisiteModules as req>
                 <li>${req.code} ${req.title}</li>
               </#list>
@@ -166,7 +176,7 @@
           <p>
             If you take ${module.code} ${module.title}, you cannot also take:
           </p>
-          <ul>
+          <ul id="module-anti-requisite-modules">
               <#list module.antiRequisiteModules as req>
                 <li>${req.code} ${req.title}</li>
               </#list>
@@ -183,7 +193,7 @@
       <p>???</p>
 
       <h2>Occurrences</h2>
-      <table class="table table-bordered">
+      <table class="table table-bordered" id="module-occurrences">
         <thead>
         <tr>
           <th>Name</th>
@@ -220,7 +230,7 @@
             You do not need to pass all assessment components to pass the module.
           </p>
         </#if>
-      <table class="table table-bordered">
+      <table class="table table-bordered" id="module-assessment">
         <thead>
         <tr>
           <th>Assessment</th>
@@ -265,7 +275,7 @@
 
     <div id="study" role="tabpanel" class="tab-pane">
       <h2>Teaching split</h2>
-      <table class="table table-bordered">
+      <table class="table table-bordered" id="module-teaching-split">
         <thead>
         <tr>
           <th>Provider</th>
@@ -283,7 +293,7 @@
       </table>
 
       <h2>Study time</h2>
-      <table class="table table-bordered">
+      <table class="table table-bordered" id="module-study-time">
         <thead>
         <tr>
           <th>Type</th>
@@ -317,7 +327,7 @@
         </#if>
 
       <h2>Costs</h2>
-      <table class="table table-bordered">
+      <table class="table table-bordered" id="module-costs">
         <thead>
         <tr>
           <th>Category</th>

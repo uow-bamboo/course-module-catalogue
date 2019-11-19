@@ -10,13 +10,14 @@ import uk.ac.warwick.camcat.system.security.Role
 import uk.ac.warwick.userlookup.Group
 import uk.ac.warwick.userlookup.User
 import uk.ac.warwick.userlookup.UserLookup
+import uk.ac.warwick.userlookup.UserLookupInterface
 import javax.annotation.security.RolesAllowed
 
 @RestController
 @RequestMapping("/flexipicker")
 @RolesAllowed(Role.user)
 class FlexiPickerController(
-  private val userLookup: UserLookup,
+  private val userLookup: UserLookupInterface,
   private val groupService: GroupService
 ) {
   @PostMapping(produces = [MediaType.APPLICATION_JSON_VALUE])

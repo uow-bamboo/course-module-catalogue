@@ -45,26 +45,27 @@ class ModulePresenter(
 
   private val descriptionsByCode = descriptions.groupBy { it.code }.mapValues { it.value.sortedBy { it.key.sequence } }
 
-  private fun descriptions(code: String): List<ModuleDescription> = descriptionsByCode[code] ?: listOf()
+  private fun descriptions(code: String): List<ModuleDescription> = descriptionsByCode[code].orEmpty()
   private fun description(code: String): ModuleDescription? = descriptions(code).firstOrNull()
   private fun descriptionText(code: String): String? = description(code)?.description
-
 
   val code = module.code
   val stemCode = module.code.take(5)
   val title = module.title ?: "Untitled module"
-  val creditValue = module.creditValue ?: module.code.takeLastWhile { it != '-' }.let { BigDecimal(it) }
+  val creditValue = module.creditValue ?: module.code.takeLastWhile { it != '-' }.let(::BigDecimal)
 
-  val department = if (module.department != null) DepartmentPresenter(
-    module.department,
-    warwickDepartmentsService.findByDepartmentCode(module.department.code)
-  ) else null
+  val department = module.department?.let { department ->
+    DepartmentPresenter(
+      department,
+      warwickDepartmentsService.findByDepartmentCode(department.code)
+    )
+  }
   val faculty = module.department?.faculty
 
   val level = primaryOccurrence.level
 
   val duration = "???" // TODO MA-634
-  val locations = descriptions("MA010").map { StudyLocation(it) }
+  val locations = descriptions("MA010").map(::StudyLocation)
     .sortedWith(compareBy(StudyLocation::primary).reversed().thenBy(StudyLocation::name))
 
   val aims = descriptionText("TMB003")
@@ -105,9 +106,9 @@ class ModulePresenter(
 
   val occurrences = sortedOccurrences.map { ModuleOccurrencePresenter(it, userPresenterFactory) }
 
-  val preRequisiteModules = relatedModules.preRequisites.map { AssociatedModulePresenter(it) }
-  val postRequisiteModules = relatedModules.postRequisites.map { AssociatedModulePresenter(it) }
-  val antiRequisiteModules = relatedModules.antiRequisites.map { AssociatedModulePresenter(it) }
+  val preRequisiteModules = relatedModules.preRequisites.map(::AssociatedModulePresenter)
+  val postRequisiteModules = relatedModules.postRequisites.map(::AssociatedModulePresenter)
+  val antiRequisiteModules = relatedModules.antiRequisites.map(::AssociatedModulePresenter)
 
   val assessmentGroups =
     module.assessmentPattern?.components
@@ -117,7 +118,7 @@ class ModulePresenter(
       ?.sortedWith(compareBy(AssessmentGroupPresenter::default).reversed().thenBy(AssessmentGroupPresenter::name))
       ?: listOf()
 
-  val costs = descriptions("MA031").map { ModuleCost(it) }
+  val costs = descriptions("MA031").map(::ModuleCost)
 
   val teachingSplits = topics.filter { it.teachingDepartment != null }.map { top ->
     TopicPresenter(
@@ -151,7 +152,7 @@ class AssessmentGroupPresenter(pattern: AssessmentPattern, components: Collectio
   }
 
   val default = pattern.defaultAssessmentGroup == name
-  val components = components.sortedBy { it.key.sequence }.map { AssessmentComponentPresenter(it) }
+  val components = components.sortedBy { it.key.sequence }.map(::AssessmentComponentPresenter)
 }
 
 class AssessmentComponentPresenter(component: AssessmentComponent) {
@@ -201,7 +202,7 @@ class DurationStudyAmount(override val type: String, private val duration: Durat
 
 class SessionStudyAmount(override val type: String, mds: ModuleDescription) : StudyAmount {
   private fun duration(value: String?) =
-    Duration.ofMinutes((BigDecimal(value) * BigDecimal(60)).toLong()) ?: Duration.ZERO
+    value?.let { Duration.ofMinutes((BigDecimal(it) * BigDecimal(60)).toLong()) } ?: Duration.ZERO
 
   private fun describe(sessions: Int, duration: Duration) =
     if (sessions == 0) null else "$sessions session${if (sessions != 1) "s" else ""} of ${DurationFormatter.format(

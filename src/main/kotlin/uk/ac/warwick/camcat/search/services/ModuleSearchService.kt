@@ -11,6 +11,7 @@ import uk.ac.warwick.camcat.search.documents.Module
 import uk.ac.warwick.camcat.search.queries.ModuleQuery
 import uk.ac.warwick.camcat.search.repositories.ModuleSearchRepository
 import uk.ac.warwick.userlookup.UserLookup
+import uk.ac.warwick.userlookup.UserLookupInterface
 
 interface ModuleSearchService {
   fun query(query: ModuleQuery, page: Pageable): Page<Module>?
@@ -19,7 +20,7 @@ interface ModuleSearchService {
 @Service
 class ElasticsearchModuleSearchService(
   private val moduleSearchRepository: ModuleSearchRepository,
-  private val userLookup: UserLookup
+  private val userLookup: UserLookupInterface
 ) : ModuleSearchService {
   override fun query(query: ModuleQuery, page: Pageable): Page<Module>? {
     val boolQuery = QueryBuilders.boolQuery()

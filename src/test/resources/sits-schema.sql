@@ -71,7 +71,7 @@ CREATE TABLE INS_MOD
     MOD_NOTE  NCLOB
 );
 
-create table INTUIT.CAM_MAB
+create table CAM_MAB
 (
     MAP_CODE  NVARCHAR2(12) not null,
     MAB_SEQ   NVARCHAR2(3)  not null,
@@ -148,29 +148,37 @@ create table INTUIT.CAM_MAB
         primary key (MAP_CODE, MAB_SEQ)
 );
 
-create index INTUIT.CAM_MABI2
-    on INTUIT.CAM_MAB (AST_CODE);
+create index CAM_MABI2
+    on CAM_MAB (AST_CODE);
 
-create index INTUIT.CAM_MABI3
-    on INTUIT.CAM_MAB (MKS_CODE);
+create index CAM_MABI3
+    on CAM_MAB (MKS_CODE);
 
-create index INTUIT.CAM_MABI4
-    on INTUIT.CAM_MAB (MAP_CODE);
+create index CAM_MABI4
+    on CAM_MAB (MAP_CODE);
 
-create index INTUIT.CAM_MABI5
-    on INTUIT.CAM_MAB (MAB_EREF);
+create index CAM_MABI5
+    on CAM_MAB (MAB_EREF);
 
-create index INTUIT.CAM_MABI6
-    on INTUIT.CAM_MAB (MAB_APAC);
+create index CAM_MABI6
+    on CAM_MAB (MAB_APAC);
 
-create index INTUIT.CAM_MABI7
-    on INTUIT.CAM_MAB (MAB_APAC, MAB_ADVC);
+create index CAM_MABI7
+    on CAM_MAB (MAB_APAC, MAB_ADVC);
 
-create index INTUIT.CAM_MABI8
-    on INTUIT.CAM_MAB (MAB_ASID);
+create index CAM_MABI8
+    on CAM_MAB (MAB_ASID);
 
+create table CAM_MABD
+(
+    MAB_MAPC NVARCHAR2(12) not null,
+    MAB_MABS NVARCHAR2(3)  not null,
+    MAB_DESC NCLOB,
+    constraint CAM_MABDP1
+        primary key (MAB_MAPC, MAB_MABS)
+);
 
-create table INTUIT.CAM_APA
+create table CAM_APA
 (
     APA_CODE NVARCHAR2(12) not null
         constraint CAM_APAP1
@@ -192,16 +200,16 @@ create table INTUIT.CAM_APA
     APA_PWGT NUMBER(5, 2)
 );
 
-create index INTUIT.CAM_APAI2
-    on INTUIT.CAM_APA (APA_PRSC);
+create index CAM_APAI2
+    on CAM_APA (APA_PRSC);
 
-create index INTUIT.CAM_APAI3
-    on INTUIT.CAM_APA (APA_APSC);
+create index CAM_APAI3
+    on CAM_APA (APA_APSC);
 
-create index INTUIT.CAM_APAI4
-    on INTUIT.CAM_APA (APA_ROMC);
+create index CAM_APAI4
+    on CAM_APA (APA_ROMC);
 
-create table INTUIT.CAM_ADV
+create table CAM_ADV
 (
     ADV_APAC NVARCHAR2(12) not null,
     ADV_CODE NVARCHAR2(12) not null,
@@ -217,10 +225,10 @@ create table INTUIT.CAM_ADV
         primary key (ADV_APAC, ADV_CODE)
 );
 
-create index INTUIT.CAM_ADVI2
-    on INTUIT.CAM_ADV (ADV_APAC);
+create index CAM_ADVI2
+    on CAM_ADV (ADV_APAC);
 
-create table INTUIT.CAM_ADR
+create table CAM_ADR
 (
     ADR_APAC NVARCHAR2(12) not null,
     ADR_ADVC NVARCHAR2(12) not null,
@@ -231,16 +239,16 @@ create table INTUIT.CAM_ADR
         primary key (ADR_APAC, ADR_ADVC, ADR_SEQN)
 );
 
-create index INTUIT.CAM_ADRI2
-    on INTUIT.CAM_ADR (ADR_APAC, ADR_ADVC);
+create index CAM_ADRI2
+    on CAM_ADR (ADR_APAC, ADR_ADVC);
 
-create index INTUIT.CAM_ADRI3
-    on INTUIT.CAM_ADR (ADR_APAC);
+create index CAM_ADRI3
+    on CAM_ADR (ADR_APAC);
 
-create index INTUIT.CAM_ADRI4
-    on INTUIT.CAM_ADR (ADR_ARQC);
+create index CAM_ADRI4
+    on CAM_ADR (ADR_ARQC);
 
-create table INTUIT.CAM_ARQ
+create table CAM_ARQ
 (
     ARQ_CODE NVARCHAR2(6) not null
         constraint CAM_ARQP1
@@ -250,9 +258,9 @@ create table INTUIT.CAM_ARQ
     ARQ_ARTC NVARCHAR2(6) not null
 );
 
-create index INTUIT.CAM_ARQI2
-    on INTUIT.CAM_ARQ (ARQ_ARTC);
-create table INTUIT.CAM_MAP
+create index CAM_ARQI2
+    on CAM_ARQ (ARQ_ARTC);
+create table CAM_MAP
 (
     MAP_CODE  NVARCHAR2(12) not null
         constraint CAM_MAPP1
@@ -310,13 +318,13 @@ create table INTUIT.CAM_MAP
     MAP_DAQE  NVARCHAR2(1)
 );
 
-create index INTUIT.CAM_MAPI2
-    on INTUIT.CAM_MAP (MKS2_CODE);
+create index CAM_MAPI2
+    on CAM_MAP (MKS2_CODE);
 
-create index INTUIT.CAM_MAPI3
-    on INTUIT.CAM_MAP (MKS3_CODE);
+create index CAM_MAPI3
+    on CAM_MAP (MKS3_CODE);
 
-create table INTUIT.CAM_AST
+create table CAM_AST
 (
     AST_CODE  NVARCHAR2(6) not null
         constraint CAM_ASTP1
@@ -358,7 +366,7 @@ create table INTUIT.CAM_AST
 );
 
 
-create table INTUIT.SRS_CRS
+create table SRS_CRS
 (
     CRS_CODE   NVARCHAR2(15) not null
         constraint SRS_CRSP1
@@ -442,58 +450,58 @@ create table INTUIT.SRS_CRS
     CRS_ESB5   NVARCHAR2(6)
 );
 
-create index INTUIT.SRS_CRSI2
-    on INTUIT.SRS_CRS (CRS_DPTC);
+create index SRS_CRSI2
+    on SRS_CRS (CRS_DPTC);
 
-create index INTUIT.SRS_CRSI3
-    on INTUIT.SRS_CRS (CRS_PRSC);
+create index SRS_CRSI3
+    on SRS_CRS (CRS_PRSC);
 
-create index INTUIT.SRS_CRSI4
-    on INTUIT.SRS_CRS (CRS_SCHC);
+create index SRS_CRSI4
+    on SRS_CRS (CRS_SCHC);
 
-create index INTUIT.SRS_CRSI5
-    on INTUIT.SRS_CRS (CRS_BEGD);
+create index SRS_CRSI5
+    on SRS_CRS (CRS_BEGD);
 
-create index INTUIT.SRS_CRSI6
-    on INTUIT.SRS_CRS (CRS_ENDD);
+create index SRS_CRSI6
+    on SRS_CRS (CRS_ENDD);
 
-create index INTUIT.SRS_CRSI7
-    on INTUIT.SRS_CRS (CRS_FPTC);
+create index SRS_CRSI7
+    on SRS_CRS (CRS_FPTC);
 
-create index INTUIT.SRS_CRSI8
-    on INTUIT.SRS_CRS (CRS_MOAC);
+create index SRS_CRSI8
+    on SRS_CRS (CRS_MOAC);
 
-create index INTUIT.SRS_CRSI9
-    on INTUIT.SRS_CRS (CRS_QULC);
+create index SRS_CRSI9
+    on SRS_CRS (CRS_QULC);
 
-create index INTUIT.SRS_CRSI10
-    on INTUIT.SRS_CRS (CRS_ESB1);
+create index SRS_CRSI10
+    on SRS_CRS (CRS_ESB1);
 
-create index INTUIT.SRS_CRSI11
-    on INTUIT.SRS_CRS (CRS_ESB2);
+create index SRS_CRSI11
+    on SRS_CRS (CRS_ESB2);
 
-create index INTUIT.SRS_CRSI12
-    on INTUIT.SRS_CRS (CRS_CTYC);
+create index SRS_CRSI12
+    on SRS_CRS (CRS_CTYC);
 
-create index INTUIT.SRS_CRSI13
-    on INTUIT.SRS_CRS (CRS_UOMC);
+create index SRS_CRSI13
+    on SRS_CRS (CRS_UOMC);
 
-create index INTUIT.SRS_CRSI14
-    on INTUIT.SRS_CRS (CRS_STTC);
+create index SRS_CRSI14
+    on SRS_CRS (CRS_STTC);
 
-create index INTUIT.SRS_CRSI15
-    on INTUIT.SRS_CRS (CRS_TTIC);
+create index SRS_CRSI15
+    on SRS_CRS (CRS_TTIC);
 
-create index INTUIT.SRS_CRSI16
-    on INTUIT.SRS_CRS (CRS_CSF1);
+create index SRS_CRSI16
+    on SRS_CRS (CRS_CSF1);
 
-create index INTUIT.SRS_CRSI17
-    on INTUIT.SRS_CRS (CRS_CSF2);
+create index SRS_CRSI17
+    on SRS_CRS (CRS_CSF2);
 
-create index INTUIT.SRS_CRSI18
-    on INTUIT.SRS_CRS (CRS_CGPC);
+create index SRS_CRSI18
+    on SRS_CRS (CRS_CGPC);
 
-create table INTUIT.INS_DPT
+create table INS_DPT
 (
     DPT_CODE NVARCHAR2(12) not null
         constraint INS_DPTP1
@@ -528,10 +536,10 @@ create table INTUIT.INS_DPT
     DPT_CCOC NVARCHAR2(6)
 );
 
-create index INTUIT.INS_DPTI2
-    on INTUIT.INS_DPT (DPT_INSC);
+create index INS_DPTI2
+    on INS_DPT (DPT_INSC);
 
-create table INTUIT.SRS_FAC
+create table SRS_FAC
 (
     FAC_CODE NVARCHAR2(6) not null
         constraint SRS_FACP1
@@ -561,7 +569,7 @@ create table INTUIT.SRS_FAC
     FAC_UDFK NVARCHAR2(100)
 );
 
-create table INTUIT.CAM_LEV
+create table CAM_LEV
 (
     LEV_CODE NVARCHAR2(6) not null
         constraint CAM_LEVP1
@@ -570,7 +578,7 @@ create table INTUIT.CAM_LEV
     LEV_NAME NVARCHAR2(50),
     LEV_IUSE VARCHAR2(1)
 );
-create table INTUIT.INS_LCA
+create table INS_LCA
 (
     LCA_CODE NVARCHAR2(12) not null
         constraint INS_LCAP1
@@ -615,11 +623,11 @@ create table INTUIT.INS_LCA
     LCA_LCID NVARCHAR2(15)
 );
 
-create index INTUIT.INS_LCAI2
-    on INTUIT.INS_LCA (LCA_CMPC);
+create index INS_LCAI2
+    on INS_LCA (LCA_CMPC);
 
 
-create table INTUIT.CAM_MDS
+create table CAM_MDS
 (
     MOD_CODE NVARCHAR2(12) not null,
     MDS_SEQN NVARCHAR2(4)  not null,
@@ -652,10 +660,10 @@ create table INTUIT.CAM_MDS
         primary key (MOD_CODE, MDS_SEQN)
 );
 
-create index INTUIT.CAM_MDSI2
-    on INTUIT.CAM_MDS (MOD_CODE);
+create index CAM_MDSI2
+    on CAM_MDS (MOD_CODE);
 
-create table INTUIT.CAM_MAV
+create table CAM_MAV
 (
     MOD_CODE  NVARCHAR2(12) not null,
     MAV_OCCUR NVARCHAR2(6)  not null,
@@ -727,25 +735,87 @@ create table INTUIT.CAM_MAV
         primary key (MOD_CODE, MAV_OCCUR, AYR_CODE, PSL_CODE)
 );
 
-create index INTUIT.CAM_MAVI2
-    on INTUIT.CAM_MAV (MOD_CODE);
+create table CAM_MAVT
+(
+    MOD_CODE  NVARCHAR2(12) not null,
+    MAV_OCCUR NVARCHAR2(6)  not null,
+    AYR_CODE  NVARCHAR2(12) not null,
+    PSL_CODE  NVARCHAR2(6)  not null,
+    MAV_NAME  NVARCHAR2(120),
+    MAV_CRED  NUMBER(5, 2),
+    MAV_VALC  NVARCHAR2(12),
+    MAV_NPER  NUMBER(2),
+    MAV_DSUM  NUMBER(5, 3),
+    MAV_PHRS  NUMBER(4),
+    MAV_REQD  DATE,
+    MAV_NUMR  NUMBER(2),
+    MAV_CMRA  VARCHAR2(1),
+    MAV_SIZR  NUMBER(3),
+    MAV_ENTP  VARCHAR2(1),
+    MAV_RPFX  NVARCHAR2(6),
+    MAV_ENDT  DATE,
+    MAV_DURN  NUMBER(4, 2),
+    MAV_BEGD  DATE,
+    MAV_ENDD  DATE,
+    MAV_ROMC  NVARCHAR2(15),
+    MAV_DVNC  NVARCHAR2(12),
+    MAV_APRT  NUMBER(5, 2),
+    MAV_LANG  NVARCHAR2(1),
+    MAV_ERFM  NVARCHAR2(1),
+    MAV_UDF1  NVARCHAR2(15),
+    MAV_UDF2  NVARCHAR2(15),
+    MAV_UDF3  NVARCHAR2(15),
+    MAV_UDF4  NVARCHAR2(15),
+    MAV_UDF5  NVARCHAR2(15),
+    MAV_UDF6  NVARCHAR2(15),
+    MAV_UDF7  NVARCHAR2(15),
+    MAV_UDF8  NVARCHAR2(15),
+    MAV_UDF9  NVARCHAR2(15),
+    MAV_UDFA  NVARCHAR2(15),
+    MAV_UDFB  NVARCHAR2(15),
+    MAV_UDFC  NVARCHAR2(15),
+    MAV_UDFD  NVARCHAR2(15),
+    MAV_UDFE  NVARCHAR2(15),
+    MAV_UDFF  NVARCHAR2(15),
+    MAV_UDFG  NVARCHAR2(15),
+    MAV_UDFH  NVARCHAR2(15),
+    MAV_UDFI  NVARCHAR2(15),
+    MAV_UDFJ  NVARCHAR2(100),
+    MAV_UDFK  NVARCHAR2(100),
+    MAV_SSTH  NUMBER(7, 2),
+    MAV_INDH  NUMBER(7, 2),
+    MAV_PLAH  NUMBER(7, 2),
+    MAV_SSTP  NUMBER(5, 2),
+    MAV_INDP  NUMBER(5, 2),
+    MAV_PLAP  NUMBER(5, 2),
+    MAV_AWEP  NUMBER(5, 2),
+    MAV_APEP  NUMBER(5, 2),
+    MAV_ACWP  NUMBER(5, 2),
+    MAV_WEEI  NVARCHAR2(1),
+    MAV_MODE  NVARCHAR2(1),
+    constraint CAM_MAVTP1
+        primary key (MOD_CODE, MAV_OCCUR, AYR_CODE, PSL_CODE)
+);
 
-create index INTUIT.CAM_MAVI3
-    on INTUIT.CAM_MAV (AYR_CODE, PSL_CODE);
+create index CAM_MAVI2
+    on CAM_MAV (MOD_CODE);
 
-create index INTUIT.CAM_MAVI4
-    on INTUIT.CAM_MAV (SCH_CODE, LEV_CODE);
+create index CAM_MAVI3
+    on CAM_MAV (AYR_CODE, PSL_CODE);
 
-create index INTUIT.CAM_MAVI5
-    on INTUIT.CAM_MAV (MAP_CODE);
+create index CAM_MAVI4
+    on CAM_MAV (SCH_CODE, LEV_CODE);
 
-create index INTUIT.CAM_MAVI6
-    on INTUIT.CAM_MAV (MOD_CODE, AYR_CODE, PSL_CODE);
+create index CAM_MAVI5
+    on CAM_MAV (MAP_CODE);
 
-create index INTUIT.CAM_MAVI7
-    on INTUIT.CAM_MAV (PSL_CODE);
+create index CAM_MAVI6
+    on CAM_MAV (MOD_CODE, AYR_CODE, PSL_CODE);
 
-create table INTUIT.CAM_TOP
+create index CAM_MAVI7
+    on CAM_MAV (PSL_CODE);
+
+create table CAM_TOP
 (
     TOP_CODE NVARCHAR2(12) not null
         constraint CAM_TOPP1
@@ -779,14 +849,14 @@ create table INTUIT.CAM_TOP
     TOP_UDFK NVARCHAR2(100)
 );
 
-create index INTUIT.CAM_TOPI2
-    on INTUIT.CAM_TOP (MOD_CODE);
+create index CAM_TOPI2
+    on CAM_TOP (MOD_CODE);
 
-create index INTUIT.CAM_TOPI3
-    on INTUIT.CAM_TOP (DPT_CODE);
+create index CAM_TOPI3
+    on CAM_TOP (DPT_CODE);
 
-create index INTUIT.CAM_TOPI4
-    on INTUIT.CAM_TOP (SUB_CODE);
+create index CAM_TOPI4
+    on CAM_TOP (SUB_CODE);
 
 create table SRS_CRN
 (
@@ -1913,7 +1983,7 @@ create table INS_PRD
 )
 ;
 
-create table INTUIT.CAM_MMR
+create table CAM_MMR
 (
     MOD_CODE NVARCHAR2(12) not null,
     MMR_CODE NVARCHAR2(6)  not null,
@@ -1940,7 +2010,7 @@ create table INTUIT.CAM_MMR
         primary key (MOD_CODE, MMR_CODE)
 );
 
-create table INTUIT.CAM_MMB
+create table CAM_MMB
 (
     MOD_CODE  NVARCHAR2(12) not null,
     MMR_CODE  NVARCHAR2(6)  not null,
@@ -1956,17 +2026,17 @@ create table INTUIT.CAM_MMB
     MMB_QUCC  NVARCHAR2(12),
     MMB_SUCC  NVARCHAR2(12),
     MMB_UBST  NUMBER(5, 2),
-    constraint INTUIT.CAM_MMBP1
+    constraint CAM_MMBP1
         primary key (MOD_CODE, MMR_CODE, MMB_SEQ)
 );
 
-create index INTUIT.CAM_MMBI3
-    on INTUIT.CAM_MMB (MOD_CODE, MMR_CODE);
+create index CAM_MMBI3
+    on CAM_MMB (MOD_CODE, MMR_CODE);
 
-create index INTUIT.CAM_MMBI2
-    on INTUIT.CAM_MMB (FMC_CODE);
+create index CAM_MMBI2
+    on CAM_MMB (FMC_CODE);
 
-create table INTUIT.CAM_REX
+create table CAM_REX
 (
     REX_CODE  NVARCHAR2(6) not null
         constraint CAM_REXP1 primary key,
@@ -1975,7 +2045,7 @@ create table INTUIT.CAM_REX
     REX_APPLY NVARCHAR2(1)
 );
 
-create table INTUIT.CAM_RCL
+create table CAM_RCL
 (
     RCL_CODE  NVARCHAR2(6) not null
         constraint CAM_RCLP1 primary key,
@@ -2047,70 +2117,5 @@ create index INS_AWDI5
 
 create index INS_AWDI6
     on INS_AWD (AWD_EQAC)
-;
-
-
--- auto-generated definition
-create table CAM_MAVT
-(
-    MOD_CODE  NVARCHAR2(12) not null,
-    MAV_OCCUR NVARCHAR2(6)  not null,
-    AYR_CODE  NVARCHAR2(12) not null,
-    PSL_CODE  NVARCHAR2(6)  not null,
-    MAV_NAME  NVARCHAR2(120),
-    MAV_CRED  NUMBER(5, 2),
-    MAV_VALC  NVARCHAR2(12),
-    MAV_NPER  NUMBER(2),
-    MAV_DSUM  NUMBER(5, 3),
-    MAV_PHRS  NUMBER(4),
-    MAV_REQD  DATE,
-    MAV_NUMR  NUMBER(2),
-    MAV_CMRA  VARCHAR2(1),
-    MAV_SIZR  NUMBER(3),
-    MAV_ENTP  VARCHAR2(1),
-    MAV_RPFX  NVARCHAR2(6),
-    MAV_ENDT  DATE,
-    MAV_DURN  NUMBER(4, 2),
-    MAV_BEGD  DATE,
-    MAV_ENDD  DATE,
-    MAV_ROMC  NVARCHAR2(15),
-    MAV_DVNC  NVARCHAR2(12),
-    MAV_APRT  NUMBER(5, 2),
-    MAV_LANG  NVARCHAR2(1),
-    MAV_ERFM  NVARCHAR2(1),
-    MAV_UDF1  NVARCHAR2(15),
-    MAV_UDF2  NVARCHAR2(15),
-    MAV_UDF3  NVARCHAR2(15),
-    MAV_UDF4  NVARCHAR2(15),
-    MAV_UDF5  NVARCHAR2(15),
-    MAV_UDF6  NVARCHAR2(15),
-    MAV_UDF7  NVARCHAR2(15),
-    MAV_UDF8  NVARCHAR2(15),
-    MAV_UDF9  NVARCHAR2(15),
-    MAV_UDFA  NVARCHAR2(15),
-    MAV_UDFB  NVARCHAR2(15),
-    MAV_UDFC  NVARCHAR2(15),
-    MAV_UDFD  NVARCHAR2(15),
-    MAV_UDFE  NVARCHAR2(15),
-    MAV_UDFF  NVARCHAR2(15),
-    MAV_UDFG  NVARCHAR2(15),
-    MAV_UDFH  NVARCHAR2(15),
-    MAV_UDFI  NVARCHAR2(15),
-    MAV_UDFJ  NVARCHAR2(100),
-    MAV_UDFK  NVARCHAR2(100),
-    MAV_SSTH  NUMBER(7, 2),
-    MAV_INDH  NUMBER(7, 2),
-    MAV_PLAH  NUMBER(7, 2),
-    MAV_SSTP  NUMBER(5, 2),
-    MAV_INDP  NUMBER(5, 2),
-    MAV_PLAP  NUMBER(5, 2),
-    MAV_AWEP  NUMBER(5, 2),
-    MAV_APEP  NUMBER(5, 2),
-    MAV_ACWP  NUMBER(5, 2),
-    MAV_WEEI  NVARCHAR2(1),
-    MAV_MODE  NVARCHAR2(1),
-    constraint CAM_MAVTP1
-        primary key (MOD_CODE, MAV_OCCUR, AYR_CODE, PSL_CODE)
-)
 ;
 

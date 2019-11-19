@@ -14,21 +14,6 @@ data class ModuleOccurrenceDetails(
   val key: ModuleOccurrenceKey,
 
   @Column(name = "MAV_CRED")
-  val creditValue: Int?,
-
-  @Column(name = "MAV_SIZR")
-  val maximumStudentNumber: Int?,
-
-  @Column(name = "MAV_SSTH")
-  val scheduledStudyHours: Int?,
-
-  @Column(name = "MAV_PLAH")
-  val placementStudyHours: Int?,
-
-  @Column(name = "MAV_INDH")
-  val independentStudyHours: Int?,
-
-  @Column(name = "MAV_UDFK")
-  val assessmentStudyHours: Int?
+  val creditValue: Int?
 )
 
