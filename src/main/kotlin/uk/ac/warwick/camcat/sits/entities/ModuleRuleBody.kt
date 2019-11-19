@@ -1,6 +1,8 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
 import java.io.Serializable
 import javax.persistence.*
 
@@ -26,10 +28,18 @@ data class ModuleRuleBody(
   val selectionData: String?,
 
   @JoinColumn(name = "FMC_CODE")
+  @NotFound(action = NotFoundAction.IGNORE)
   @OneToOne
-  val formedModuleCollection: FormedModuleCollection?
-)
+  val formedModuleCollection: FormedModuleCollection?,
 
+  @ManyToOne
+  @NotFound(action = NotFoundAction.IGNORE)
+  @JoinColumns(
+    JoinColumn(name = "MOD_CODE", insertable = false, updatable = false),
+    JoinColumn(name = "MMR_CODE", insertable = false, updatable = false)
+  )
+  val rule: ModuleRule?
+)
 
 @Embeddable
 data class ModuleRuleBodyKey(

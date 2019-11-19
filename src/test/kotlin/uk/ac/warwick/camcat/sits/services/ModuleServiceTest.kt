@@ -1,6 +1,6 @@
 package uk.ac.warwick.camcat.sits.services
 
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.contains
 import org.junit.Assert.*
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,20 +23,9 @@ class ModuleServiceTest : ContextTest() {
   }
 
   @Test
-  fun testFindModuleRules() {
-    val rules = moduleService.findRules("CS261-15", AcademicYear.starting(2019))
-    assertThat(rules, hasSize(2))
+  fun testFindRelatedModules() {
+    val rules = moduleService.findRelatedModules("CS261-15", AcademicYear.starting(2019))
 
-    val prerequisites = rules.elementAt(0)
-    assertEquals("To take CS261-15 you must have taken and passed CS118-15 and CS126-15", prerequisites.description)
-    assertEquals("COMPULSORY", prerequisites.ruleClass?.name)
-    assertEquals("PRE-REQUISITE", prerequisites.type?.name)
-
-    val preReqModules = prerequisites.elements
-      .map{ eb -> eb.formedModuleCollection }
-      .flatMap{ fmc -> fmc?.formedModuleCollectionElements?.asIterable() ?: emptyList() }
-      .mapNotNull{ e -> e.module?.code }
-
-    assertEquals(listOf("CS118-15", "CS126-15"), preReqModules)
+    assertThat(rules.preRequisites.map { it.code }, contains("CS118-15", "CS126-15"))
   }
 }

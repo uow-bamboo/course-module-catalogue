@@ -14,7 +14,11 @@
         <tbody>
         <#list results as module>
           <tr>
-            <td>${module.code} ${module.title}</td>
+            <td>
+              <a href="/modules/${query.academicYear.startYear?c}/${module.code}">
+                  ${module.code} ${module.title}
+              </a>
+            </td>
             <td>${module.departmentName!(module.departmentCode)}</td>
           </tr>
         </#list>

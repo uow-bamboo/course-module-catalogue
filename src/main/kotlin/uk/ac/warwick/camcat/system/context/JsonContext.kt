@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import uk.ac.warwick.camcat.system.serializers.DurationSerializer
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.time.Duration
 
@@ -17,7 +16,7 @@ class JsonContext {
     .registerModule(KotlinModule())
     .registerModule(
       SimpleModule()
-        .addSerializer(AcademicYear::class.java, ToStringSerializer(AcademicYear::class.java))
-        .addSerializer(Duration::class.java, DurationSerializer())
+        .addSerializer(AcademicYear::class.java, ToStringSerializer())
+        .addSerializer(Duration::class.java, ToStringSerializer())
     )
 }

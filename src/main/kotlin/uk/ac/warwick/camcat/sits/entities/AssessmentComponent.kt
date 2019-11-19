@@ -56,13 +56,22 @@ data class AssessmentComponent(
   @Type(type = "yes_no")
   val canSelfCertify: Boolean?,
 
-  @Formula("CASE WHEN MAB_UDF3 IS NOT NULL THEN 1 ELSE 0 END")
+  @Formula("CASE WHEN MAB_UDF3 IS NOT NULL THEN 'Y' ELSE 'N' END")
   @Type(type = "yes_no")
   val reassessment: Boolean,
 
   @Column(name = "MAB_UDF4")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
-  val introducedAcademicYear: AcademicYear?
+  val introducedAcademicYear: AcademicYear?,
+
+  @ManyToOne
+  @Fetch(FetchMode.JOIN)
+  @JoinColumns(
+    JoinColumn(name = "MAP_CODE", referencedColumnName = "MAB_MAPC", insertable = false, updatable = false),
+    JoinColumn(name = "MAB_SEQ", referencedColumnName = "MAB_MABS", insertable = false, updatable = false)
+  )
+  @NotFound(action = NotFoundAction.IGNORE)
+  val description: AssessmentComponentDescription?
 )
 
 @Embeddable

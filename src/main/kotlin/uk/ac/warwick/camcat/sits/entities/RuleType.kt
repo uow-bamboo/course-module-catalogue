@@ -16,4 +16,10 @@ data class RuleType(
 
   @Column(name = "REX_NAME")
   val name: String?
-)
+) {
+  companion object {
+    const val PreRequisite = "PRE"
+    const val PostRequisite = "POST"
+    const val AntiRequisite = "ANTI"
+  }
+}
