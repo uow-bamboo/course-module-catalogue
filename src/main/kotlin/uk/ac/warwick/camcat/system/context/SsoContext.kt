@@ -13,6 +13,7 @@ import uk.ac.warwick.sso.client.cache.UserCache
 import uk.ac.warwick.sso.client.cache.spring.DatabaseUserCache
 import uk.ac.warwick.userlookup.GroupService
 import uk.ac.warwick.userlookup.UserLookup
+import uk.ac.warwick.userlookup.UserLookupInterface
 import uk.ac.warwick.userlookup.webgroups.WarwickGroupsService
 import javax.servlet.Filter
 import javax.sql.DataSource
@@ -29,7 +30,7 @@ class SsoContext(private val dataSource: DataSource) {
     ServletRegistrationBean(LogoutServlet(), "/sso/logout")
 
   @Bean
-  fun userLookup(): UserLookup = UserLookup()
+  fun userLookup(): UserLookupInterface = UserLookup()
 
   @Bean
   fun groupService(): GroupService = WarwickGroupsService()

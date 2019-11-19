@@ -14,6 +14,7 @@ import uk.ac.warwick.camcat.system.security.WarwickAuthenticationDetails
 import uk.ac.warwick.camcat.system.security.WarwickAuthenticationManager
 import uk.ac.warwick.sso.client.SSOClientFilter
 import uk.ac.warwick.userlookup.UserLookup
+import uk.ac.warwick.userlookup.UserLookupInterface
 import javax.inject.Named
 import javax.servlet.Filter
 
@@ -21,7 +22,7 @@ import javax.servlet.Filter
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 class SecurityContext(
-  private val userLookup: UserLookup,
+  private val userLookup: UserLookupInterface,
   private val authenticationManager: WarwickAuthenticationManager,
   @Named("ssoClientFilter") private val ssoClientFilter: Filter
 ) : WebSecurityConfigurerAdapter() {

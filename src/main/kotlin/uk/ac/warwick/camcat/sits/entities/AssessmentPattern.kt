@@ -16,7 +16,7 @@ data class AssessmentPattern(
   @Column(name = "MAP_AGRP")
   val defaultAssessmentGroup: String,
 
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "MAP_CODE")
   val components: Collection<AssessmentComponent>

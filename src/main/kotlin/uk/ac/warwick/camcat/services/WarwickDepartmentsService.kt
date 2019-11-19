@@ -36,8 +36,6 @@ class WarwickDepartmentsRepository(
   }
 }
 
-
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class Department(
   val inUse: Boolean,

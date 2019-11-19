@@ -16,7 +16,8 @@ interface ModuleRepository : CrudRepository<Module, String> {
 
   fun findByCode(code: String): Module
 
-  @Query("""
+  @Query(
+    """
     select module from Course course
     join course.routes route
     join route.pathwayDiets pathwayDiet
@@ -38,9 +39,8 @@ interface ModuleRepository : CrudRepository<Module, String> {
     block: String
   ): Collection<Module>
 
-
-
-  @Query("""
+  @Query(
+    """
     select module from Route route
     join route.pathwayDiets pathwayDiet
     join route.courses course
@@ -61,7 +61,6 @@ interface ModuleRepository : CrudRepository<Module, String> {
     moduleSelection: ModuleSelection,
     block: String
   ): Collection<Module>
-
 
   @Query(
     """select module from ModuleRule rule

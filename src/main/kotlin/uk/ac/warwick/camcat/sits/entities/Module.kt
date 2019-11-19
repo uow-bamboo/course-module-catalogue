@@ -37,7 +37,7 @@ data class Module(
   val topics: Collection<Topic>,
 
   @JoinColumn(name = "MAP_CODE")
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @NotFound(action = NotFoundAction.IGNORE)
   @JsonIgnore
   val assessmentPattern: AssessmentPattern?,

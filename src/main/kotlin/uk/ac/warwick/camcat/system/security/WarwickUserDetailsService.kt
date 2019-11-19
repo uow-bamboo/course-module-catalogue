@@ -8,10 +8,11 @@ import uk.ac.warwick.camcat.system.config.RoleConfiguration
 import uk.ac.warwick.userlookup.GroupService
 import uk.ac.warwick.userlookup.User
 import uk.ac.warwick.userlookup.UserLookup
+import uk.ac.warwick.userlookup.UserLookupInterface
 
 @Service
 class WarwickUserDetailsService(
-  private val userLookup: UserLookup,
+  private val userLookup: UserLookupInterface,
   private val groupService: GroupService,
   private val roleConfig: RoleConfiguration
 ) : UserDetailsService {

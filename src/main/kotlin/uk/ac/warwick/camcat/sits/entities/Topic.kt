@@ -30,11 +30,8 @@ data class Topic(
   @JoinColumn(name = "DPT_CODE")
   val teachingDepartment: Department?,
 
-  @Column(name = "TOP_IUSE")
-  @Type(type = "yes_no")
-  val inUse: Boolean?,
-
   @Column(name = "TOP_UDF1")
+  @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
   val academicYear: AcademicYear?
 ) {
   val moduleCode: String?
