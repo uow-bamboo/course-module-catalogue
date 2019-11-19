@@ -8,7 +8,4 @@ import uk.ac.warwick.util.termdates.AcademicYear
 interface TopicRepository : CrudRepository<Topic, String> {
   @Query("from Topic where module.code = :moduleCode and academicYear = :academicYear")
   fun findByModuleCodeAndAcademicYear(moduleCode: String, academicYear: AcademicYear?): Collection<Topic>
-
-  @Query("from Topic where module.code = :moduleCode and inUse = true and academicYear is null")
-  fun findInUseByModuleCodeWhereAcademicYearIsNull(moduleCode: String): Collection<Topic>
 }

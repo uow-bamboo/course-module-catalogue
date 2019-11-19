@@ -46,33 +46,16 @@ class DatabaseModuleService(
     occurrenceRepository.findAllByModuleCodeAndAcademicYear(moduleCode, academicYear)
 
   @Cacheable("moduleTopics")
-  override fun findTopics(moduleCode: String, academicYear: AcademicYear): Collection<Topic> {
-    val topics = topicRepository.findByModuleCodeAndAcademicYear(moduleCode, academicYear)
-
-    if (!topics.isEmpty())
-      return topics
-
-    return topicRepository.findInUseByModuleCodeWhereAcademicYearIsNull(moduleCode)
-  }
+  override fun findTopics(moduleCode: String, academicYear: AcademicYear): Collection<Topic> =
+    topicRepository.findByModuleCodeAndAcademicYear(moduleCode, academicYear)
 
   @Cacheable("relatedModules")
-  override fun findRelatedModules(moduleCode: String, academicYear: AcademicYear): RelatedModules {
-    val relatedModules = RelatedModules(
-      preRequisites = moduleRepository.findRelatedModules(moduleCode, RuleType.PreRequisite, academicYear),
-      postRequisites = moduleRepository.findModulesRelatedTo(moduleCode, RuleType.PostRequisite, academicYear),
-      antiRequisites = moduleRepository.findRelatedModules(moduleCode, RuleType.AntiRequisite, academicYear)
+  override fun findRelatedModules(moduleCode: String, academicYear: AcademicYear): RelatedModules =
+    RelatedModules(
+      preRequisites = moduleRepository.findModulesInRuleForModule(moduleCode, RuleType.PreRequisite, academicYear),
+      postRequisites = moduleRepository.findModulesWithRulesContainingModule(moduleCode, RuleType.PreRequisite, academicYear),
+      antiRequisites = moduleRepository.findModulesInRuleForModule(moduleCode, RuleType.AntiRequisite, academicYear)
     )
-
-    if (!relatedModules.empty) {
-      return relatedModules
-    }
-
-    return RelatedModules(
-      preRequisites = moduleRepository.findRelatedModulesWithNullAcademicYear(moduleCode, RuleType.PreRequisite),
-      postRequisites = moduleRepository.findModulesRelatedToWithNullAcademicYear(moduleCode, RuleType.PreRequisite),
-      antiRequisites = moduleRepository.findRelatedModulesWithNullAcademicYear(moduleCode, RuleType.AntiRequisite)
-    )
-  }
 }
 
 data class RelatedModules(

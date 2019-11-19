@@ -49,6 +49,7 @@ class ModulePresenter(
   private fun description(code: String): ModuleDescription? = descriptions(code).firstOrNull()
   private fun descriptionText(code: String): String? = description(code)?.description
 
+
   val code = module.code
   val stemCode = module.code.take(5)
   val title = module.title ?: "Untitled module"
@@ -110,7 +111,7 @@ class ModulePresenter(
 
   val assessmentGroups =
     module.assessmentPattern?.components
-      ?.filter { it.inUse == true && it.assessmentGroup != null }
+      ?.filter { it.assessmentGroup != null }
       ?.groupBy { it.assessmentGroup }
       ?.map { AssessmentGroupPresenter(module.assessmentPattern, it.value) }
       ?.sortedWith(compareBy(AssessmentGroupPresenter::default).reversed().thenBy(AssessmentGroupPresenter::name))
