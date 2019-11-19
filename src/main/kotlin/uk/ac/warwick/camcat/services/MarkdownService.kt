@@ -1,7 +1,7 @@
 package uk.ac.warwick.camcat.services
 
-import org.commonmark.parser.Parser
-import org.commonmark.renderer.html.HtmlRenderer
+import com.vladsch.flexmark.html.HtmlRenderer
+import com.vladsch.flexmark.parser.Parser
 import org.springframework.stereotype.Service
 
 interface MarkdownService {

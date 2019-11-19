@@ -83,7 +83,7 @@ dependencies {
   testImplementation("pl.allegro.tech:embedded-elasticsearch:2.7.0")
   testImplementation("net.sourceforge.htmlunit:htmlunit")
 
-  implementation("com.atlassian.commonmark:commonmark:0.13.0")
+  implementation("com.vladsch.flexmark:flexmark-all:0.50.44")
 }
 
 tasks.withType<KotlinCompile> {

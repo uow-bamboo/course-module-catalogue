@@ -17,11 +17,9 @@ class ModulePresenterFactory(
   private val warwickDepartmentsService: WarwickDepartmentsService,
   private val moduleService: ModuleService
 ) {
-  fun build(moduleCode: String, academicYear: AcademicYear): ModulePresenter? {
-    val module = moduleService.findByModuleCode(moduleCode)
-
-    if (module != null) {
-      return ModulePresenter(
+  fun build(moduleCode: String, academicYear: AcademicYear): ModulePresenter? =
+    moduleService.findByModuleCode(moduleCode)?.let { module ->
+      ModulePresenter(
         module = module,
         occurrenceCollection = moduleService.findOccurrences(module.code, academicYear),
         descriptions = moduleService.findDescriptions(module.code, academicYear),
@@ -31,9 +29,6 @@ class ModulePresenterFactory(
         warwickDepartmentsService = warwickDepartmentsService
       )
     }
-
-    return null
-  }
 }
 
 class ModulePresenter(
