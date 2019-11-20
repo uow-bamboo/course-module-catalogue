@@ -5,7 +5,11 @@ import freemarker.template.TemplateMethodModelEx
 import uk.ac.warwick.camcat.helpers.StripBullets.stripBullets
 
 object StripBullets {
-  fun stripBullets(string: String) = string.replace("·", "")
+  private val pattern = Regex("^\\s*[•·]\\s*", RegexOption.MULTILINE)
+
+  fun stripBullets(string: String) = string.replace(pattern, "")
+
+  fun replaceBullets(string: String, with: String) = string.replace(pattern, "$with ")
 }
 
 object StripBulletsTemplateMethod : TemplateMethodModelEx {
