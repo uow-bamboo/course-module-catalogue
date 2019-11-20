@@ -64,7 +64,7 @@ class ModuleIntegrationTest : IntegrationTest() {
 
     assertThat(
       tableCells("module-occurrences"),
-      containsInRelativeOrder("A", "University of Warwick", "John Smith")
+      containsInRelativeOrder("University of Warwick", "John Smith")
     )
 
     assertThat(

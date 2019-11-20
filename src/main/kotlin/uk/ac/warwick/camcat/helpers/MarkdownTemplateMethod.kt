@@ -1,4 +1,4 @@
-package uk.ac.warwick.camcat.system
+package uk.ac.warwick.camcat.helpers
 
 import freemarker.core.HTMLOutputFormat
 import freemarker.template.SimpleScalar

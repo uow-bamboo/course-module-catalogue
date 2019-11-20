@@ -64,12 +64,12 @@ class ModulePresenter(
 
   val level = primaryOccurrence.level
 
-  val duration = "???" // TODO MA-634
+  val duration = "Not yet in SITS" // TODO MA-634
   val locations = descriptions("MA010").map(::StudyLocation)
     .sortedWith(compareBy(StudyLocation::primary).reversed().thenBy(StudyLocation::name))
 
   val aims = descriptionText("TMB003")
-  val assessmentFeedback = "???" // TODO MA-635
+  val assessmentFeedback: String? = null // TODO MA-635
   val indicativeReadingList = descriptionText("MA004")
   val interdisciplinary = descriptionText("MA008")
   val international = descriptionText("MA009")

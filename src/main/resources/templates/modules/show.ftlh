@@ -95,7 +95,7 @@
           <h5>Learning outcomes</h5>
           <ul>
               <#list module.learningOutcomes as outcome>
-                <li>${outcome}</li>
+                <li>${stripBullets(outcome)}</li>
               </#list>
           </ul>
         </#if>
@@ -144,7 +144,7 @@
       <h5>Pre-requisite modules</h5>
         <#if module.preRequisiteModules?has_content>
           <p>
-            To take ${module.code} ${module.title}, you must have taken and passed:
+            To take this module, you must have passed:
           </p>
           <ul id="module-pre-requisite-modules">
               <#list module.preRequisiteModules as req>
@@ -153,13 +153,13 @@
           </ul>
         <#else>
           <p>
-            There are no pre-requisite modules.
+            There are no modules you need to have passed to take this module.
           </p>
         </#if>
       <h5>Post-requisite modules</h5>
         <#if module.postRequisiteModules?has_content>
           <p>
-            If you take and pass ${module.code} ${module.title}, you can take:
+            If you pass this module, you can take:
           </p>
           <ul id="module-post-requisite-modules">
               <#list module.postRequisiteModules as req>
@@ -168,13 +168,13 @@
           </ul>
         <#else>
           <p>
-            There are no post-requisite modules.
+            There are no modules you can only take if you pass this module.
           </p>
         </#if>
       <h5>Anti-requisite modules</h5>
         <#if module.antiRequisiteModules?has_content>
           <p>
-            If you take ${module.code} ${module.title}, you cannot also take:
+            If you take this module, you cannot also take:
           </p>
           <ul id="module-anti-requisite-modules">
               <#list module.antiRequisiteModules as req>
@@ -183,20 +183,21 @@
           </ul>
         <#else>
           <p>
-            There are no anti-requisite modules.
+            There are no modules you can't take if you take this module.
           </p>
         </#if>
 
-      <h2>Courses</h2>
-      <p>This module is available on the following courses:</p>
+        <#--
+        <h2>Courses</h2>
+        <p>This module is available on the following courses:</p>
 
-      <p>???</p>
+        <p>???</p>
+        -->
 
       <h2>Occurrences</h2>
       <table class="table table-bordered" id="module-occurrences">
         <thead>
         <tr>
-          <th>Name</th>
           <th>Location</th>
           <th>Module leader</th>
         </tr>
@@ -204,7 +205,6 @@
         <tbody>
         <#list module.occurrences as occurrence>
           <tr>
-            <td>${occurrence.code}</td>
             <td>${occurrence.location.name}</td>
             <td>
                 <#if occurrence.moduleLeader??>
@@ -274,47 +274,51 @@
     </div>
 
     <div id="study" role="tabpanel" class="tab-pane">
-      <h2>Teaching split</h2>
-      <table class="table table-bordered" id="module-teaching-split">
-        <thead>
-        <tr>
-          <th>Provider</th>
-          <th>Weighting</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list module.teachingSplits as item>
-          <tr>
-            <td>${item.department.name}</td>
-            <td>${item.weighting}%</td>
-          </tr>
-        </#list>
-        </tbody>
-      </table>
+        <#if module.teachingSplits?has_content>
+          <h2>Teaching split</h2>
+          <table class="table table-bordered" id="module-teaching-split">
+            <thead>
+            <tr>
+              <th>Provider</th>
+              <th>Weighting</th>
+            </tr>
+            </thead>
+            <tbody>
+            <#list module.teachingSplits as item>
+              <tr>
+                <td>${item.department.name}</td>
+                <td>${item.weighting}%</td>
+              </tr>
+            </#list>
+            </tbody>
+          </table>
+        </#if>
 
-      <h2>Study time</h2>
-      <table class="table table-bordered" id="module-study-time">
-        <thead>
-        <tr>
-          <th>Type</th>
-          <th>Required</th>
-          <th>Optional</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list module.studyAmounts as item>
-          <tr>
-            <td>${item.type}</td>
-            <td>
-                ${item.requiredDescription!""}
-            </td>
-            <td>
-                ${item.optionalDescription!""}
-            </td>
-          </tr>
-        </#list>
-        </tbody>
-      </table>
+        <#if module.studyAmounts?has_content>
+          <h2>Study time</h2>
+          <table class="table table-bordered" id="module-study-time">
+            <thead>
+            <tr>
+              <th>Type</th>
+              <th>Required</th>
+              <th>Optional</th>
+            </tr>
+            </thead>
+            <tbody>
+            <#list module.studyAmounts as item>
+              <tr>
+                <td>${item.type}</td>
+                <td>
+                    ${item.requiredDescription!""}
+                </td>
+                <td>
+                    ${item.optionalDescription!""}
+                </td>
+              </tr>
+            </#list>
+            </tbody>
+          </table>
+        </#if>
 
         <#if module.privateStudyDescription??>
           <h5>Private study description</h5>
@@ -326,29 +330,31 @@
             ${renderMarkdown(module.otherActivityDescription)}
         </#if>
 
-      <h2>Costs</h2>
-      <table class="table table-bordered" id="module-costs">
-        <thead>
-        <tr>
-          <th>Category</th>
-          <th>Description</th>
-          <th>Funded by</th>
-          <th>Cost to student</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list module.costs as cost>
-          <tr>
-            <td>${cost.category}</td>
-            <td>
-                ${renderMarkdown(cost.description)}
-            </td>
-            <td>${cost.fundedBy}</td>
-            <td>${cost.costToStudent?string.currency}</td>
-          </tr>
-        </#list>
-        </tbody>
-      </table>
+        <#if module.costs?has_content>
+          <h2>Costs</h2>
+          <table class="table table-bordered" id="module-costs">
+            <thead>
+            <tr>
+              <th>Category</th>
+              <th>Description</th>
+              <th>Funded by</th>
+              <th>Cost to student</th>
+            </tr>
+            </thead>
+            <tbody>
+            <#list module.costs as cost>
+              <tr>
+                <td>${cost.category}</td>
+                <td>
+                    ${renderMarkdown(cost.description)}
+                </td>
+                <td>${cost.fundedBy}</td>
+                <td>${cost.costToStudent?string.currency}</td>
+              </tr>
+            </#list>
+            </tbody>
+          </table>
+        </#if>
     </div>
   </div>
 </@layout>
