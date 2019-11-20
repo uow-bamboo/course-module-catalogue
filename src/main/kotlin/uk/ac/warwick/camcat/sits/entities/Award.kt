@@ -8,7 +8,6 @@ import javax.persistence.Table
 @Entity
 @Immutable
 @Table(name = "INS_AWD")
-@Where(clause = "AWD_IUSE = 'Y'")
 data class Award(
   @Id
   @Column(name = "AWD_CODE")

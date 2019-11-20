@@ -32,7 +32,7 @@ data class ModuleRule(
   @Column(name = "MMR_DESC")
   val description: String?,
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany
   @Fetch(FetchMode.SELECT)
   @JoinColumns(
     JoinColumn(name = "MOD_CODE", referencedColumnName = "MOD_CODE", insertable = false, updatable = false),

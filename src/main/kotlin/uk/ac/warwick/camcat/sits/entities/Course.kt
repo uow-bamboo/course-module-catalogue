@@ -10,7 +10,6 @@ import javax.persistence.Table
 @Entity
 @Immutable
 @Table(name = "SRS_CRS")
-@Where(clause = "CRS_IUSE = 'Y'")
 data class Course(
   @Id
   @Column(name = "CRS_CODE")
@@ -108,7 +107,7 @@ data class Course(
   @Column(name = "CRS_FECM")
   val feCourseMarker: String?,
 
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany
   @NotFound(action = NotFoundAction.IGNORE)
   @Fetch(FetchMode.SELECT)
   @JoinTable(
@@ -122,12 +121,17 @@ data class Course(
   )
   val routes: Collection<Route>,
 
-  @OneToMany(fetch = FetchType.LAZY)
+  @OneToMany
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "CRN_CRSC", referencedColumnName = "CRS_CODE")
   @JsonIgnore
-  val courseNotes: Collection<CourseNotes>
+  val courseNotes: Collection<CourseNotes>,
 
+  @OneToMany
+  @Fetch(FetchMode.SELECT)
+  @JoinColumn(name = "CBK_CRSC", referencedColumnName = "CRS_CODE")
+  @JsonIgnore
+  val blocks: Collection<CourseBlock>
 ) {
   val externalSubjects: List<ExternalSubject>
     get() = listOfNotNull(externalSubject1, externalSubject2, externalSubject3)

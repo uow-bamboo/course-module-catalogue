@@ -35,15 +35,13 @@ data class Programme(
   @Type(type = "yes_no")
   val allowMultipleAward: Boolean?,
 
-  @ManyToMany(
-    mappedBy = "programmes"
-  )
+  @ManyToMany(mappedBy = "programmes")
   @NotFound(action = NotFoundAction.IGNORE)
   @Fetch(FetchMode.SELECT)
   @LazyCollection(LazyCollectionOption.FALSE)
   val routes: Collection<Route>,
 
-  @ManyToMany(fetch = FetchType.LAZY)
+  @ManyToMany
   @NotFound(action = NotFoundAction.IGNORE)
   @Fetch(FetchMode.SELECT)
   @LazyCollection(LazyCollectionOption.FALSE)

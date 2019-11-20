@@ -10,7 +10,6 @@ import javax.persistence.Table
 @Entity
 @Immutable
 @Table(name = "CAM_FMC")
-@Where(clause = "FMC_IUSE = 'Y'")
 data class FormedModuleCollection(
   @Id
   @Column(name = "FMC_CODE")
@@ -33,7 +32,7 @@ data class FormedModuleCollection(
   @Column(name = "FMC_SNAM")
   val shortName: String?,
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany
   @Fetch(FetchMode.SELECT)
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "FMC_CODE", referencedColumnName = "FMC_CODE")

@@ -2,53 +2,29 @@ package uk.ac.warwick.camcat.sits.repositories
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import uk.ac.warwick.camcat.sits.entities.Module
-import uk.ac.warwick.camcat.sits.entities.ModuleSelection
-import uk.ac.warwick.camcat.sits.entities.Route
+import uk.ac.warwick.camcat.sits.entities.*
 import uk.ac.warwick.util.termdates.AcademicYear
 
 @Repository
 interface ModuleRepository : CrudRepository<Module, String> {
   fun findAll(pageable: Pageable): Page<Module>
 
+  @EntityGraph(attributePaths = ["assessmentPattern.components"])
   fun findByCode(code: String): Module
 
   @Query(
-    """
-    select module from Course course
-    join course.routes route
-    join route.pathwayDiets pathwayDiet
-    join pathwayDiet.pathwayDietModules pathwayDietModule 
-    join pathwayDietModule.formedModuleCollection formedModuleCollection
-    join formedModuleCollection.formedModuleCollectionElements formedModuleCollectionElements
-    join formedModuleCollectionElements.module module
-    where pathwayDietModule.selectionStatus = :moduleSelection 
-    and pathwayDiet.academicYear = :academicYear 
-    and pathwayDiet.block = :block
-    and route = :route
-    and module.code like '%-%'
-    """
-  )
-  fun findAllByRouteAndAcademicYearAndSelectionAndBlock(
-    route: Route,
-    academicYear: AcademicYear,
-    moduleSelection: ModuleSelection,
-    block: String
-  ): Collection<Module>
-
-  @Query(
-    """
-    select module from Route route
+    """select module from Route route
     join route.pathwayDiets pathwayDiet
     join route.courses course
     join pathwayDiet.pathwayDietModules pathwayDietModule 
     join pathwayDietModule.formedModuleCollection formedModuleCollection
-    join formedModuleCollection.formedModuleCollectionElements formedModuleCollectionElements
-    join formedModuleCollectionElements.module module
-    where pathwayDietModule.selectionStatus = :moduleSelection 
+    join formedModuleCollection.formedModuleCollectionElements formedModuleCollectionElement
+    join formedModuleCollectionElement.module module
+    where pathwayDietModule.selectionStatus = :moduleSelectionStatus
     and pathwayDiet.academicYear = :academicYear 
     and pathwayDiet.block = :block
     and course.code = :courseCode
@@ -58,7 +34,7 @@ interface ModuleRepository : CrudRepository<Module, String> {
   fun findAllByCourseCodeAndAcademicYearAndSelectionAndBlock(
     courseCode: String,
     academicYear: AcademicYear,
-    moduleSelection: ModuleSelection,
+    moduleSelectionStatus: ModuleSelectionStatus,
     block: String
   ): Collection<Module>
 
@@ -92,4 +68,30 @@ interface ModuleRepository : CrudRepository<Module, String> {
     ruleType: String,
     academicYear: AcademicYear
   ): Collection<Module>
+
+  @Query("""select distinct new uk.ac.warwick.camcat.sits.repositories.ModuleAvailability(course, block, pathwayDietModule.selectionStatus) from Module module
+    join module.formedModuleCollectionElements fme
+    join fme.key.formedModuleCollection fmc
+    join fmc.pathwayDietModules pathwayDietModule
+    join pathwayDietModule.key.pathwayDiet pathwayDiet
+    join pathwayDiet.route route
+    join route.courses course
+    join course.blocks block on pathwayDiet.block = block.key.block
+    join block.occurrences courseBlockOccurrence
+    join module.moduleOccurrences moduleOccurrence
+    where module.code = :moduleCode
+    and pathwayDiet.code like '%-%-%'
+    and length(pathwayDiet.code) = 9
+    and courseBlockOccurrence.key.academicYear = :academicYear
+    and moduleOccurrence.key.academicYear = :academicYear
+    and pathwayDiet.academicYear = substring(:academicYear, 1, 2)"""
+    //              ^^ is a 2 digit starting year (e.g. 10), which is different to acadYear toString (e.g. 10/11)
+  )
+  fun findModuleAvailability(moduleCode: String, academicYear: AcademicYear): Collection<ModuleAvailability>
 }
+
+data class ModuleAvailability(
+  val course: Course,
+  val block: CourseBlock?,
+  val selectionStatus: ModuleSelectionStatus?
+)

@@ -1,11 +1,11 @@
 package uk.ac.warwick.camcat.sits.entities
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.hibernate.annotations.*
+import org.hibernate.annotations.Immutable
+import org.hibernate.annotations.NotFound
+import org.hibernate.annotations.NotFoundAction
 import java.io.Serializable
 import javax.persistence.*
-import javax.persistence.Entity
-import javax.persistence.Table
 
 @Entity
 @Immutable
@@ -27,7 +27,7 @@ data class FormedModuleCollectionElement(
   @Column(name = "MTC_CODE")
   val moduleTypeCode: String?,
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "FME_MODP", referencedColumnName = "MOD_CODE")
   val module: Module?
@@ -35,7 +35,7 @@ data class FormedModuleCollectionElement(
 
 @Embeddable
 data class FormedModuleCollectionElementKey(
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "FMC_CODE", referencedColumnName = "FMC_CODE")
   @JsonIgnore

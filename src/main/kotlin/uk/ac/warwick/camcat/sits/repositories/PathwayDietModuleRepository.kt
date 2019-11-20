@@ -9,8 +9,8 @@ import uk.ac.warwick.util.termdates.AcademicYear
 @Repository
 interface PathwayDietModuleRepository : CrudRepository<PathwayDietModule, PathwayDietModuleKey> {
   @Query("from PathwayDietModule where key.pathwayDiet in :pathwayDiets and selectionStatus = :selectionStatus")
-  fun PathwayDietModuleByPathwayDietsAndSelectionCode(
+  fun PathwayDietModuleByPathwayDietsAndSelectionStatus(
     pathwayDiets: Collection<PathwayDiet>,
-    selectionStatus: String
+    selectionStatus: ModuleSelectionStatus
   ): Collection<PathwayDietModule>
 }

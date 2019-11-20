@@ -187,12 +187,36 @@
           </p>
         </#if>
 
-        <#--
-        <h2>Courses</h2>
-        <p>This module is available on the following courses:</p>
+      <h2>Courses</h2>
 
-        <p>???</p>
-        -->
+        <#macro moduleAvailability list>
+          <ul>
+              <#list list as availability>
+                <li>
+                    <#if availability.year??>
+                      Year ${availability.year}
+                    <#else>
+                      Block ${availability.block}
+                    </#if>
+                  of
+                  <a href="/courses/${academicYear.startYear?c}/${availability.courseCode}">
+                      ${availability.courseCode}
+                      ${availability.courseName!""}
+                  </a>
+                </li>
+              </#list>
+          </ul>
+        </#macro>
+
+        <#if module.compulsoryCourses?has_content>
+          <p>This module is required for:</p>
+            <@moduleAvailability module.compulsoryCourses />
+        </#if>
+
+        <#if module.optionalCourses?has_content>
+          <p>This module is available on:</p>
+            <@moduleAvailability module.optionalCourses />
+        </#if>
 
       <h2>Occurrences</h2>
       <table class="table table-bordered" id="module-occurrences">

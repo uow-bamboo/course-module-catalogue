@@ -7,6 +7,7 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import uk.ac.warwick.camcat.sits.entities.Course
 import uk.ac.warwick.camcat.sits.entities.Module
+import uk.ac.warwick.camcat.sits.entities.PathwayDietModule
 import uk.ac.warwick.util.termdates.AcademicYear
 
 @Repository
@@ -27,7 +28,6 @@ interface CourseRepository : CrudRepository<Course, String> {
     where module.code = :moduleCode
     and pathwayDiet.code like '%-%-%'
     and length(pathwayDiet.code) = 9
-    and pathwayDiet.inUse = true 
     and moduleOccurrences.key.academicYear = :academicYear
     and pathwayDiet.academicYear = SUBSTRING(:academicYear, 1, 2)"""
     //              ^^ is a 2 digit starting year (e.g. 10), which is different to acadYear toString (e.g. 10/11)

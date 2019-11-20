@@ -30,14 +30,14 @@ data class Module(
   val department: Department?,
 
   @JoinColumn(name = "MOD_CODE")
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany
   @NotFound(action = NotFoundAction.IGNORE)
   @Fetch(FetchMode.SELECT)
   @JsonIgnore
   val topics: Collection<Topic>,
 
   @JoinColumn(name = "MAP_CODE")
-  @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JsonIgnore
   val assessmentPattern: AssessmentPattern?,
@@ -52,7 +52,7 @@ data class Module(
   @JsonIgnore
   val formedModuleCollectionElements: Collection<FormedModuleCollectionElement>,
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany
   @Fetch(FetchMode.SELECT)
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "MOD_CODE")

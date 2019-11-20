@@ -6,11 +6,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.sits.entities.*
 import uk.ac.warwick.camcat.sits.repositories.*
-import uk.ac.warwick.camcat.sits.entities.*
-import uk.ac.warwick.camcat.sits.repositories.ModuleDescriptionRepository
-import uk.ac.warwick.camcat.sits.repositories.ModuleOccurrenceRepository
-import uk.ac.warwick.camcat.sits.repositories.ModuleRepository
-import uk.ac.warwick.camcat.sits.repositories.TopicRepository
 import uk.ac.warwick.util.termdates.AcademicYear
 
 interface ModuleService {
@@ -31,9 +26,11 @@ interface ModuleService {
   fun findModulesByCourseYearSelectionBlock(
     courseCode: String,
     academicYear: AcademicYear,
-    moduleSelection: ModuleSelection,
+    moduleSelectionStatus: ModuleSelectionStatus,
     block: String
   ): Collection<Module>
+
+  fun findAvailability(moduleCode: String, academicYear: AcademicYear): Collection<ModuleAvailability>
 }
 
 @Service
@@ -76,16 +73,20 @@ class DatabaseModuleService(
   override fun findModulesByCourseYearSelectionBlock(
     courseCode: String,
     academicYear: AcademicYear,
-    moduleSelection: ModuleSelection,
+    moduleSelectionStatus: ModuleSelectionStatus,
     block: String
   ): Collection<Module> {
     return moduleRepository.findAllByCourseCodeAndAcademicYearAndSelectionAndBlock(
       courseCode = courseCode,
       academicYear = academicYear,
-      moduleSelection = moduleSelection,
+      moduleSelectionStatus = moduleSelectionStatus,
       block = block
     )
   }
+
+  @Cacheable("moduleAvailability")
+  override fun findAvailability(moduleCode: String, academicYear: AcademicYear): Collection<ModuleAvailability> =
+    moduleRepository.findModuleAvailability(moduleCode, academicYear)
 }
 
 data class RelatedModules(
