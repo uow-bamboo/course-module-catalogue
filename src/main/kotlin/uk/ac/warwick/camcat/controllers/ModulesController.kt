@@ -34,7 +34,10 @@ class ModulesController(
   fun levels() = levelRepository.findAll()
 
   @ModelAttribute("academicYears")
-  fun academicYears() = listOf(AcademicYear.starting(2019))
+  fun academicYears() = listOf(
+    AcademicYear.starting(2020),
+    AcademicYear.starting(2019)
+  )
 
   @ModelAttribute("assessmentTypes")
   fun assessmentTypes() = assessmentTypeRepository.findAll()
