@@ -226,12 +226,16 @@
 
         <#if module.coreAvailability?has_content>
           <p>This module is core for:</p>
-            <@moduleAvailability module.coreAvailability />
+          <div id="module-core-availability">
+              <@moduleAvailability module.coreAvailability />
+          </div>
         </#if>
 
         <#if module.optionalAvailability?has_content>
           <p>This module is optional for:</p>
-            <@moduleAvailability module.optionalAvailability />
+          <div id="module-optional-availability">
+              <@moduleAvailability module.optionalAvailability />
+          </div>
         </#if>
 
       <h2>Occurrences</h2>
