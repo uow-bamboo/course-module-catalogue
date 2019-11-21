@@ -22,7 +22,10 @@ class IndexModulesJob(
   private val moduleSearchRepository: ModuleSearchRepository,
   private val modulePresenterFactory: ModulePresenterFactory
 ) : Job, Logging() {
-  private val academicYears = mutableListOf(AcademicYear.starting(2019))
+  private val academicYears = mutableListOf(
+    AcademicYear.starting(2019),
+    AcademicYear.starting(2020)
+  )
 
   init {
     val now = AcademicYear.forDate(LocalDate.now())

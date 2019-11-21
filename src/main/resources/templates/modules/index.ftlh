@@ -33,7 +33,7 @@
       <select name="${spring.status.expression}" id="academicYear" class="form-control">
           <#list academicYears as academicYear>
             <option value="${academicYear.startYear?c}"
-                    <#if (spring.status.value!"") == academicYear.startYear?c>selected</#if>
+                    <#if (spring.status.value!"") == academicYear.label>selected</#if>
             >${academicYear.label}</option>
           </#list>
       </select>
