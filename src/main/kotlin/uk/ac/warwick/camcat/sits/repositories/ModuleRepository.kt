@@ -92,9 +92,9 @@ interface ModuleRepository : CrudRepository<Module, String> {
 
 data class ModuleAvailability(
   val routeCode: String,
-  val routeName: String,
+  val routeName: String?,
   val courseCode: String,
-  val courseName: String,
+  val courseName: String?,
   var block: String,
   var blockYear: Int?,
   val selectionStatus: ModuleSelectionStatus?

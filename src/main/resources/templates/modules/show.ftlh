@@ -193,29 +193,45 @@
           <ul>
               <#list list as availability>
                 <li>
-                    <#if availability.year??>
-                      Year ${availability.year}
-                    <#else>
-                      Block ${availability.block}
+                    <#if availability.routes?size == 1>
+                        <#local route = availability.routes[0] />
+                        <#if route.year??>
+                          Year ${route.year} of
+                        <#elseif route.block??>
+                          Block ${route.block} of
+                        </#if>
                     </#if>
-                  of
                   <a href="/courses/${academicYear.startYear?c}/${availability.courseCode}">
                       ${availability.courseCode}
                       ${availability.courseName!""}
                   </a>
+                    <#if availability.routes?size gt 1>
+                      <ul>
+                          <#list availability.routes as route>
+                            <li>
+                                <#if route.year??>
+                                  Year ${route.year} of
+                                <#elseif route.block??>
+                                  Block ${route.block} of
+                                </#if>
+                                ${route.routeCode} ${route.routeName!""}
+                            </li>
+                          </#list>
+                      </ul>
+                    </#if>
                 </li>
               </#list>
           </ul>
         </#macro>
 
-        <#if module.compulsoryCourses?has_content>
-          <p>This module is required for:</p>
-            <@moduleAvailability module.compulsoryCourses />
+        <#if module.coreAvailability?has_content>
+          <p>This module is core for:</p>
+            <@moduleAvailability module.coreAvailability />
         </#if>
 
-        <#if module.optionalCourses?has_content>
-          <p>This module is available on:</p>
-            <@moduleAvailability module.optionalCourses />
+        <#if module.optionalAvailability?has_content>
+          <p>This module is optional for:</p>
+            <@moduleAvailability module.optionalAvailability />
         </#if>
 
       <h2>Occurrences</h2>

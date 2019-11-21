@@ -133,11 +133,13 @@ class ModulePresenter(
     )
   }.sortedWith(compareBy(TopicPresenter::weighting).reversed().thenBy { it.department.name })
 
-  private val availabilityPresenters = availability.map(::AvailabilityPresenter)
-    .sortedWith(compareBy(AvailabilityPresenter::block).thenBy(AvailabilityPresenter::courseName).thenBy(AvailabilityPresenter::courseCode))
+  fun presentAvailablity(items: Collection<ModuleAvailability>) = items
+    .groupBy { it.courseCode }.values
+    .map(::CourseAvailabilityPresenter)
+    .sortedWith(compareBy(CourseAvailabilityPresenter::courseName).thenBy(CourseAvailabilityPresenter::courseCode))
 
-  val compulsoryCourses = availabilityPresenters.filter { it.compulsory }
-  val optionalCourses = availabilityPresenters.filterNot { it.compulsory }
+  val coreAvailability = presentAvailablity(availability.filter { it.selectionStatus != ModuleSelectionStatus.Optional })
+  val optionalAvailability = presentAvailablity(availability.filter { it.selectionStatus == ModuleSelectionStatus.Optional })
 }
 
 class TopicPresenter(topic: Topic, val department: DepartmentPresenter) {
@@ -236,12 +238,26 @@ class AssociatedModulePresenter(module: Module) {
   val title = module.title
 }
 
+class CourseAvailabilityPresenter(availabilities: Collection<ModuleAvailability>) {
+  val courseCode = availabilities.first().courseCode
+  val courseName = availabilities.first().courseName
+  val routes = availabilities.map(::AvailabilityPresenter)
+    .sortedWith(compareBy(AvailabilityPresenter::optionalCore).thenBy(AvailabilityPresenter::block).thenBy(AvailabilityPresenter::routeName).thenBy(AvailabilityPresenter::routeCode))
+}
+
 class AvailabilityPresenter(availability: ModuleAvailability) {
-  val courseCode = availability.courseCode
-  val courseName = availability.courseName
-  val block = availability.block
-  val year = availability.blockYear
+  val routeCode = availability.routeCode
+  val routeName = availability.routeName
   val type = availability.selectionStatus?.name
-  val compulsory = availability.selectionStatus == ModuleSelectionStatus.Compulsory
+
+  @JsonIgnore
+  val core = availability.selectionStatus == ModuleSelectionStatus.Compulsory
+  @JsonIgnore
+  val optionalCore = availability.selectionStatus == ModuleSelectionStatus.OptionalCore
+  @JsonIgnore
+  val optional = availability.selectionStatus == ModuleSelectionStatus.Optional
+
+  val block = if (optionalCore) null else availability.block
+  val year = if (optionalCore) null else availability.blockYear
 }
 

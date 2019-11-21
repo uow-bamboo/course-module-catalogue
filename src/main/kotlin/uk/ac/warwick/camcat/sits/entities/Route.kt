@@ -15,7 +15,7 @@ data class Route(
   val code: String,
 
   @Column(name = "ROU_NAME")
-  val name: String,
+  val name: String?,
 
   @Column(name = "ROU_IUSE")
   @Type(type = "yes_no")
