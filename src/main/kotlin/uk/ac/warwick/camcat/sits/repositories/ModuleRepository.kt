@@ -69,7 +69,7 @@ interface ModuleRepository : CrudRepository<Module, String> {
     academicYear: AcademicYear
   ): Collection<Module>
 
-  @Query("""select distinct new uk.ac.warwick.camcat.sits.repositories.ModuleAvailability(course, block, pathwayDietModule.selectionStatus) from Module module
+  @Query("""select distinct new uk.ac.warwick.camcat.sits.repositories.ModuleAvailability(route.code, route.name, course.code, course.name, block.key.block, block.yearOfCourse, pathwayDietModule.selectionStatus) from Module module
     join module.formedModuleCollectionElements fme
     join fme.key.formedModuleCollection fmc
     join fmc.pathwayDietModules pathwayDietModule
@@ -91,7 +91,11 @@ interface ModuleRepository : CrudRepository<Module, String> {
 }
 
 data class ModuleAvailability(
-  val course: Course,
-  val block: CourseBlock?,
+  val routeCode: String,
+  val routeName: String,
+  val courseCode: String,
+  val courseName: String,
+  var block: String,
+  var blockYear: Int?,
   val selectionStatus: ModuleSelectionStatus?
 )

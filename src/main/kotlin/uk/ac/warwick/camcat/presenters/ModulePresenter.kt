@@ -237,10 +237,10 @@ class AssociatedModulePresenter(module: Module) {
 }
 
 class AvailabilityPresenter(availability: ModuleAvailability) {
-  val courseCode = availability.course.code
-  val courseName = availability.course.name
-  val block = availability.block?.key?.block
-  val year = availability.block?.yearOfCourse
+  val courseCode = availability.courseCode
+  val courseName = availability.courseName
+  val block = availability.block
+  val year = availability.blockYear
   val type = availability.selectionStatus?.name
   val compulsory = availability.selectionStatus == ModuleSelectionStatus.Compulsory
 }
