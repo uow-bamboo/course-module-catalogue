@@ -230,6 +230,12 @@
             You do not need to pass all assessment components to pass the module.
           </p>
         </#if>
+
+      <#if module.hasAuditOnlyAssessmentGroup>
+        <p>
+          Students can register for this module without taking any assessment.
+        </p>
+      </#if>
       <table class="table table-bordered" id="module-assessment">
         <thead>
         <tr>

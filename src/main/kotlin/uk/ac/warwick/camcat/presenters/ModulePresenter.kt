@@ -112,13 +112,15 @@ class ModulePresenter(
 
   val assessmentGroups =
     module.assessmentPattern?.components
-      ?.filter { it.assessmentGroup != null }
+      ?.filterNot { it.assessmentGroup == null || it.assessmentGroup == "AO" }
       ?.groupBy { it.assessmentGroup }
       ?.map { AssessmentGroupPresenter(module.assessmentPattern, it.value) }
       ?.sortedWith(compareBy(AssessmentGroupPresenter::default).reversed().thenBy(AssessmentGroupPresenter::name))
       ?: listOf()
 
   val costs = descriptions("MA031").map(::ModuleCost)
+
+  val hasAuditOnlyAssessmentGroup = module.assessmentPattern?.components?.any { it.assessmentGroup == "AO" }
 
   val teachingSplits = topics.filter { it.teachingDepartment != null }.map { top ->
     TopicPresenter(
