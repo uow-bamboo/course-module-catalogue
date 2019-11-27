@@ -62,7 +62,11 @@ class DatabaseModuleService(
   override fun findRelatedModules(moduleCode: String, academicYear: AcademicYear): RelatedModules =
     RelatedModules(
       preRequisites = moduleRepository.findModulesInRuleForModule(moduleCode, RuleType.PreRequisite, academicYear),
-      postRequisites = moduleRepository.findModulesWithRulesContainingModule(moduleCode, RuleType.PreRequisite, academicYear),
+      postRequisites = moduleRepository.findModulesWithRulesContainingModule(
+        moduleCode,
+        RuleType.PreRequisite,
+        academicYear
+      ),
       antiRequisites = moduleRepository.findModulesInRuleForModule(moduleCode, RuleType.AntiRequisite, academicYear)
     )
 

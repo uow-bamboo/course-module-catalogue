@@ -96,7 +96,7 @@ class ModuleIntegrationTest : IntegrationTest() {
 
     assertThat(
       content("module-core-availability"),
-      stringContainsInOrder("Year 1 of UCSA-G500 Computer Science")
+      stringContainsInOrder("Year 1 of", "UCSA-G500", "Computer Science")
     )
   }
 }

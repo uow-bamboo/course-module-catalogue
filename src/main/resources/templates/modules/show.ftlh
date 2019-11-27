@@ -187,7 +187,8 @@
           </p>
         </#if>
 
-      <h2>Courses</h2>
+      <#if module.coreAvailability?has_content || module.optionalAvailability?has_content>
+        <h2>Courses</h2>
 
         <#macro moduleAvailability list>
           <ul>
@@ -237,6 +238,7 @@
               <@moduleAvailability module.optionalAvailability />
           </div>
         </#if>
+      </#if>
 
       <h2>Occurrences</h2>
       <table class="table table-bordered" id="module-occurrences">
