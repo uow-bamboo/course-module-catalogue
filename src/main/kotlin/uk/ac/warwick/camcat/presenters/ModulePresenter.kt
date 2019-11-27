@@ -66,6 +66,7 @@ class ModulePresenter(
   val faculty = module.department?.faculty
 
   val level = primaryOccurrence.level
+  val leader = primaryOccurrence.moduleLeaderPersonnelCode?.let(userPresenterFactory::buildFromPersonnelCode)
 
   val duration = "Not yet in SITS" // TODO MA-634
   val locations = descriptions("MA010").map(::StudyLocation)
@@ -107,21 +108,21 @@ class ModulePresenter(
     }
   ).filterNot { it.zero }
 
-  val occurrences = sortedOccurrences.map { ModuleOccurrencePresenter(it, userPresenterFactory) }
-
   val preRequisiteModules = relatedModules.preRequisites.map(::AssociatedModulePresenter)
   val postRequisiteModules = relatedModules.postRequisites.map(::AssociatedModulePresenter)
   val antiRequisiteModules = relatedModules.antiRequisites.map(::AssociatedModulePresenter)
 
   val assessmentGroups =
     module.assessmentPattern?.components
-      ?.filter { it.assessmentGroup != null }
+      ?.filterNot { it.assessmentGroup == null || it.assessmentGroup == "AO" }
       ?.groupBy { it.assessmentGroup }
       ?.map { AssessmentGroupPresenter(module.assessmentPattern, it.value) }
       ?.sortedWith(compareBy(AssessmentGroupPresenter::default).reversed().thenBy(AssessmentGroupPresenter::name))
       ?: listOf()
 
   val costs = descriptions("MA031").map(::ModuleCost)
+
+  val hasAuditOnlyAssessmentGroup = module.assessmentPattern?.components?.any { it.assessmentGroup == "AO" }
 
   val teachingSplits = topics.filter { it.teachingDepartment != null }.map { top ->
     TopicPresenter(
@@ -171,13 +172,6 @@ class AssessmentComponentPresenter(component: AssessmentComponent) {
   val type = component.type?.name
   val weighting = component.weighting
   val description = component.description?.text
-}
-
-class ModuleOccurrencePresenter(occurrence: ModuleOccurrence, userPresenterFactory: UserPresenterFactory) {
-  val code = occurrence.key.occurrenceCode
-  val periodSlotCode = occurrence.key.periodSlotCode
-  val location = occurrence.location
-  val moduleLeader = occurrence.moduleLeaderPersonnelCode?.let { userPresenterFactory.buildFromPersonnelCode(it) }
 }
 
 class DepartmentPresenter(department: Department, warwickDepartment: uk.ac.warwick.camcat.services.Department?) {
