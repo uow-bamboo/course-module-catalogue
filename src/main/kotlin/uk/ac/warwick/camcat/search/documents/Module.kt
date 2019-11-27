@@ -4,7 +4,6 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.elasticsearch.annotations.Document
 import org.springframework.data.elasticsearch.annotations.Field
 import org.springframework.data.elasticsearch.annotations.FieldType.Keyword
-import org.springframework.data.elasticsearch.annotations.FieldType.Nested
 import java.math.BigDecimal
 
 @Document(indexName = "modules", type = "module")
@@ -19,12 +18,7 @@ data class Module(
   @Field(type = Keyword) val departmentName: String?,
   @Field(type = Keyword) val facultyCode: String?,
   @Field(type = Keyword) val levelCode: String?,
-  val text: String,
-  @Field(type = Nested) val occurrences: List<ModuleOccurrence>
+  @Field(type = Keyword) val leader: String?,
+  val text: String
 )
 
-data class ModuleOccurrence(
-  @Field(type = Keyword) val moduleLeader: String?,
-  @Field(type = Keyword) val periodSlotCode: String,
-  @Field(type = Keyword) val locationCode: String?
-)

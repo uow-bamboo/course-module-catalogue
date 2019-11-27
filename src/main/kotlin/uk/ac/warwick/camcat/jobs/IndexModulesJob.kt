@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import uk.ac.warwick.camcat.presenters.ModulePresenterFactory
 import uk.ac.warwick.camcat.search.documents.Module
-import uk.ac.warwick.camcat.search.documents.ModuleOccurrence
 import uk.ac.warwick.camcat.search.repositories.ModuleSearchRepository
 import uk.ac.warwick.camcat.sits.services.ModuleService
 import uk.ac.warwick.camcat.system.Logging
@@ -75,13 +74,7 @@ class IndexModulesJob(
       departmentName = module.department?.shortName,
       facultyCode = module.faculty?.code,
       levelCode = module.level?.code,
-      occurrences = module.occurrences.map {
-        ModuleOccurrence(
-          moduleLeader = it.moduleLeader?.universityId,
-          periodSlotCode = it.periodSlotCode,
-          locationCode = it.location?.code
-        )
-      },
+      leader = module.leader?.universityId,
       text = listOfNotNull(
         *(module.learningOutcomes.toTypedArray()),
         module.introductoryDescription,

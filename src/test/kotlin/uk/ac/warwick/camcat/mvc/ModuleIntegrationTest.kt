@@ -41,6 +41,7 @@ class ModuleIntegrationTest : IntegrationTest() {
     assertThat(content("module-department-name"), equalToCompressingWhiteSpace("Computer Science"))
     assertThat(content("module-faculty-name"), equalToCompressingWhiteSpace("Science"))
     assertThat(content("module-level-name"), equalToCompressingWhiteSpace("Undergraduate Level 1"))
+    assertThat(content("module-leader"), equalToCompressingWhiteSpace("John Smith"))
     assertThat(content("module-credit-value"), equalToCompressingWhiteSpace("15"))
     assertThat(
       (page.getHtmlElementById("module-web-page") as HtmlAnchor).hrefAttribute,
@@ -60,11 +61,6 @@ class ModuleIntegrationTest : IntegrationTest() {
     assertThat(
       content("module-post-requisite-modules"),
       equalToCompressingWhiteSpace("CS261-15 Software Engineering")
-    )
-
-    assertThat(
-      tableCells("module-occurrences"),
-      containsInRelativeOrder("University of Warwick", "John Smith")
     )
 
     assertThat(

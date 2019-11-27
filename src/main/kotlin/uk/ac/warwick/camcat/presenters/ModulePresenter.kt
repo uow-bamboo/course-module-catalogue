@@ -63,6 +63,7 @@ class ModulePresenter(
   val faculty = module.department?.faculty
 
   val level = primaryOccurrence.level
+  val leader = primaryOccurrence.moduleLeaderPersonnelCode?.let(userPresenterFactory::buildFromPersonnelCode)
 
   val duration = "Not yet in SITS" // TODO MA-634
   val locations = descriptions("MA010").map(::StudyLocation)
@@ -103,8 +104,6 @@ class ModulePresenter(
       )
     }
   ).filterNot { it.zero }
-
-  val occurrences = sortedOccurrences.map { ModuleOccurrencePresenter(it, userPresenterFactory) }
 
   val preRequisiteModules = relatedModules.preRequisites.map(::AssociatedModulePresenter)
   val postRequisiteModules = relatedModules.postRequisites.map(::AssociatedModulePresenter)
@@ -162,13 +161,6 @@ class AssessmentComponentPresenter(component: AssessmentComponent) {
   val type = component.type?.name
   val weighting = component.weighting
   val description = component.description?.text
-}
-
-class ModuleOccurrencePresenter(occurrence: ModuleOccurrence, userPresenterFactory: UserPresenterFactory) {
-  val code = occurrence.key.occurrenceCode
-  val periodSlotCode = occurrence.key.periodSlotCode
-  val location = occurrence.location
-  val moduleLeader = occurrence.moduleLeaderPersonnelCode?.let { userPresenterFactory.buildFromPersonnelCode(it) }
 }
 
 class DepartmentPresenter(department: Department, warwickDepartment: uk.ac.warwick.camcat.services.Department?) {

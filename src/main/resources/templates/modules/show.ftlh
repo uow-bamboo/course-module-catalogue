@@ -25,6 +25,11 @@
         <dd id="module-level-name">${module.level.name}</dd>
       </#if>
 
+    <#if module.leader??>
+      <dt>Module leader</dt>
+      <dd id="module-leader">${module.leader.name}</dd>
+    </#if>
+
     <dt>Credit value</dt>
     <dd id="module-credit-value">${module.creditValue}</dd>
 
@@ -193,31 +198,6 @@
 
         <p>???</p>
         -->
-
-      <h2>Occurrences</h2>
-      <table class="table table-bordered" id="module-occurrences">
-        <thead>
-        <tr>
-          <th>Location</th>
-          <th>Module leader</th>
-        </tr>
-        </thead>
-        <tbody>
-        <#list module.occurrences as occurrence>
-          <tr>
-            <td>${occurrence.location.name}</td>
-            <td>
-                <#if occurrence.moduleLeader??>
-                    ${occurrence.moduleLeader.name}
-                <#else>
-                  Unknown
-                </#if>
-            </td>
-          </tr>
-        </#list>
-        </tbody>
-      </table>
-
     </div>
 
     <div id="assessment" role="tabpanel" class="tab-pane">
