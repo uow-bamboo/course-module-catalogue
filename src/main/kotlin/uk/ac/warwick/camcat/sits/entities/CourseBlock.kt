@@ -26,7 +26,14 @@ data class CourseBlock(
   val useForKeyInformationSet: Boolean?,
 
   @Column(name = "CBK_YEAR")
-  val yearOfCourse: Int?
+  val yearOfCourse: Int?,
+
+  @OneToMany
+  @JoinColumns(
+    JoinColumn(name = "CBO_CRSC", referencedColumnName = "CBK_CRSC", insertable = false, updatable = false),
+    JoinColumn(name = "CBO_BLOK", referencedColumnName = "CBK_BLOK", insertable = false, updatable = false)
+  )
+  val occurrences: Collection<CourseBlockOccurrence>
 )
 
 @Embeddable

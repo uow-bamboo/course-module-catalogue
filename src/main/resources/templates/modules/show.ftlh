@@ -192,12 +192,58 @@
           </p>
         </#if>
 
-        <#--
+      <#if module.coreAvailability?has_content || module.optionalAvailability?has_content>
         <h2>Courses</h2>
-        <p>This module is available on the following courses:</p>
 
-        <p>???</p>
-        -->
+        <#macro moduleAvailability list>
+          <ul>
+              <#list list as availability>
+                <li>
+                    <#if availability.routes?size == 1>
+                        <#local route = availability.routes[0] />
+                        <#if route.year??>
+                          Year ${route.year} of
+                        <#elseif route.block??>
+                          Block ${route.block} of
+                        </#if>
+                    </#if>
+                  <a href="/courses/${academicYear.startYear?c}/${availability.courseCode}">
+                      ${availability.courseCode}
+                      ${availability.courseName!""}
+                  </a>
+                    <#if availability.routes?size gt 1>
+                      <ul>
+                          <#list availability.routes as route>
+                            <li>
+                                <#if route.year??>
+                                  Year ${route.year} of
+                                <#elseif route.block??>
+                                  Block ${route.block} of
+                                </#if>
+                                ${route.routeCode} ${route.routeName!""}
+                            </li>
+                          </#list>
+                      </ul>
+                    </#if>
+                </li>
+              </#list>
+          </ul>
+        </#macro>
+
+        <#if module.coreAvailability?has_content>
+          <p>This module is core for:</p>
+          <div id="module-core-availability">
+              <@moduleAvailability module.coreAvailability />
+          </div>
+        </#if>
+
+        <#if module.optionalAvailability?has_content>
+          <p>This module is optional for:</p>
+          <div id="module-optional-availability">
+              <@moduleAvailability module.optionalAvailability />
+          </div>
+        </#if>
+      </#if>
     </div>
 
     <div id="assessment" role="tabpanel" class="tab-pane">

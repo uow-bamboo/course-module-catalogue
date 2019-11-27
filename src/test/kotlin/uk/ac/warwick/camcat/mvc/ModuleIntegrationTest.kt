@@ -89,5 +89,10 @@ class ModuleIntegrationTest : IntegrationTest() {
         "Students sit an exam"
       )
     )
+
+    assertThat(
+      content("module-core-availability"),
+      stringContainsInOrder("Year 1 of", "UCSA-G500", "Computer Science")
+    )
   }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component
 import uk.ac.warwick.camcat.helpers.DurationFormatter
 import uk.ac.warwick.camcat.services.WarwickDepartmentsService
 import uk.ac.warwick.camcat.sits.entities.*
+import uk.ac.warwick.camcat.sits.repositories.ModuleAvailability
 import uk.ac.warwick.camcat.sits.services.ModuleService
 import uk.ac.warwick.camcat.sits.services.RelatedModules
 import uk.ac.warwick.util.termdates.AcademicYear
@@ -25,6 +26,7 @@ class ModulePresenterFactory(
         descriptions = moduleService.findDescriptions(module.code, academicYear),
         relatedModules = moduleService.findRelatedModules(module.code, academicYear),
         topics = moduleService.findTopics(module.code, academicYear),
+        availability = moduleService.findAvailability(module.code, academicYear),
         userPresenterFactory = userPresenterFactory,
         warwickDepartmentsService = warwickDepartmentsService
       )
@@ -37,6 +39,7 @@ class ModulePresenter(
   descriptions: Collection<ModuleDescription>,
   relatedModules: RelatedModules,
   topics: Collection<Topic>,
+  availability: Collection<ModuleAvailability>,
   userPresenterFactory: UserPresenterFactory,
   warwickDepartmentsService: WarwickDepartmentsService
 ) {
@@ -130,6 +133,14 @@ class ModulePresenter(
       )
     )
   }.sortedWith(compareBy(TopicPresenter::weighting).reversed().thenBy { it.department.name })
+
+  fun presentAvailablity(items: Collection<ModuleAvailability>) = items
+    .groupBy { it.courseCode }.values
+    .map(::CourseAvailabilityPresenter)
+    .sortedWith(compareBy(CourseAvailabilityPresenter::courseName).thenBy(CourseAvailabilityPresenter::courseCode))
+
+  val coreAvailability = presentAvailablity(availability.filter { it.selectionStatus != ModuleSelectionStatus.Optional })
+  val optionalAvailability = presentAvailablity(availability.filter { it.selectionStatus == ModuleSelectionStatus.Optional })
 }
 
 class TopicPresenter(topic: Topic, val department: DepartmentPresenter) {
@@ -220,3 +231,27 @@ class AssociatedModulePresenter(module: Module) {
   val code = module.code
   val title = module.title
 }
+
+class CourseAvailabilityPresenter(availabilities: Collection<ModuleAvailability>) {
+  val courseCode = availabilities.first().courseCode
+  val courseName = availabilities.first().courseName
+  val routes = availabilities.map(::AvailabilityPresenter)
+    .sortedWith(compareBy(AvailabilityPresenter::optionalCore).thenBy(AvailabilityPresenter::block).thenBy(AvailabilityPresenter::routeName).thenBy(AvailabilityPresenter::routeCode))
+}
+
+class AvailabilityPresenter(availability: ModuleAvailability) {
+  val routeCode = availability.routeCode
+  val routeName = availability.routeName
+  val type = availability.selectionStatus?.name
+
+  @JsonIgnore
+  val core = availability.selectionStatus == ModuleSelectionStatus.Compulsory
+  @JsonIgnore
+  val optionalCore = availability.selectionStatus == ModuleSelectionStatus.OptionalCore
+  @JsonIgnore
+  val optional = availability.selectionStatus == ModuleSelectionStatus.Optional
+
+  val block = if (optionalCore) null else availability.block
+  val year = if (optionalCore) null else availability.blockYear
+}
+

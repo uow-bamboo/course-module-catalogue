@@ -16,7 +16,7 @@ data class AssessmentPaper(
   @Column(name = "APA_NAME")
   val name: String?,
 
-  @OneToMany(fetch = FetchType.EAGER)
+  @OneToMany
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "ADV_APAC", referencedColumnName = "APA_CODE")
   val divisions: Collection<AssessmentPaperDivision>

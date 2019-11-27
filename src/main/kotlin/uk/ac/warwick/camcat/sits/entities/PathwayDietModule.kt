@@ -10,7 +10,6 @@ import javax.persistence.Table
 @Entity
 @Immutable
 @Table(name = "CAM_PDM")
-@Where(clause = "PDM_IUSE = 'Y'")
 data class PathwayDietModule(
   @EmbeddedId
   val key: PathwayDietModuleKey,
@@ -24,9 +23,9 @@ data class PathwayDietModule(
 
   @Convert(converter = ModuleSelectionConverter::class)
   @Column(name = "PDM_SESC")
-  val selectionStatus: ModuleSelection?,
+  val selectionStatus: ModuleSelectionStatus?,
 
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumnsOrFormulas(
     JoinColumnOrFormula(column = JoinColumn(name = "PDM_FMCC", referencedColumnName = "FMC_CODE")),
@@ -38,8 +37,7 @@ data class PathwayDietModule(
 
 @Embeddable
 data class PathwayDietModuleKey(
-
-  @ManyToOne(fetch = FetchType.EAGER)
+  @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "PDM_PDTC", referencedColumnName = "PDT_CODE")
   @JsonIgnore
