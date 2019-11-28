@@ -19,7 +19,6 @@ interface ModuleRepository : CrudRepository<Module, String> {
     """
       select module from Module module
       where exists (from ModuleOccurrence o where o.key.module = module and o.key.academicYear = :academicYear)
-      and exists (from ModuleDescription d where d.key.module = module and d.code like 'MA%')
       order by module.code
     """
   )

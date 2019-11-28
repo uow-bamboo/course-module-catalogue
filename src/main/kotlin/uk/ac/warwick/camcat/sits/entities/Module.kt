@@ -11,7 +11,7 @@ import javax.persistence.Table
 @Entity
 @Immutable
 @Table(name = "INS_MOD")
-@Where(clause = "MOD_CODE LIKE '%-%'")
+@Where(clause = "MOD_UDF5 = 'Y'")
 data class Module(
   @Id
   @Column(name = "MOD_CODE")
@@ -60,7 +60,11 @@ data class Module(
 
   @OneToMany
   @JoinColumn(name = "MOD_CODE")
-  val descriptions: Collection<ModuleDescription>
+  val descriptions: Collection<ModuleDescription>,
+
+  @Column(name = "MOD_UDF5")
+  @Type(type = "yes_no")
+  val approved: Boolean?
 ) : Serializable {
   val assessmentPatternCode: String?
     get() = assessmentPattern?.code
