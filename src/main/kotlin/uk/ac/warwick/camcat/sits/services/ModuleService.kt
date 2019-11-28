@@ -1,17 +1,16 @@
 package uk.ac.warwick.camcat.sits.services
 
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
+import org.springframework.data.util.Streamable
 import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.sits.entities.*
 import uk.ac.warwick.camcat.sits.repositories.*
 import uk.ac.warwick.util.termdates.AcademicYear
 
 interface ModuleService {
-  fun findAll(pageable: Pageable): Page<Module>
-
   fun findByModuleCode(code: String): Module?
+
+  fun findAllWithOccurrenceInAcademicYear(academicYear: AcademicYear): Streamable<Module>
 
   fun findDescriptions(moduleCode: String, academicYear: AcademicYear): Collection<ModuleDescription>
 
@@ -41,7 +40,8 @@ class DatabaseModuleService(
   private val ruleRepository: ModuleRuleRepository,
   private val topicRepository: TopicRepository
 ) : ModuleService {
-  override fun findAll(pageable: Pageable): Page<Module> = moduleRepository.findAll(pageable)
+  override fun findAllWithOccurrenceInAcademicYear(academicYear: AcademicYear): Streamable<Module> =
+    moduleRepository.findAllWithOccurrenceInAcademicYear(academicYear)
 
   @Cacheable("module")
   override fun findByModuleCode(code: String): Module? = moduleRepository.findByCode(code)

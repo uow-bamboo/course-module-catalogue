@@ -4,13 +4,13 @@ import uk.ac.warwick.util.termdates.AcademicYear
 import java.math.BigDecimal
 
 data class ModuleQuery(
-  val code: String?,
-  val keywords: String?,
-  val department: String?,
-  val faculty: String?,
-  val level: String?,
-  val leader: String?,
-  val creditValue: BigDecimal?,
-  val academicYear: AcademicYear?,
-  val assessmentTypes: Set<String>?
+  val code: String? = null,
+  val keywords: String? = null,
+  val department: String? = null,
+  val faculty: String? = null,
+  val level: String? = null,
+  val leader: String? = null,
+  val creditValue: BigDecimal? = null,
+  val academicYear: AcademicYear? = null,
+  val assessmentTypes: Set<String>? = null
 )

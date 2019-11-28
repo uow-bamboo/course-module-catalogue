@@ -56,7 +56,11 @@ data class Module(
   @Fetch(FetchMode.SELECT)
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "MOD_CODE")
-  val moduleOccurrences: Collection<ModuleOccurrence>
+  val occurrences: Collection<ModuleOccurrence>,
+
+  @OneToMany
+  @JoinColumn(name = "MOD_CODE")
+  val descriptions: Collection<ModuleDescription>
 ) : Serializable {
   val assessmentPatternCode: String?
     get() = assessmentPattern?.code

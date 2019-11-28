@@ -10,11 +10,10 @@ import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.search.documents.Module
 import uk.ac.warwick.camcat.search.queries.ModuleQuery
 import uk.ac.warwick.camcat.search.repositories.ModuleSearchRepository
-import uk.ac.warwick.userlookup.UserLookup
 import uk.ac.warwick.userlookup.UserLookupInterface
 
 interface ModuleSearchService {
-  fun query(query: ModuleQuery, page: Pageable): Page<Module>?
+  fun query(query: ModuleQuery, page: Pageable = Pageable.unpaged()): Page<Module>?
 }
 
 @Service

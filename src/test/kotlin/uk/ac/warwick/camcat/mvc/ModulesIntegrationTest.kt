@@ -53,4 +53,26 @@ class ModulesIntegrationTest : IntegrationTest() {
       hasItem(hasProperty("valueAttribute", equalTo("ES")))
     )
   }
+
+  @Test
+  @WithMockUser(roles = [Role.user])
+  fun testFindModuleByCode() {
+    var page: HtmlPage = webClient.getPage("http://localhost/modules")
+
+    val form = page.getFormByName("modules")
+    form.getInputByName<HtmlTextInput>("code").valueAttribute = "CS126"
+    form.getSelectByName("academicYear").setSelectedAttribute<HtmlPage>("2019", true)
+
+    page = form.getElementsByAttribute<HtmlButton>("button", "type", "submit").first().click()
+
+    val links = page.anchors.filter { it.textContent.contains("CS126-15") }
+
+    assertThat(links, hasSize(1))
+
+    page = links.first().click()
+
+    val headings = page.getElementsByTagName("h1").filter { it.textContent.contains("Design of Information Structures") }
+
+    assertThat(headings, hasSize(1))
+  }
 }

@@ -3,8 +3,10 @@ package uk.ac.warwick.camcat.sits.repositories
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import uk.ac.warwick.camcat.sits.entities.*
-import uk.ac.warwick.util.termdates.AcademicYear
+import uk.ac.warwick.camcat.sits.entities.ModuleSelectionStatus
+import uk.ac.warwick.camcat.sits.entities.PathwayDiet
+import uk.ac.warwick.camcat.sits.entities.PathwayDietModule
+import uk.ac.warwick.camcat.sits.entities.PathwayDietModuleKey
 
 @Repository
 interface PathwayDietModuleRepository : CrudRepository<PathwayDietModule, PathwayDietModuleKey> {

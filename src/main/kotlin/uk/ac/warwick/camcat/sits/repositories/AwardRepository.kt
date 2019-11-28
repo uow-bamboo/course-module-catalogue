@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 import uk.ac.warwick.camcat.sits.entities.Award
-import uk.ac.warwick.camcat.sits.entities.Course
 
 @Repository
 interface AwardRepository : CrudRepository<Award, String> {

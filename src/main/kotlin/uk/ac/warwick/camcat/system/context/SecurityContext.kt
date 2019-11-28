@@ -13,7 +13,6 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import uk.ac.warwick.camcat.system.security.WarwickAuthenticationDetails
 import uk.ac.warwick.camcat.system.security.WarwickAuthenticationManager
 import uk.ac.warwick.sso.client.SSOClientFilter
-import uk.ac.warwick.userlookup.UserLookup
 import uk.ac.warwick.userlookup.UserLookupInterface
 import javax.inject.Named
 import javax.servlet.Filter
