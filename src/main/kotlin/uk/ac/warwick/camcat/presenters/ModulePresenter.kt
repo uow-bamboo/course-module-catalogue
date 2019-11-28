@@ -100,10 +100,10 @@ class ModulePresenter(
     description("MA020")?.let { SessionStudyAmount("Fieldwork", it) },
     description("MA021")?.let { SessionStudyAmount("External visits", it) },
     description("MA022")?.let { SessionStudyAmount("Work-based learning", it) },
-    description("MA026")?.let {
+    description("MA026")?.title?.let {
       DurationStudyAmount(
         "Private study",
-        Duration.ofHours(BigDecimal(it.title).longValueExact())
+        Duration.ofHours(BigDecimal(it).longValueExact())
       )
     }
   ).filterNot { it.zero }
