@@ -19,9 +19,7 @@ class ModuleController(
 ) {
   @ModelAttribute("module")
   fun module(@PathVariable("moduleCode") moduleCode: String, @PathVariable("academicYear") academicYear: AcademicYear): ModulePresenter? =
-    modulePresenterFactory.build(moduleCode, academicYear) ?: throw ResponseStatusException(
-      HttpStatus.NOT_FOUND
-    )
+    modulePresenterFactory.build(moduleCode, academicYear) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
   @GetMapping
   fun show() = ModelAndView("modules/show")

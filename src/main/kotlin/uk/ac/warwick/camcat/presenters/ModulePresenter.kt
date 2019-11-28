@@ -20,9 +20,15 @@ class ModulePresenterFactory(
 ) {
   fun build(moduleCode: String, academicYear: AcademicYear): ModulePresenter? =
     moduleService.findByModuleCode(moduleCode)?.let { module ->
+      val occurrences = moduleService.findOccurrences(module.code, academicYear)
+
+      if (occurrences.isEmpty()) {
+        return null
+      }
+
       ModulePresenter(
         module = module,
-        occurrenceCollection = moduleService.findOccurrences(module.code, academicYear),
+        occurrenceCollection = occurrences,
         descriptions = moduleService.findDescriptions(module.code, academicYear),
         relatedModules = moduleService.findRelatedModules(module.code, academicYear),
         topics = moduleService.findTopics(module.code, academicYear),
