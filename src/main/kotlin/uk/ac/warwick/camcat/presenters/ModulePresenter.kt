@@ -114,6 +114,8 @@ class ModulePresenter(
     }
   ).filterNot { it.zero }
 
+  val totalStudyHours = BigDecimal(studyAmounts.sumBy { it.requiredDuration.toMinutes().toInt() }).divide(BigDecimal(60))
+
   val preRequisiteModules = relatedModules.preRequisites.map(::AssociatedModulePresenter)
   val postRequisiteModules = relatedModules.postRequisites.map(::AssociatedModulePresenter)
   val antiRequisiteModules = relatedModules.antiRequisites.map(::AssociatedModulePresenter)
@@ -199,10 +201,13 @@ interface StudyAmount {
   val requiredDescription: String?
   val optionalDescription: String?
   val zero: Boolean
+  val requiredDuration: Duration
 }
 
 class DurationStudyAmount(override val type: String, private val duration: Duration) : StudyAmount {
   override val requiredDescription = if (!zero) DurationFormatter.format(duration) else null
+
+  override val requiredDuration = duration
 
   override val optionalDescription = null
 
@@ -223,6 +228,7 @@ class SessionStudyAmount(override val type: String, mds: ModuleDescription) : St
   val requiredSessions = mds.udf1?.toInt() ?: 0
   val requiredSessionDuration: Duration = duration(mds.udf2)
   override val requiredDescription = describe(requiredSessions, requiredSessionDuration)
+  override val requiredDuration = requiredSessionDuration.multipliedBy(requiredSessions.toLong())
 
   val optionalSessions = mds.udf3?.toInt() ?: 0
   val optionalSessionDuration: Duration = duration(mds.udf4)

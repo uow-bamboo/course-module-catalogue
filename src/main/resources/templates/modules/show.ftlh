@@ -349,6 +349,13 @@
               </tr>
             </#list>
             </tbody>
+            <tfoot>
+              <tr>
+                <td>Total</td>
+                <td id="module-total-study-hours">${module.totalStudyHours} hours</td>
+                <td></td>
+              </tr>
+            </tfoot>
           </table>
         </#if>
 

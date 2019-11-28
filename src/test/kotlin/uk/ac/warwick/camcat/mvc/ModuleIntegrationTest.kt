@@ -80,6 +80,10 @@ class ModuleIntegrationTest : IntegrationTest() {
         "Private study", "20 hours"
       )
     )
+    assertThat(
+      content("module-total-study-hours"),
+      equalToCompressingWhiteSpace("66 hours")
+    )
 
     assertThat(
       tableCells("module-assessment"),
