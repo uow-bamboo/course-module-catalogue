@@ -13,11 +13,11 @@
     <link rel="icon" type="image/png" sizes="32x32" href="<@spring.url "/assets/images/favicon-32x32.png" />">
     <link rel="icon" type="image/png" sizes="16x16" href="<@spring.url "/assets/images/favicon-16x16.png" />">
     <link rel="manifest" href="<@spring.url "/assets/images/site.webmanifest" />">
-    <link rel="mask-icon" href="<@spring.url "/assets/images/safari-pinned-tab.svg" />" color="#a14418">
+    <link rel="mask-icon" href="<@spring.url "/assets/images/safari-pinned-tab.svg" />" color="#303060">
     <link rel="shortcut icon" href="<@spring.url "/assets/images/favicon.ico" />">
-    <meta name="msapplication-TileColor" content="#a14418">
+    <meta name="msapplication-TileColor" content="#303060">
     <meta name="msapplication-config" content="<@spring.url "/assets/images/browserconfig.xml" />">
-    <meta name="theme-color" content="#a14418">
+    <meta name="theme-color" content="#303060">
 
     <title><#if title?has_content>${title} - </#if>Course and Module Catalogue</title>
 
