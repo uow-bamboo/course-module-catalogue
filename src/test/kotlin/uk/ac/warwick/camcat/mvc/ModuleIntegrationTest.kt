@@ -10,6 +10,7 @@ import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithMockUser
+import org.springframework.test.web.servlet.get
 import uk.ac.warwick.camcat.system.security.Role
 import uk.ac.warwick.userlookup.User
 import uk.ac.warwick.userlookup.UserLookupInterface
@@ -94,5 +95,21 @@ class ModuleIntegrationTest : IntegrationTest() {
       content("module-core-availability"),
       stringContainsInOrder("Year 1 of", "UCSA-G500", "Computer Science")
     )
+  }
+
+  @Test
+  @WithMockUser(roles = [Role.user])
+  fun testNotFoundWhenNoOccurrence() {
+    mvc.get("/modules/2030/CS126-15").andExpect {
+      status { isNotFound }
+    }
+  }
+
+  @Test
+  @WithMockUser(roles = [Role.user])
+  fun testNotFoundWhenModuleCodeDoesNotExist() {
+    mvc.get("/modules/2020/AB123-45").andExpect {
+      status { isNotFound }
+    }
   }
 }

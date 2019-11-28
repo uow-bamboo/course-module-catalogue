@@ -14,7 +14,7 @@ interface ModuleRepository : CrudRepository<Module, String> {
   fun findAll(pageable: Pageable): Page<Module>
 
   @EntityGraph(attributePaths = ["assessmentPattern.components"])
-  fun findByCode(code: String): Module
+  fun findByCode(code: String): Module?
 
   @Query(
     """select module from Route route
