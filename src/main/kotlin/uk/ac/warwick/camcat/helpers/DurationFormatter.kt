@@ -7,7 +7,7 @@ object DurationFormatter {
   fun format(duration: Duration): String {
     val seconds = BigDecimal(duration.seconds)
     val minutes = seconds.divide(BigDecimal(60)).rem(BigDecimal(60))
-    val hours = seconds.divide(BigDecimal(3600)).rem(BigDecimal(60))
+    val hours = seconds.divide(BigDecimal(3600))
 
     var string = ""
 
