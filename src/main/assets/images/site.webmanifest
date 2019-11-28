@@ -1,6 +1,6 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "Course and Module Catalogue",
+    "short_name": "Course and Module Catalogue",
     "icons": [
         {
             "src": "/assets/images/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#a14418",
-    "background_color": "#a14418",
+    "theme_color": "#303060",
+    "background_color": "#303060",
     "display": "standalone"
 }
