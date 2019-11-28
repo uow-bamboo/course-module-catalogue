@@ -1,8 +1,8 @@
 SET SCHEMA INTUIT;
 
-INSERT INTO INS_MOD (MOD_CODE, MOD_NAME, MOD_IUSE) VALUES ('CS118-15', 'Programming for Computer Scientists', 'Y');
-INSERT INTO INS_MOD (MOD_CODE, MOD_NAME, MOD_IUSE) VALUES ('CS261-15', 'Software Engineering', 'Y');
-INSERT INTO INS_MOD (MOD_CODE, MOD_NAME, MOD_IUSE) VALUES ('CS343-30', 'Computer & Business Studies Project', 'Y');
+INSERT INTO INS_MOD (MOD_CODE, MOD_NAME, MOD_IUSE, MOD_UDF5) VALUES ('CS118-15', 'Programming for Computer Scientists', 'Y', 'Y');
+INSERT INTO INS_MOD (MOD_CODE, MOD_NAME, MOD_IUSE, MOD_UDF5) VALUES ('CS261-15', 'Software Engineering', 'Y', 'Y');
+INSERT INTO INS_MOD (MOD_CODE, MOD_NAME, MOD_IUSE, MOD_UDF5) VALUES ('CS343-30', 'Computer & Business Studies Project', 'Y', 'Y');
 
 INSERT INTO INS_LCA (LCA_CODE, LCA_NAME) VALUES ('U', 'University of Warwick');
 
@@ -74,7 +74,7 @@ INSERT INTO CAM_FME (FMC_CODE, FME_SEQ, FME_MODP, MTC_CODE) VALUES ('CS118-15', 
 INSERT INTO CAM_FME (FMC_CODE, FME_SEQ, FME_MODP, MTC_CODE) VALUES ('CS126-15', '001', 'CS126-15', 'S');
 INSERT INTO CAM_FME (FMC_CODE, FME_SEQ, FME_MODP, MTC_CODE) VALUES ('CS343-30', '001', 'CS343-30', 'S');
 
-INSERT INTO INS_MOD (MOD_CODE, DPT_CODE, MAP_CODE, MOD_CRDT, MOD_NAME, MOD_IUSE) VALUES ('CS126-15', 'CS', 'CS126-15', '15', 'Design of Information Structures', 'Y');
+INSERT INTO INS_MOD (MOD_CODE, DPT_CODE, MAP_CODE, MOD_CRDT, MOD_NAME, MOD_IUSE, MOD_UDF5) VALUES ('CS126-15', 'CS', 'CS126-15', '15', 'Design of Information Structures', 'Y', 'Y');
 INSERT INTO CAM_MAV (MOD_CODE, MAV_OCCUR, AYR_CODE, PSL_CODE, DPT_CODE, LEV_CODE, LCA_CODE, MAV_MAVN, PRS_CODE) VALUES ('CS126-15', 'A', '19/20', 'A', 'CS', '1', 'U', 'Design of Information Structures', 'CS0000126');
 INSERT INTO CAM_MAVT (MOD_CODE, MAV_OCCUR, AYR_CODE, PSL_CODE, MAV_CRED) VALUES ('CS126-15', 'A', '19/20', 'A', '15');
 INSERT INTO CAM_MDS (MOD_CODE, MDS_SEQN, MDS_DVNC, MDS_AYRC, MOD_DESC) VALUES ('CS126-15', '0001', 'TMB003', '19/20', 'The module aims for students to gain familiarity with the specification, implementation and use of some standard abstract data types (ADTs) such as linked lists, stacks, queues, graphs etc.');

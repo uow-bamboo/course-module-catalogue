@@ -5,10 +5,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
-import uk.ac.warwick.camcat.sits.entities.Award
-import uk.ac.warwick.camcat.sits.entities.Course
 import uk.ac.warwick.camcat.sits.entities.Programme
-import uk.ac.warwick.camcat.sits.entities.Route
 
 @Repository
 interface ProgrammeRepository : CrudRepository<Programme, String> {

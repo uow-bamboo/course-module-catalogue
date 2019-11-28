@@ -190,7 +190,7 @@ class DepartmentPresenter(department: Department, warwickDepartment: uk.ac.warwi
 class ModuleCost(mds: ModuleDescription) {
   val category = mds.title
   val description = mds.description
-  val costToStudent = BigDecimal(mds.udf1)
+  val costToStudent = mds.udf1?.let(::BigDecimal)
   val fundedBy = mds.udf2
 }
 

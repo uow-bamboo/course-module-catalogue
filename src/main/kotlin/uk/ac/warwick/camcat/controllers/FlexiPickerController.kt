@@ -9,7 +9,6 @@ import uk.ac.warwick.camcat.services.GroupService
 import uk.ac.warwick.camcat.system.security.Role
 import uk.ac.warwick.userlookup.Group
 import uk.ac.warwick.userlookup.User
-import uk.ac.warwick.userlookup.UserLookup
 import uk.ac.warwick.userlookup.UserLookupInterface
 import javax.annotation.security.RolesAllowed
 

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.system.config.RoleConfiguration
 import uk.ac.warwick.userlookup.GroupService
 import uk.ac.warwick.userlookup.User
-import uk.ac.warwick.userlookup.UserLookup
 import uk.ac.warwick.userlookup.UserLookupInterface
 
 @Service
