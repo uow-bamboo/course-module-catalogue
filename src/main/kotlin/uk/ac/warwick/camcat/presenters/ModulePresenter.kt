@@ -50,7 +50,7 @@ class ModulePresenter(
   warwickDepartmentsService: WarwickDepartmentsService
 ) {
   private val sortedOccurrences = occurrenceCollection.sortedBy { it.key.occurrenceCode }
-  private val primaryOccurrence = sortedOccurrences.find { it.key.occurrenceCode == "A" } ?: sortedOccurrences.first()
+  private val primaryOccurrence = sortedOccurrences.find { it.key.occurrenceCode == "A" } ?: sortedOccurrences.firstOrNull()
 
   private val descriptionsByCode = descriptions.groupBy { it.code }.mapValues { it.value.sortedBy { it.key.sequence } }
 
@@ -71,8 +71,8 @@ class ModulePresenter(
   }
   val faculty = module.department?.faculty
 
-  val level = primaryOccurrence.level
-  val leader = primaryOccurrence.moduleLeaderPersonnelCode?.let(userPresenterFactory::buildFromPersonnelCode)
+  val level = primaryOccurrence?.level
+  val leader = primaryOccurrence?.moduleLeaderPersonnelCode?.let(userPresenterFactory::buildFromPersonnelCode)
 
   val duration = "Not yet in SITS" // TODO MA-634
   val locations = descriptions("MA010").map(::StudyLocation)
@@ -106,10 +106,10 @@ class ModulePresenter(
     description("MA020")?.let { SessionStudyAmount("Fieldwork", it) },
     description("MA021")?.let { SessionStudyAmount("External visits", it) },
     description("MA022")?.let { SessionStudyAmount("Work-based learning", it) },
-    description("MA026")?.let {
+    description("MA026")?.title?.let {
       DurationStudyAmount(
         "Private study",
-        Duration.ofHours(BigDecimal(it.title).longValueExact())
+        Duration.ofHours(BigDecimal(it).longValueExact())
       )
     }
   ).filterNot { it.zero }
@@ -142,7 +142,7 @@ class ModulePresenter(
     )
   }.sortedWith(compareBy(TopicPresenter::weighting).reversed().thenBy { it.department.name })
 
-  fun presentAvailablity(items: Collection<ModuleAvailability>) = items
+  private fun presentAvailablity(items: Collection<ModuleAvailability>) = items
     .groupBy { it.courseCode }.values
     .map(::CourseAvailabilityPresenter)
     .sortedWith(compareBy(CourseAvailabilityPresenter::courseName).thenBy(CourseAvailabilityPresenter::courseCode))
@@ -184,13 +184,13 @@ class AssessmentComponentPresenter(component: AssessmentComponent) {
 
 class DepartmentPresenter(department: Department, warwickDepartment: uk.ac.warwick.camcat.services.Department?) {
   val code = department.code
-  val name = warwickDepartment?.name ?: department.name
-  val shortName = warwickDepartment?.shortName ?: department.name
-  val veryShortName = warwickDepartment?.veryShortName ?: department.name
+  val name = warwickDepartment?.name ?: department.name ?: department.code
+  val shortName = warwickDepartment?.shortName ?: department.name ?: department.code
+  val veryShortName = warwickDepartment?.veryShortName ?: department.name ?: department.code
 }
 
 class ModuleCost(mds: ModuleDescription) {
-  val category = mds.title
+  val category = mds.title ?: "Other"
   val description = mds.description
   val costToStudent = mds.udf1?.let(::BigDecimal)
   val fundedBy = mds.udf2

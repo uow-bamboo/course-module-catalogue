@@ -17,18 +17,18 @@
 
       <#if module.faculty??>
         <dt>Faculty</dt>
-        <dd id="module-faculty-name">${module.faculty.name}</dd>
+        <dd id="module-faculty-name">${module.faculty.name!(module.faculty.code)}</dd>
       </#if>
 
       <#if module.level??>
         <dt>Level</dt>
-        <dd id="module-level-name">${module.level.name}</dd>
+        <dd id="module-level-name">${module.level.name!(module.level.code)}</dd>
       </#if>
 
-    <#if module.leader??>
-      <dt>Module leader</dt>
-      <dd id="module-leader">${module.leader.name}</dd>
-    </#if>
+      <#if module.leader??>
+        <dt>Module leader</dt>
+        <dd id="module-leader">${module.leader.name!""}</dd>
+      </#if>
 
     <dt>Credit value</dt>
     <dd id="module-credit-value">${module.creditValue}</dd>
@@ -153,7 +153,7 @@
           </p>
           <ul id="module-pre-requisite-modules">
               <#list module.preRequisiteModules as req>
-                <li>${req.code} ${req.title}</li>
+                <li>${req.code} ${req.title!""}</li>
               </#list>
           </ul>
         <#else>
@@ -168,7 +168,7 @@
           </p>
           <ul id="module-post-requisite-modules">
               <#list module.postRequisiteModules as req>
-                <li>${req.code} ${req.title}</li>
+                <li>${req.code} ${req.title!""}</li>
               </#list>
           </ul>
         <#else>
@@ -183,7 +183,7 @@
           </p>
           <ul id="module-anti-requisite-modules">
               <#list module.antiRequisiteModules as req>
-                <li>${req.code} ${req.title}</li>
+                <li>${req.code} ${req.title!""}</li>
               </#list>
           </ul>
         <#else>
@@ -192,58 +192,58 @@
           </p>
         </#if>
 
-      <#if module.coreAvailability?has_content || module.optionalAvailability?has_content>
-        <h2>Courses</h2>
+        <#if module.coreAvailability?has_content || module.optionalAvailability?has_content>
+          <h2>Courses</h2>
 
-        <#macro moduleAvailability list>
-          <ul>
-              <#list list as availability>
-                <li>
-                    <#if availability.routes?size == 1>
-                        <#local route = availability.routes[0] />
-                        <#if route.year??>
-                          Year ${route.year} of
-                        <#elseif route.block??>
-                          Block ${route.block} of
+            <#macro moduleAvailability list>
+              <ul>
+                  <#list list as availability>
+                    <li>
+                        <#if availability.routes?size == 1>
+                            <#local route = availability.routes[0] />
+                            <#if route.year??>
+                              Year ${route.year} of
+                            <#elseif route.block??>
+                              Block ${route.block} of
+                            </#if>
                         </#if>
-                    </#if>
-                  <a href="/courses/${academicYear.startYear?c}/${availability.courseCode}">
-                      ${availability.courseCode}
-                      ${availability.courseName!""}
-                  </a>
-                    <#if availability.routes?size gt 1>
-                      <ul>
-                          <#list availability.routes as route>
-                            <li>
-                                <#if route.year??>
-                                  Year ${route.year} of
-                                <#elseif route.block??>
-                                  Block ${route.block} of
-                                </#if>
-                                ${route.routeCode} ${route.routeName!""}
-                            </li>
-                          </#list>
-                      </ul>
-                    </#if>
-                </li>
-              </#list>
-          </ul>
-        </#macro>
+                      <a href="/courses/${academicYear.startYear?c}/${availability.courseCode}">
+                          ${availability.courseCode}
+                          ${availability.courseName!""}
+                      </a>
+                        <#if availability.routes?size gt 1>
+                          <ul>
+                              <#list availability.routes as route>
+                                <li>
+                                    <#if route.year??>
+                                      Year ${route.year} of
+                                    <#elseif route.block??>
+                                      Block ${route.block} of
+                                    </#if>
+                                    ${route.routeCode} ${route.routeName!""}
+                                </li>
+                              </#list>
+                          </ul>
+                        </#if>
+                    </li>
+                  </#list>
+              </ul>
+            </#macro>
 
-        <#if module.coreAvailability?has_content>
-          <p>This module is core for:</p>
-          <div id="module-core-availability">
-              <@moduleAvailability module.coreAvailability />
-          </div>
-        </#if>
+            <#if module.coreAvailability?has_content>
+              <p>This module is core for:</p>
+              <div id="module-core-availability">
+                  <@moduleAvailability module.coreAvailability />
+              </div>
+            </#if>
 
-        <#if module.optionalAvailability?has_content>
-          <p>This module is optional for:</p>
-          <div id="module-optional-availability">
-              <@moduleAvailability module.optionalAvailability />
-          </div>
+            <#if module.optionalAvailability?has_content>
+              <p>This module is optional for:</p>
+              <div id="module-optional-availability">
+                  <@moduleAvailability module.optionalAvailability />
+              </div>
+            </#if>
         </#if>
-      </#if>
     </div>
 
     <div id="assessment" role="tabpanel" class="tab-pane">
@@ -257,11 +257,11 @@
           </p>
         </#if>
 
-      <#if module.hasAuditOnlyAssessmentGroup>
-        <p>
-          Students can register for this module without taking any assessment.
-        </p>
-      </#if>
+        <#if module.hasAuditOnlyAssessmentGroup>
+          <p>
+            Students can register for this module without taking any assessment.
+          </p>
+        </#if>
       <table class="table table-bordered" id="module-assessment">
         <thead>
         <tr>
@@ -282,9 +282,13 @@
           </tr>
             <#list group.components as component>
               <tr>
-                <td>${component.name}</td>
-                <td>${component.type}</td>
-                <td>${component.weighting}%</td>
+                <td>${component.name!""}</td>
+                <td>${component.type!""}</td>
+                <td>
+                    <#if component.weighting??>
+                        ${component.weighting}%
+                    </#if>
+                </td>
               </tr>
                 <#if component.description??>
                   <tr>
@@ -319,7 +323,11 @@
             <#list module.teachingSplits as item>
               <tr>
                 <td>${item.department.name}</td>
-                <td>${item.weighting}%</td>
+                <td>
+                    <#if item.weighting??>
+                        ${item.weighting}%
+                    </#if>
+                </td>
               </tr>
             </#list>
             </tbody>
@@ -385,10 +393,16 @@
               <tr>
                 <td>${cost.category}</td>
                 <td>
-                    ${renderMarkdown(cost.description)}
+                    <#if cost.description??>
+                        ${renderMarkdown(cost.description)}
+                    </#if>
                 </td>
-                <td>${cost.fundedBy}</td>
-                <td>${cost.costToStudent?string.currency}</td>
+                <td>${cost.fundedBy!""}</td>
+                <td>
+                    <#if cost.costToStudent??>
+                        ${cost.costToStudent?string.currency}
+                    </#if>
+                </td>
               </tr>
             </#list>
             </tbody>
