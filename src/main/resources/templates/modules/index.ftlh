@@ -117,7 +117,6 @@
       <#else>
         <p>There are no results.</p>
       </#if>
-
     </div>
   </form>
 </@layout>

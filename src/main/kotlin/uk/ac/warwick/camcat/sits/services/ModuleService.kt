@@ -12,6 +12,8 @@ interface ModuleService {
 
   fun findAllWithOccurrenceInAcademicYear(academicYear: AcademicYear): Streamable<Module>
 
+  fun findAssessmentComponents(moduleCode: String, academicYear: AcademicYear): Collection<AssessmentComponent>
+
   fun findDescriptions(moduleCode: String, academicYear: AcademicYear): Collection<ModuleDescription>
 
   fun findOccurrences(moduleCode: String, academicYear: AcademicYear): Collection<ModuleOccurrence>
@@ -38,7 +40,8 @@ class DatabaseModuleService(
   private val descriptionRepository: ModuleDescriptionRepository,
   private val occurrenceRepository: ModuleOccurrenceRepository,
   private val ruleRepository: ModuleRuleRepository,
-  private val topicRepository: TopicRepository
+  private val topicRepository: TopicRepository,
+  private val assessmentComponentRepository: AssessmentComponentRepository
 ) : ModuleService {
   override fun findAllWithOccurrenceInAcademicYear(academicYear: AcademicYear): Streamable<Module> =
     moduleRepository.findAllWithOccurrenceInAcademicYear(academicYear)
@@ -91,6 +94,14 @@ class DatabaseModuleService(
   @Cacheable("moduleAvailability")
   override fun findAvailability(moduleCode: String, academicYear: AcademicYear): Collection<ModuleAvailability> =
     moduleRepository.findModuleAvailability(moduleCode, academicYear)
+
+  @Cacheable("moduleAssessmentComponents")
+  override fun findAssessmentComponents(
+    moduleCode: String,
+    academicYear: AcademicYear
+  ): Collection<AssessmentComponent> =
+    assessmentComponentRepository.findAllByAssessmentPatternCodeAndAcademicYear(moduleCode, academicYear)
+
 }
 
 data class RelatedModules(
