@@ -18,7 +18,7 @@ class ModuleController(
   private val modulePresenterFactory: ModulePresenterFactory
 ) {
   @ModelAttribute("module")
-  fun module(@PathVariable("moduleCode") moduleCode: String, @PathVariable("academicYear") academicYear: AcademicYear): ModulePresenter? =
+  fun module(@PathVariable("moduleCode") moduleCode: String, @PathVariable("academicYear") academicYear: AcademicYear): ModulePresenter =
     modulePresenterFactory.build(moduleCode, academicYear) ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
 
   @GetMapping

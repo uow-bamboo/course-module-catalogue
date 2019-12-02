@@ -3,7 +3,8 @@ package uk.ac.warwick.camcat.presenters
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.stereotype.Component
 import uk.ac.warwick.camcat.helpers.DurationFormatter
-import uk.ac.warwick.camcat.services.WarwickDepartmentsService
+import uk.ac.warwick.camcat.services.DepartmentPresenter
+import uk.ac.warwick.camcat.services.DepartmentService
 import uk.ac.warwick.camcat.sits.entities.*
 import uk.ac.warwick.camcat.sits.repositories.ModuleAvailability
 import uk.ac.warwick.camcat.sits.services.ModuleService
@@ -15,7 +16,7 @@ import java.time.Duration
 @Component
 class ModulePresenterFactory(
   private val userPresenterFactory: UserPresenterFactory,
-  private val warwickDepartmentsService: WarwickDepartmentsService,
+  private val departmentService: DepartmentService,
   private val moduleService: ModuleService
 ) {
   fun build(moduleCode: String, academicYear: AcademicYear): ModulePresenter? =
@@ -34,7 +35,7 @@ class ModulePresenterFactory(
         topics = moduleService.findTopics(module.code, academicYear),
         availability = moduleService.findAvailability(module.code, academicYear),
         userPresenterFactory = userPresenterFactory,
-        warwickDepartmentsService = warwickDepartmentsService
+        departmentService = departmentService
       )
     }
 }
@@ -47,10 +48,11 @@ class ModulePresenter(
   topics: Collection<Topic>,
   availability: Collection<ModuleAvailability>,
   userPresenterFactory: UserPresenterFactory,
-  warwickDepartmentsService: WarwickDepartmentsService
+  departmentService: DepartmentService
 ) {
   private val sortedOccurrences = occurrenceCollection.sortedBy { it.key.occurrenceCode }
-  private val primaryOccurrence = sortedOccurrences.find { it.key.occurrenceCode == "A" } ?: sortedOccurrences.firstOrNull()
+  private val primaryOccurrence =
+    sortedOccurrences.find { it.key.occurrenceCode == "A" } ?: sortedOccurrences.firstOrNull()
 
   private val descriptionsByCode = descriptions.groupBy { it.code }.mapValues { it.value.sortedBy { it.key.sequence } }
 
@@ -63,12 +65,7 @@ class ModulePresenter(
   val title = module.title ?: "Untitled module"
   val creditValue = module.creditValue ?: module.code.takeLastWhile { it != '-' }.let(::BigDecimal)
 
-  val department = module.department?.let { department ->
-    DepartmentPresenter(
-      department,
-      warwickDepartmentsService.findByDepartmentCode(department.code)
-    )
-  }
+  val department = module.department?.code?.let(departmentService::findByDepartmentCode)
   val faculty = module.department?.faculty
 
   val level = primaryOccurrence?.level
@@ -114,7 +111,8 @@ class ModulePresenter(
     }
   ).filterNot { it.zero }
 
-  val totalStudyHours = BigDecimal(studyAmounts.sumBy { it.requiredDuration.toMinutes().toInt() }).divide(BigDecimal(60))
+  val totalStudyHours =
+    BigDecimal(studyAmounts.sumBy { it.requiredDuration.toMinutes().toInt() }).divide(BigDecimal(60))
 
   val preRequisiteModules = relatedModules.preRequisites.map(::AssociatedModulePresenter)
   val postRequisiteModules = relatedModules.postRequisites.map(::AssociatedModulePresenter)
@@ -135,10 +133,8 @@ class ModulePresenter(
   val teachingSplits = topics.filter { it.teachingDepartment != null }.map { top ->
     TopicPresenter(
       top,
-      DepartmentPresenter(
-        top.teachingDepartment!!,
-        warwickDepartmentsService.findByDepartmentCode(top.teachingDepartment.code)
-      )
+      departmentService.findByDepartmentCode(top.teachingDepartment!!.code)
+        ?: DepartmentPresenter.build(top.teachingDepartment, null, null)
     )
   }.sortedWith(compareBy(TopicPresenter::weighting).reversed().thenBy { it.department.name })
 
@@ -147,8 +143,10 @@ class ModulePresenter(
     .map(::CourseAvailabilityPresenter)
     .sortedWith(compareBy(CourseAvailabilityPresenter::courseName).thenBy(CourseAvailabilityPresenter::courseCode))
 
-  val coreAvailability = presentAvailablity(availability.filter { it.selectionStatus != ModuleSelectionStatus.Optional })
-  val optionalAvailability = presentAvailablity(availability.filter { it.selectionStatus == ModuleSelectionStatus.Optional })
+  val coreAvailability =
+    presentAvailablity(availability.filter { it.selectionStatus != ModuleSelectionStatus.Optional })
+  val optionalAvailability =
+    presentAvailablity(availability.filter { it.selectionStatus == ModuleSelectionStatus.Optional })
 }
 
 class TopicPresenter(topic: Topic, val department: DepartmentPresenter) {
@@ -177,16 +175,10 @@ class AssessmentGroupPresenter(pattern: AssessmentPattern, components: Collectio
 
 class AssessmentComponentPresenter(component: AssessmentComponent) {
   val name = component.name
+  val typeCode = component.type?.code
   val type = component.type?.name
   val weighting = component.weighting
   val description = component.description?.text
-}
-
-class DepartmentPresenter(department: Department, warwickDepartment: uk.ac.warwick.camcat.services.Department?) {
-  val code = department.code
-  val name = warwickDepartment?.name ?: department.name ?: department.code
-  val shortName = warwickDepartment?.shortName ?: department.name ?: department.code
-  val veryShortName = warwickDepartment?.veryShortName ?: department.name ?: department.code
 }
 
 class ModuleCost(mds: ModuleDescription) {
@@ -248,7 +240,11 @@ class CourseAvailabilityPresenter(availabilities: Collection<ModuleAvailability>
   val courseCode = availabilities.first().courseCode
   val courseName = availabilities.first().courseName
   val routes = availabilities.map(::AvailabilityPresenter)
-    .sortedWith(compareBy(AvailabilityPresenter::optionalCore).thenBy(AvailabilityPresenter::block).thenBy(AvailabilityPresenter::routeName).thenBy(AvailabilityPresenter::routeCode))
+    .sortedWith(
+      compareBy(AvailabilityPresenter::optionalCore).thenBy(AvailabilityPresenter::block).thenBy(
+        AvailabilityPresenter::routeName
+      ).thenBy(AvailabilityPresenter::routeCode)
+    )
 }
 
 class AvailabilityPresenter(availability: ModuleAvailability) {

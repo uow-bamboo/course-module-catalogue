@@ -36,3 +36,26 @@ dt, dd {
 .tab-content {
   margin-top: 1.5rem;
 }
+
+
+.nav-tabs {
+  > li.active {
+    font-weight: bold;
+  }
+
+  @media (min-width: @screen-sm-min) {
+    html.flexbox & {
+      display: flex;
+
+      > li {
+        flex: 1 1 0;
+        white-space: nowrap;
+
+        > a i {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+}
+

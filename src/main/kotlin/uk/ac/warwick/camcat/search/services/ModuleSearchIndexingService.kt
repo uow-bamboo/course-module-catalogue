@@ -2,6 +2,7 @@ package uk.ac.warwick.camcat.search.services
 
 import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.presenters.ModulePresenterFactory
+import uk.ac.warwick.camcat.search.documents.AssessmentComponent
 import uk.ac.warwick.camcat.search.repositories.ModuleSearchRepository
 import uk.ac.warwick.camcat.sits.services.ModuleService
 import uk.ac.warwick.camcat.system.Logging
@@ -20,7 +21,6 @@ class ElasticsearchModuleSearchIndexingService(
   private val modulePresenterFactory: ModulePresenterFactory
 ) : ModuleSearchIndexingService, Logging() {
   private val academicYears = mutableListOf(
-    AcademicYear.starting(2019),
     AcademicYear.starting(2020)
   )
 
@@ -47,23 +47,36 @@ class ElasticsearchModuleSearchIndexingService(
     val module = modulePresenterFactory.build(mod.code, academicYear)!!
 
     return ModuleDocument(
-      id = "${module.code}-$academicYear",
+      id = "${module.code}-${academicYear.startYear}",
       code = module.code,
       academicYear = academicYear.startYear,
       title = module.title,
       stemCode = module.stemCode,
       creditValue = module.creditValue,
       departmentCode = module.department?.code,
-      departmentName = module.department?.shortName,
+      departmentShortName = module.department?.shortName,
+      departmentName = module.department?.name,
       facultyCode = module.faculty?.code,
+      facultyName = module.faculty?.name,
       levelCode = module.level?.code,
       leader = module.leader?.universityId,
+      leaderName = module.leader?.name,
       text = listOfNotNull(
-        *(module.learningOutcomes.toTypedArray()),
         module.introductoryDescription,
         module.aims,
-        module.outlineSyllabus
-      ).joinToString(separator = "\n")
+        module.outlineSyllabus,
+        *(module.learningOutcomes.toTypedArray()),
+        module.subjectSpecificSkills,
+        module.transferableSkills
+      ).joinToString(separator = "\n"),
+      assessmentComponents = module.assessmentGroups.flatMap { group ->
+        group.components.filter { it.typeCode != null }.map { component ->
+          AssessmentComponent(
+            typeCode = component.typeCode!!,
+            name = component.name
+          )
+        }
+      }
     )
   }
 }

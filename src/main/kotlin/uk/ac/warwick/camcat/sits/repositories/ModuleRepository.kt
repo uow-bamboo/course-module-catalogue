@@ -9,11 +9,15 @@ import uk.ac.warwick.camcat.sits.entities.Module
 import uk.ac.warwick.camcat.sits.entities.ModuleSelectionStatus
 import uk.ac.warwick.camcat.sits.entities.Route
 import uk.ac.warwick.util.termdates.AcademicYear
+import java.math.BigDecimal
 
 @Repository
 interface ModuleRepository : CrudRepository<Module, String> {
   @EntityGraph(attributePaths = ["assessmentPattern.components"])
   fun findByCode(code: String): Module?
+
+  @Query("select distinct m.creditValue from Module m where m.creditValue is not null order by m.creditValue asc")
+  fun findCreditValues(): List<BigDecimal>
 
   @Query(
     """

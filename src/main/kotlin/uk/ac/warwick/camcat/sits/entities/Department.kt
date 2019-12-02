@@ -1,14 +1,14 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import org.hibernate.annotations.Immutable
-import org.hibernate.annotations.NotFound
-import org.hibernate.annotations.NotFoundAction
-import org.hibernate.annotations.Type
+import org.hibernate.annotations.*
 import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Immutable
 @Table(name = "INS_DPT")
+@Where(clause = "DPT_IUSE = 'Y'")
 data class Department(
   @Id
   @Column(name = "DPT_CODE")
@@ -27,5 +27,11 @@ data class Department(
   @JoinColumn(name = "DPT_FACC", referencedColumnName = "FAC_CODE")
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
-  val faculty: Faculty?
+  val faculty: Faculty?,
+
+  @OneToMany(mappedBy = "department")
+  val modules: Collection<Module>,
+
+  @OneToMany(mappedBy = "department")
+  val courses: Collection<Course>
 )
