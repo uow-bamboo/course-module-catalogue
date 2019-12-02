@@ -30,7 +30,7 @@ class ModuleIntegrationTest : IntegrationTest() {
   @Test
   @WithMockUser(roles = [Role.user])
   fun test() {
-    val page: HtmlPage = webClient.getPage("http://localhost/modules/2019/CS126-15")
+    val page: HtmlPage = webClient.getPage("http://localhost/modules/2020/CS126-15")
 
     fun content(id: String): String = page.getElementById(id).textContent
     fun tableCells(tableId: String): List<String> =
@@ -68,7 +68,7 @@ class ModuleIntegrationTest : IntegrationTest() {
       tableCells("module-teaching-split"),
       containsInRelativeOrder(
         "Computer Science", "80%",
-        "Warwick Mathematics Institute", "20%"
+        "Mathematics Institute", "20%"
       )
     )
 

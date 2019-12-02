@@ -55,4 +55,8 @@ $(() => {
         $('.popover').each((i, popover) => closePopover($(popover)));
       }
     });
+
+  $('form[name=modules] select').on('change', () => {
+    $('form[name=modules]').submit();
+  });
 });

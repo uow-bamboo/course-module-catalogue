@@ -24,7 +24,7 @@ class ModuleServiceTest : ContextTest() {
 
   @Test
   fun testFindRelatedModules() {
-    val rules = moduleService.findRelatedModules("CS261-15", AcademicYear.starting(2019))
+    val rules = moduleService.findRelatedModules("CS261-15", AcademicYear.starting(2020))
 
     assertThat(rules.preRequisites.map { it.code }, contains("CS118-15", "CS126-15"))
   }

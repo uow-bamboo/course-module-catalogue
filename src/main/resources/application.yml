@@ -26,6 +26,8 @@ spring.quartz:
   properties:
     org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
 
+spring.jpa.open-in-view: false
+
 ---
 
 spring.profiles: scheduling
