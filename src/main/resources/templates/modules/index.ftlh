@@ -34,12 +34,12 @@
             <label for="department" class="sr-only">Department</label>
             <select name="${spring.status.expression}" id="department" class="form-control">
               <option value="">Any department</option>
-              <#list faculties as faculty>
+              <#list results.filterOptions.faculties as faculty>
                 <optgroup label="${faculty.name!""}">
                   <option value="${faculty.code}"
                           <#if (spring.status.value!"") == faculty.code>selected</#if>
                   >Any department in ${faculty.name}</option>
-                  <#list departments as department>
+                  <#list results.filterOptions.departments as department>
                     <#if department.faculty == faculty>
                       <option value="${department.code}"
                               <#if (spring.status.value!"") == department.code>selected</#if>
@@ -56,7 +56,7 @@
             <label for="level" class="sr-only">Level</label>
             <select name="${spring.status.expression}" id="level" class="form-control">
               <option value="">Any level</option>
-              <#list levels as level>
+              <#list results.filterOptions.levels as level>
                 <option value="${level.code}"
                         <#if (spring.status.value!"") == level.code>selected</#if>
                 >${level.name}</option>
@@ -69,7 +69,7 @@
             <label for="creditValue" class="sr-only">Credit value</label>
             <select name="${spring.status.expression}" id="creditValue" class="form-control">
               <option value="">Any credit value</option>
-              <#list creditValueOptions as creditValue>
+              <#list results.filterOptions.creditValues as creditValue>
                 <option value="${creditValue}"
                         <#if spring.status.value?? && spring.status.value == creditValue?c>selected</#if>
                 >${creditValue}</option>
@@ -82,7 +82,7 @@
             <label for="assessmentType" class="sr-only">Assessment type</label>
             <select name="${spring.status.expression}" id="assessmentType" class="form-control">
               <option value="">Any assessment type</option>
-              <#list assessmentTypes as assessmentType>
+              <#list results.filterOptions.assessmentTypes as assessmentType>
                 <option value="${assessmentType.code}"
                         <#if spring.status.value?? && spring.status.value == assessmentType.code>selected</#if>
                 >${assessmentType.name}</option>

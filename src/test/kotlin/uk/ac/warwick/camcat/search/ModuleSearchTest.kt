@@ -16,9 +16,9 @@ class ModuleSearchTest : IntegrationTest() {
   fun testQuery() {
     val results = moduleSearchService.query(ModuleQuery(keywords = "CS126-15", academicYear = AcademicYear.starting(2020)))
 
-    assertEquals(1, results?.content?.size)
+    assertEquals(1, results?.page?.content?.size)
 
-    val result = results?.content?.first()!!
+    val result = results?.page?.content?.first()!!
 
     assertEquals(2020, result.academicYear)
     assertEquals("CS126-15", result.code)
@@ -29,6 +29,6 @@ class ModuleSearchTest : IntegrationTest() {
   fun testNoResultsWhenNoOccurrence() {
     val results = moduleSearchService.query(ModuleQuery(keywords = "CS126-15", academicYear = AcademicYear.starting(2021)))
 
-    assertEquals(0, results?.content?.size)
+    assertEquals(0, results?.page?.content?.size)
   }
 }

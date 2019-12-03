@@ -42,7 +42,6 @@ class ModulesIntegrationTest : IntegrationTest() {
     var page: HtmlPage = webClient.getPage("http://localhost/modules")
     var form = page.getFormByName("modules")
 
-    form.getInputByName<HtmlTextInput>("keywords").valueAttribute = "Java"
     form.getSelectByName("department").setSelectedAttribute<HtmlPage>("CS", true)
     form.getSelectByName("level").setSelectedAttribute<HtmlPage>("1", true)
     form.getSelectByName("creditValue").setSelectedAttribute<HtmlPage>("15", true)
@@ -51,7 +50,6 @@ class ModulesIntegrationTest : IntegrationTest() {
     page = form.getElementsByAttribute<HtmlButton>("button", "type", "submit").first().click()
     form = page.getFormByName("modules")
 
-    assertThat(form.getInputByName<HtmlTextInput>("keywords"), hasProperty("valueAttribute", equalTo("Java")))
     assertThat(
       form.getSelectByName("level").selectedOptions,
       hasItem(hasProperty("text", equalTo("Undergraduate Level 1")))
