@@ -37,8 +37,13 @@ data class AssessmentComponent(
   @NotFound(action = NotFoundAction.IGNORE)
   val paper: AssessmentPaper?,
 
-  @Column(name = "MAB_ADVC")
-  val paperDivisionCode: String?,
+  @ManyToOne
+  @JoinColumns(
+    JoinColumn(referencedColumnName = "ADV_APAC", name = "MAB_APAC", insertable = false, updatable = false),
+    JoinColumn(referencedColumnName = "ADV_CODE", name = "MAB_ADVC", insertable = false, updatable = false)
+  )
+  @NotFound(action = NotFoundAction.IGNORE)
+  val paperDivision: AssessmentPaperDivision?,
 
   @Column(name = "MAB_FAYN")
   @Type(type = "yes_no")
@@ -65,7 +70,6 @@ data class AssessmentComponent(
   val introducedAcademicYear: AcademicYear?,
 
   @ManyToOne
-  @Fetch(FetchMode.JOIN)
   @JoinColumns(
     JoinColumn(name = "MAP_CODE", referencedColumnName = "MAB_MAPC", insertable = false, updatable = false),
     JoinColumn(name = "MAB_SEQ", referencedColumnName = "MAB_MABS", insertable = false, updatable = false)

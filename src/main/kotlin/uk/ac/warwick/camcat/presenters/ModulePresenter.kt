@@ -34,6 +34,7 @@ class ModulePresenterFactory(
         relatedModules = moduleService.findRelatedModules(module.code, academicYear),
         topics = moduleService.findTopics(module.code, academicYear),
         availability = moduleService.findAvailability(module.code, academicYear),
+        assessmentComponents = moduleService.findAssessmentComponents(module.code, academicYear),
         userPresenterFactory = userPresenterFactory,
         departmentService = departmentService
       )
@@ -47,6 +48,7 @@ class ModulePresenter(
   relatedModules: RelatedModules,
   topics: Collection<Topic>,
   availability: Collection<ModuleAvailability>,
+  assessmentComponents: Collection<AssessmentComponent>,
   userPresenterFactory: UserPresenterFactory,
   departmentService: DepartmentService
 ) {
@@ -118,13 +120,7 @@ class ModulePresenter(
   val postRequisiteModules = relatedModules.postRequisites.map(::AssociatedModulePresenter)
   val antiRequisiteModules = relatedModules.antiRequisites.map(::AssociatedModulePresenter)
 
-  val assessmentGroups =
-    module.assessmentPattern?.components
-      ?.filterNot { it.assessmentGroup == null || it.assessmentGroup == "AO" }
-      ?.groupBy { it.assessmentGroup }
-      ?.map { AssessmentGroupPresenter(module.assessmentPattern, it.value) }
-      ?.sortedWith(compareBy(AssessmentGroupPresenter::default).reversed().thenBy(AssessmentGroupPresenter::name))
-      ?: listOf()
+  val assessmentGroups = listOf(AssessmentGroupPresenter(assessmentComponents))
 
   val costs = descriptions("MA031").map(::ModuleCost)
 
@@ -158,18 +154,7 @@ class StudyLocation(description: ModuleDescription) {
   val primary = description.udf5 == true
 }
 
-class AssessmentGroupPresenter(pattern: AssessmentPattern, components: Collection<AssessmentComponent>) {
-  val name = components.first().assessmentGroup!!
-
-  val description = if (name == "AO") "Audit only" else when (name.first()) {
-    'A' -> "Assessed"
-    'B' -> "Examined"
-    'C', 'D' -> "Assessed and examined"
-    'V' -> "Visiting students"
-    else -> "Other"
-  }
-
-  val default = pattern.defaultAssessmentGroup == name
+class AssessmentGroupPresenter(components: Collection<AssessmentComponent>) {
   val components = components.sortedBy { it.key.sequence }.map(::AssessmentComponentPresenter)
 }
 

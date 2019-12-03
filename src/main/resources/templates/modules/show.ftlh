@@ -273,13 +273,6 @@
         <tbody>
         <#list module.assessmentGroups as group>
           <tr>
-            <th colspan="3">
-                ${group.description} (${group.name})
-                <#if group.default>
-                  <span class="label label-primary">Default</span>
-                </#if>
-            </th>
-          </tr>
             <#list group.components as component>
               <tr>
                 <td>${component.name!""}</td>
