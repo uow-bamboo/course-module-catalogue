@@ -28,6 +28,15 @@ spring.quartz:
 
 spring.jpa.open-in-view: false
 
+
+spring:
+  mvc:
+    contentnegotiation:
+      favor-path-extension: true
+    pathmatch:
+      use-suffix-pattern: true
+      use-registered-suffix-pattern: true
+
 ---
 
 spring.profiles: scheduling
