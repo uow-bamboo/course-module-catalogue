@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.*
 import java.io.Serializable
 import javax.persistence.*
@@ -26,7 +25,6 @@ data class FormedModuleCollection(
   @Fetch(FetchMode.SELECT)
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "PDM_FMCC", referencedColumnName = "FMC_CODE")
-  @JsonIgnore
   val pathwayDietModules: Collection<PathwayDietModule>,
 
   @Column(name = "FMC_SNAM")
@@ -42,6 +40,5 @@ data class FormedModuleCollection(
   @Fetch(FetchMode.SELECT)
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "FMC_CODE")
-  @JsonIgnore
   val moduleRuleElements: Collection<ModuleRuleBody>
 ) : Serializable

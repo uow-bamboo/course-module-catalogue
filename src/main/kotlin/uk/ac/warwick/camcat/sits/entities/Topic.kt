@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
@@ -22,7 +21,6 @@ data class Topic(
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "MOD_CODE")
-  @JsonIgnore
   val module: Module?,
 
   @ManyToOne
@@ -33,7 +31,4 @@ data class Topic(
   @Column(name = "TOP_UDF1")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
   val academicYear: AcademicYear?
-) {
-  val moduleCode: String?
-    get() = module?.code
-}
+)

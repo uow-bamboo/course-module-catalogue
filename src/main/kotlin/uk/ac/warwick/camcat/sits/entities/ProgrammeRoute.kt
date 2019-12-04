@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
@@ -30,9 +29,5 @@ data class ProgrammeRouteKey(
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "ROU_CODE")
-  @JsonIgnore
   val route: Route
-) : Serializable {
-  val routeCode: String
-    get() = route.code
-}
+) : Serializable

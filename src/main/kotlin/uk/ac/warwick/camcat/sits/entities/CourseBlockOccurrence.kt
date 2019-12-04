@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.*
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.io.Serializable
@@ -48,7 +47,6 @@ data class CourseBlockOccurrence(
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "CBO_NCRS", referencedColumnName = "CRS_CODE")
-  @JsonIgnore
   val nextCourse: Course?,
 
   @ManyToOne
@@ -98,11 +96,7 @@ data class CourseBlockOccurrence(
 
   @Column(name = "CBO_DELM")
   val directEnrolmentsLeft: Int?
-
-) {
-  val nextCourseCode: String?
-    get() = nextCourse?.code
-}
+)
 
 @Embeddable
 data class CourseBlockOccurrenceKey(

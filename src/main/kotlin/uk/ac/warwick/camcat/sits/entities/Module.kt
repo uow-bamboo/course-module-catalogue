@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.*
 import java.io.Serializable
 import java.math.BigDecimal
@@ -33,13 +32,11 @@ data class Module(
   @OneToMany
   @NotFound(action = NotFoundAction.IGNORE)
   @Fetch(FetchMode.SELECT)
-  @JsonIgnore
   val topics: Collection<Topic>,
 
   @JoinColumn(name = "MAP_CODE")
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
-  @JsonIgnore
   val assessmentPattern: AssessmentPattern?,
 
   @Column(name = "MOD_CRDT")
@@ -49,7 +46,6 @@ data class Module(
   @Fetch(FetchMode.SELECT)
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "FME_MODP", referencedColumnName = "MOD_CODE")
-  @JsonIgnore
   val formedModuleCollectionElements: Collection<FormedModuleCollectionElement>,
 
   @OneToMany
@@ -65,10 +61,4 @@ data class Module(
   @Column(name = "MOD_UDF5")
   @Type(type = "yes_no")
   val approved: Boolean?
-) : Serializable {
-  val assessmentPatternCode: String?
-    get() = assessmentPattern?.code
-
-  val topicCodes: Collection<String>
-    get() = topics.map { it.code }
-}
+) : Serializable

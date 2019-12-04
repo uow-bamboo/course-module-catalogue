@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.*
 import javax.persistence.*
 import javax.persistence.Entity
@@ -33,19 +32,16 @@ data class Route(
       JoinColumn(name = "PRG_CODE")
     ]
   )
-  @JsonIgnore
   val programmes: Collection<Programme>,
 
   @ManyToMany(mappedBy = "routes")
   @NotFound(action = NotFoundAction.IGNORE)
   @Fetch(FetchMode.SELECT)
   @LazyCollection(LazyCollectionOption.FALSE)
-  @JsonIgnore
   val courses: Collection<Course>,
 
   @OneToMany
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "PDT_ROUC", referencedColumnName = "ROU_CODE")
-  @JsonIgnore
   val pathwayDiets: Collection<PathwayDiet>
 )

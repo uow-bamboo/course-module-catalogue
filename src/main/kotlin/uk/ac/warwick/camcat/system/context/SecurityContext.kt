@@ -21,7 +21,6 @@ import javax.servlet.Filter
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 class SecurityContext(
-  private val userLookup: UserLookupInterface,
   private val authenticationManager: WarwickAuthenticationManager,
   @Named("ssoClientFilter") private val ssoClientFilter: Filter
 ) : WebSecurityConfigurerAdapter() {
@@ -44,6 +43,7 @@ class SecurityContext(
       ?.exceptionHandling {
         it.accessDeniedPage("/error")
       }
+      ?.cors {}
   }
 
   @Bean

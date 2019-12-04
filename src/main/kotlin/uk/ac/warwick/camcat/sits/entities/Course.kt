@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.*
 import java.time.LocalDate
 import javax.persistence.*
@@ -77,19 +76,16 @@ data class Course(
   @ManyToOne
   @JoinColumn(referencedColumnName = "ESB_CODE", name = "CRS_ESB1")
   @NotFound(action = NotFoundAction.IGNORE)
-  @JsonIgnore
   val externalSubject1: ExternalSubject?,
 
   @ManyToOne
   @JoinColumn(referencedColumnName = "ESB_CODE", name = "CRS_ESB2")
   @NotFound(action = NotFoundAction.IGNORE)
-  @JsonIgnore
   val externalSubject2: ExternalSubject?,
 
   @ManyToOne
   @JoinColumn(referencedColumnName = "ESB_CODE", name = "CRS_ESB3")
   @NotFound(action = NotFoundAction.IGNORE)
-  @JsonIgnore
   val externalSubject3: ExternalSubject?,
 
   @Embedded
@@ -124,13 +120,11 @@ data class Course(
   @OneToMany
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "CRN_CRSC", referencedColumnName = "CRS_CODE")
-  @JsonIgnore
   val courseNotes: Collection<CourseNotes>,
 
   @OneToMany
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "CBK_CRSC", referencedColumnName = "CRS_CODE")
-  @JsonIgnore
   val blocks: Collection<CourseBlock>
 ) {
   val externalSubjects: List<ExternalSubject>

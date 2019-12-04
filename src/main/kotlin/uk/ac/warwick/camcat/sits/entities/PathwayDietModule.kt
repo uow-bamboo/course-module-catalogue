@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.*
 import java.io.Serializable
 import javax.persistence.*
@@ -31,7 +30,6 @@ data class PathwayDietModule(
     JoinColumnOrFormula(column = JoinColumn(name = "PDM_FMCC", referencedColumnName = "FMC_CODE")),
     JoinColumnOrFormula(formula = JoinFormula(value = "PDM_IUSE", referencedColumnName = "FMC_IUSE"))
   )
-  @JsonIgnore
   val formedModuleCollection: FormedModuleCollection?
 )
 
@@ -40,12 +38,8 @@ data class PathwayDietModuleKey(
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "PDM_PDTC", referencedColumnName = "PDT_CODE")
-  @JsonIgnore
   val pathwayDiet: PathwayDiet,
 
   @Column(name = "PDM_SEQN")
   val sequence: String
-) : Serializable {
-  val pathwayDietCode: String
-    get() = pathwayDiet.code
-}
+) : Serializable
