@@ -3,10 +3,7 @@ package uk.ac.warwick.camcat.controllers
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
 import uk.ac.warwick.camcat.search.documents.Module
 import uk.ac.warwick.camcat.search.queries.ModuleQuery
@@ -60,6 +57,7 @@ class ModulesController(
 
   @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
+  @CrossOrigin
   fun indexJson(@ModelAttribute("results", binding = false) results: List<Module>?) =
     results.orEmpty().map { module ->
       ModuleResult(

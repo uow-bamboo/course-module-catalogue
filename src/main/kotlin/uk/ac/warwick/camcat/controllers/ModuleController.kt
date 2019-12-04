@@ -24,5 +24,6 @@ class ModuleController(
 
   @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
+  @CrossOrigin
   fun showJson(@ModelAttribute("module", binding = false) module: ModulePresenter) = module
 }
