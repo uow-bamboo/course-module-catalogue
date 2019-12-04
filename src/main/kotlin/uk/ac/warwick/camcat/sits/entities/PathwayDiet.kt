@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.*
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.io.Serializable
@@ -40,7 +39,6 @@ data class PathwayDiet(
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "PDT_ROUC", referencedColumnName = "ROU_CODE")
-  @JsonIgnore
   val route: Route?,
 
   @Column(name = "PDT_PRDC")
@@ -50,7 +48,4 @@ data class PathwayDiet(
   @Fetch(FetchMode.SELECT)
   @JoinColumn(name = "PDM_PDTC", referencedColumnName = "PDT_CODE")
   val pathwayDietModules: Collection<PathwayDietModule>
-) : Serializable {
-  val routeCode: String?
-    get() = route?.code
-}
+) : Serializable

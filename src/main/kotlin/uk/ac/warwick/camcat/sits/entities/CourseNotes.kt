@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
@@ -35,12 +34,8 @@ data class CourseNotesKey(
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "CRN_CRSC")
-  @JsonIgnore
   val course: Course,
 
   @Column(name = "CRN_SEQN")
   val sequence: String
-) : Serializable {
-  val courseCode: String
-    get() = course.code
-}
+) : Serializable

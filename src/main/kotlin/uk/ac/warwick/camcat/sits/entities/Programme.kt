@@ -55,5 +55,4 @@ data class Programme(
     ]
   )
   val awards: Collection<Award>
-
 )

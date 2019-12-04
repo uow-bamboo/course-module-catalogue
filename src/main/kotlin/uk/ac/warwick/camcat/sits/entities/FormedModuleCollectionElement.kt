@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
@@ -38,12 +37,8 @@ data class FormedModuleCollectionElementKey(
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "FMC_CODE", referencedColumnName = "FMC_CODE")
-  @JsonIgnore
   val formedModuleCollection: FormedModuleCollection,
 
   @Column(name = "FME_SEQ")
   val sequence: String
-) : Serializable {
-  val formedModuleCollectionCode: String
-    get() = formedModuleCollection.code
-}
+) : Serializable

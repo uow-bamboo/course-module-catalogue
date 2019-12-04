@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.Immutable
 import org.hibernate.annotations.NotFound
 import org.hibernate.annotations.NotFoundAction
@@ -51,7 +50,6 @@ data class ModuleDescriptionKey(
   @ManyToOne
   @JoinColumn(name = "MOD_CODE", insertable = false, updatable = false)
   @NotFound(action = NotFoundAction.IGNORE)
-  @JsonIgnore
   val module: Module,
 
   @Column(name = "MDS_SEQN")
