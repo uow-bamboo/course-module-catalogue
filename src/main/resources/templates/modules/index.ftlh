@@ -109,7 +109,11 @@
               <td>
                 <a href="/modules/${query.academicYear.startYear?c}/${module.code}">${module.title}</a>
               </td>
-              <td>${module.departmentShortName!(module.departmentCode)}</td>
+              <td>
+                <#if module.departmentCode??>
+                  ${module.departmentShortName!(module.departmentCode)}
+                </#if>
+              </td>
             </tr>
           </#list>
           </tbody>
