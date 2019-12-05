@@ -97,45 +97,39 @@
             <#if results.lastPage gt 0>
               <nav aria-label="Pagination buttons">
                 <ul class="pagination" data-current-page="${results.currentPage}">
-                  <#if results.currentPage gt 0>
-                    <li>
-                      <button class="btn button" disabled aria-label="Previous" value="${results.currentPage - 1}">
+                  <li>
+                    <#if results.currentPage gt 0>
+                      <button class="btn button" aria-label="Previous" value="${results.currentPage - 1}">
                         <span>&laquo;</span>
                       </button>
-                    </li>
-                  <#else>
-                    <li>
+                    <#else>
                       <button class="btn button disabled" disabled>
                         <span aria-hidden="true">&laquo;</span>
                       </button>
-                    </li>
-                  </#if>
+                    </#if>
+                  </li>
                   <#list results.pageRange as page>
-                    <#if page == results.currentPage>
-                      <li>
+                    <li>
+                      <#if page == results.currentPage>
                         <button class="btn active" aria-label="${page + 1}" name="page" value="${page}">
                           ${page + 1}
                         </button>
-                      </li>
-                    <#else>
-                      <li>
+                      <#else>
                         <button class="btn" name="page" aria-label="${page + 1}" value="${page}">
                           ${page + 1}
                         </button>
-                      </li>
-                    </#if>
+                      </#if>
+                    </li>
                   </#list>
-                  <#if results.currentPage != results.lastPage>
-                    <li>
-                      <button class="btn button" disabled aria-label="Next" value="${results.currentPage + 1}">
+                  <li>
+                    <#if results.currentPage != results.lastPage>
+                      <button class="btn button" aria-label="Next" value="${results.currentPage + 1}">
                         <span>&raquo;</span>
                       </button>
-                    </li>
-                  <#else>
-                    <li>
+                    <#else>
                       <button class="btn button disabled" disabled><span aria-hidden="true">&raquo;</span></button>
-                    </li>
-                  </#if>
+                    </#if>
+                  </li>
                 </ul>
               </nav>
             </#if>

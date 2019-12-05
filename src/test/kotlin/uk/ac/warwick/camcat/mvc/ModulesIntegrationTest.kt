@@ -109,6 +109,9 @@ class ModulesIntegrationTest : IntegrationTest() {
     // previous button should be disabled on first page
     assert(pageButtons.first().hasAttribute("disabled"))
 
+    // next button should not be disabled on first page
+    assert(!pageButtons.last().hasAttribute("disabled"))
+
     // button for current page should have active class
     assert(pageButtons[1].getAttribute("class").contains("active"))
 
@@ -128,8 +131,7 @@ class ModulesIntegrationTest : IntegrationTest() {
     // 10 modules on last page
     assertThat(page.getByXPath<HtmlTableRow>("//tr[contains(@class, 'module')]"), hasSize(11))
     assert(pageButtons.last().hasAttribute("disabled")) // next button should be disabled on last page
-
-
+    assert(!pageButtons.first().hasAttribute("disabled")) // previous button should not be disabled on last page
   }
 
 }
