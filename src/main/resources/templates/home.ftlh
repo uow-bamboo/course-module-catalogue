@@ -59,16 +59,12 @@
 
     <#list faculties as faculty>
       <details>
-        <summary>
-          ${faculty.name}
-        </summary>
+        <summary>${faculty.name}</summary>
         <ul>
-          <#list departments as department>
-            <#if department.faculty == faculty>
-              <li>
-                <a href="/modules/?department=${department.code}">${department.name}</a>
-              </li>
-            </#if>
+          <#list departments?filter(d -> d.faculty == faculty) as department>
+            <li>
+              <a href="/modules/?department=${department.code}">${department.name}</a>
+            </li>
           </#list>
         </ul>
       </details>

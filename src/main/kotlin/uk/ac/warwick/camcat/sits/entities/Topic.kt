@@ -23,10 +23,8 @@ data class Topic(
   @JoinColumn(name = "MOD_CODE")
   val module: Module?,
 
-  @ManyToOne
-  @NotFound(action = NotFoundAction.IGNORE)
-  @JoinColumn(name = "DPT_CODE")
-  val teachingDepartment: Department?,
+  @Column(name = "DPT_CODE")
+  val teachingDepartmentCode: String?,
 
   @Column(name = "TOP_UDF1")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")

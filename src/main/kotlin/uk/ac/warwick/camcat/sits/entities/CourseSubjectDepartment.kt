@@ -30,8 +30,6 @@ data class CourseSubjectDepartmentKey(
   @Column(name = "CSD_SUBC")
   val subjectCode: String,
 
-  @ManyToOne
-  @JoinColumn(name = "CSD_DPTC")
-  @NotFound(action = NotFoundAction.IGNORE)
-  val department: Department
+  @Column(name = "CSD_DPTC")
+  val departmentCode: String
 ) : Serializable

@@ -23,10 +23,8 @@ data class Module(
   @Type(type = "yes_no")
   val inUse: Boolean?,
 
-  @JoinColumn(name = "DPT_CODE")
-  @ManyToOne
-  @NotFound(action = NotFoundAction.IGNORE)
-  val department: Department?,
+  @Column(name = "DPT_CODE")
+  val departmentCode: String?,
 
   @JoinColumn(name = "MOD_CODE")
   @OneToMany

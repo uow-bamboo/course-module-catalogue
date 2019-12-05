@@ -3,7 +3,7 @@ package uk.ac.warwick.camcat.presenters
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.stereotype.Component
 import uk.ac.warwick.camcat.helpers.DurationFormatter
-import uk.ac.warwick.camcat.services.DepartmentPresenter
+import uk.ac.warwick.camcat.services.Department
 import uk.ac.warwick.camcat.services.DepartmentService
 import uk.ac.warwick.camcat.sits.entities.*
 import uk.ac.warwick.camcat.sits.repositories.ModuleAvailability
@@ -67,8 +67,8 @@ class ModulePresenter(
   val title = module.title ?: "Untitled module"
   val creditValue = module.creditValue ?: module.code.takeLastWhile { it != '-' }.let(::BigDecimal)
 
-  val department = module.department?.code?.let(departmentService::findByDepartmentCode)
-  val faculty = module.department?.faculty
+  val department = module.departmentCode?.let(departmentService::findByDepartmentCode)
+  val faculty = department?.faculty
 
   val level = primaryOccurrence?.level
   val leader = primaryOccurrence?.moduleLeaderPersonnelCode?.let(userPresenterFactory::buildFromPersonnelCode)
@@ -126,12 +126,12 @@ class ModulePresenter(
 
   val hasAuditOnlyAssessmentGroup = module.assessmentPattern?.components?.any { it.assessmentGroup == "AO" }
 
-  val teachingSplits = topics.filter { it.teachingDepartment != null }.map { top ->
-    TopicPresenter(
-      top,
-      departmentService.findByDepartmentCode(top.teachingDepartment!!.code)
-        ?: DepartmentPresenter.build(top.teachingDepartment, null, null)
-    )
+  val teachingSplits = topics.filter { it.teachingDepartmentCode != null }.mapNotNull { top ->
+    val department = departmentService.findByDepartmentCode(top.teachingDepartmentCode!!)
+    departmentService.findAllFaculties()
+
+    if (department != null) TopicPresenter(top, department)
+    else null
   }.sortedWith(compareBy(TopicPresenter::weighting).reversed().thenBy { it.department.name })
 
   private fun presentAvailablity(items: Collection<ModuleAvailability>) = items
@@ -145,7 +145,7 @@ class ModulePresenter(
     presentAvailablity(availability.filter { it.selectionStatus == ModuleSelectionStatus.Optional })
 }
 
-class TopicPresenter(topic: Topic, val department: DepartmentPresenter) {
+class TopicPresenter(topic: Topic, val department: Department) {
   val weighting = topic.percentage
 }
 
