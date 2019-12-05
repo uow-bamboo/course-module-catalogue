@@ -7,13 +7,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.web.authentication.preauth.RequestAttributeAuthenticationFilter
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import uk.ac.warwick.camcat.system.security.WarwickAuthenticationDetails
 import uk.ac.warwick.camcat.system.security.WarwickAuthenticationManager
-import uk.ac.warwick.sso.client.SSOClientFilter
-import uk.ac.warwick.userlookup.UserLookupInterface
 import javax.inject.Named
 import javax.servlet.Filter
 
@@ -26,8 +23,8 @@ class SecurityContext(
 ) : WebSecurityConfigurerAdapter() {
   override fun configure(http: HttpSecurity?) {
     http
-      ?.addFilter(requestAttributeAuthenticationFilter())
-      ?.addFilterBefore(ssoClientFilter, requestAttributeAuthenticationFilter().javaClass)
+      ?.addFilter(preAuthenticatedProcessingFilter())
+      ?.addFilterBefore(ssoClientFilter, preAuthenticatedProcessingFilter().javaClass)
       ?.sessionManagement {
         it.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       }
@@ -47,10 +44,8 @@ class SecurityContext(
   }
 
   @Bean
-  fun requestAttributeAuthenticationFilter(): RequestAttributeAuthenticationFilter {
-    val filter = RequestAttributeAuthenticationFilter()
-    filter.setPrincipalEnvironmentVariable("${SSOClientFilter.USER_KEY}_usercode")
-    filter.setExceptionIfVariableMissing(false)
+  fun preAuthenticatedProcessingFilter(): WarwickPreAuthenticatedProcessingFilter {
+    val filter = WarwickPreAuthenticatedProcessingFilter()
     filter.setAuthenticationManager(authenticationManager)
     filter.setAuthenticationDetailsSource(::WarwickAuthenticationDetails)
     return filter
