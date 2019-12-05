@@ -35,16 +35,17 @@
             <select name="${spring.status.expression}" id="department" class="form-control">
               <option value="">Any department</option>
               <#list results.filterOptions.faculties as faculty>
+                <#assign facultyDepartments=results.filterOptions.departments?filter(d -> d.faculty == faculty) />
                 <optgroup label="${faculty.name!""}">
-                  <option value="${faculty.code}"
-                          <#if (spring.status.value!"") == faculty.code>selected</#if>
-                  >Any department in ${faculty.name}</option>
-                  <#list results.filterOptions.departments as department>
-                    <#if department.faculty == faculty>
-                      <option value="${department.code}"
-                              <#if (spring.status.value!"") == department.code>selected</#if>
-                      >${department.name}</option>
-                    </#if>
+                  <#if facultyDepartments?size gt 1>
+                    <option value="${faculty.code}"
+                            <#if (spring.status.value!"") == faculty.code>selected</#if>
+                    >Any department in ${faculty.name}</option>
+                  </#if>
+                  <#list facultyDepartments as department>
+                    <option value="${department.code}"
+                            <#if (spring.status.value!"") == department.code>selected</#if>
+                    >${department.name}</option>
                   </#list>
                 </optgroup>
               </#list>
