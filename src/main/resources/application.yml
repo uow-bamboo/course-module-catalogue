@@ -1,6 +1,35 @@
-spring.resources.chain.strategy.content:
-  enabled: true
-  paths: /assets/**
+spring:
+  resources:
+    chain:
+      cache: true
+      strategy:
+        content:
+          enabled: true
+          paths: /assets/**
+    cache:
+      cachecontrol:
+        cache-public: true
+        max-age: 31536000
+  mvc:
+    contentnegotiation:
+      favor-path-extension: true
+    pathmatch:
+      use-suffix-pattern: true
+      use-registered-suffix-pattern: true
+  quartz:
+    scheduler-name: camcat
+    job-store-type: jdbc
+    auto-startup: false
+    overwrite-existing-jobs: true
+    properties:
+      org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+  jpa:
+    open-in-view: false
+  datasource:
+    sits:
+      schema: INTUIT
+      data-source-properties:
+        oracle.jdbc.fanEnabled: FALSE
 
 server:
   forward-headers-strategy: native
@@ -12,30 +41,6 @@ camcat.roles:
   masqueraders-webgroup: in-camcat-masqueraders
 
 audit.application-key: camcat
-
-spring.datasource.sits:
-  schema: INTUIT
-  data-source-properties:
-    oracle.jdbc.fanEnabled: FALSE
-
-spring.quartz:
-  scheduler-name: camcat
-  job-store-type: jdbc
-  auto-startup: false
-  overwrite-existing-jobs: true
-  properties:
-    org.quartz.jobStore.driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
-
-spring.jpa.open-in-view: false
-
-
-spring:
-  mvc:
-    contentnegotiation:
-      favor-path-extension: true
-    pathmatch:
-      use-suffix-pattern: true
-      use-registered-suffix-pattern: true
 
 ---
 
