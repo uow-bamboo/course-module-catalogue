@@ -40,15 +40,8 @@ data class Course(
   @JoinColumn(referencedColumnName = "SCH_CODE", name = "CRS_SCHC")
   val scheme: Scheme?,
 
-  @ManyToOne
-  @NotFound(action = NotFoundAction.IGNORE)
-  @JoinColumn(referencedColumnName = "FAC_CODE", name = "CRS_FACC")
-  val faculty: Faculty?,
-
-  @ManyToOne
-  @NotFound(action = NotFoundAction.IGNORE)
-  @JoinColumn(referencedColumnName = "DPT_CODE", name = "CRS_DPTC")
-  val department: Department?,
+  @Column(name = "CRS_DPTC")
+  val departmentCode: String?,
 
   @Column(name = "CRS_CGPC")
   val courseGroupCode: String?,

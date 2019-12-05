@@ -15,10 +15,8 @@ data class ModuleOccurrence(
   @EmbeddedId
   val key: ModuleOccurrenceKey,
 
-  @JoinColumn(name = "DPT_CODE")
-  @ManyToOne
-  @NotFound(action = NotFoundAction.IGNORE)
-  val department: Department?,
+  @Column(name = "DPT_CODE")
+  val departmentCode: String?,
 
   @JoinColumn(name = "LEV_CODE")
   @ManyToOne

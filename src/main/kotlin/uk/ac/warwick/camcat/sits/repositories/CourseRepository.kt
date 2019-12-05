@@ -12,6 +12,9 @@ import uk.ac.warwick.util.termdates.AcademicYear
 interface CourseRepository : CrudRepository<Course, String> {
   fun findAll(pageable: Pageable): Page<Course>
 
+  @Query("select distinct c.departmentCode from Course c where c.inUse = true")
+  fun findDistinctDepartmentCodes(): Set<String>
+
   fun findByCode(code: String): Course?
 
   @Query("""

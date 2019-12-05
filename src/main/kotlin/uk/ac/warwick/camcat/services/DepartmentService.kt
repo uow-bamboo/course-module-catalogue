@@ -2,73 +2,84 @@ package uk.ac.warwick.camcat.services
 
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
-import uk.ac.warwick.camcat.sits.entities.Department
-import uk.ac.warwick.camcat.sits.entities.Faculty
-import uk.ac.warwick.camcat.sits.repositories.DepartmentRepository
+import uk.ac.warwick.camcat.sits.repositories.CourseRepository
+import uk.ac.warwick.camcat.sits.repositories.ModuleRepository
 
 interface DepartmentService {
-  fun findAllDepartments(): List<DepartmentPresenter>
+  /**
+   * Find all departments that contain courses or modules.
+   */
+  fun findAllDepartments(): List<Department>
 
-  fun findAllFaculties(): List<FacultyPresenter>
+  /**
+   * Find all faculties that contain courses or modules.
+   */
+  fun findAllFaculties(): List<Faculty>
 
-  fun findByDepartmentCode(code: String): DepartmentPresenter? = findAllDepartments().find { it.code == code }
+  fun findByDepartmentCode(code: String): Department?
 
-  fun findByFacultyCode(code: String): FacultyPresenter? = findAllFaculties().find { it.code == code }
+  fun findByFacultyCode(code: String): Faculty?
 }
 
 @Service
-class CombinedDepartmentService(
-  private val departmentRepository: DepartmentRepository,
-  private val warwickDepartmentsService: WarwickDepartmentsService
+class CourseModuleDepartmentService(
+  private val warwickDepartmentsService: WarwickDepartmentsService,
+  private val moduleRepository: ModuleRepository,
+  private val courseRepository: CourseRepository
 ) : DepartmentService {
   @Cacheable("departments")
-  override fun findAllDepartments(): List<DepartmentPresenter> {
-    return departmentRepository.findAllAcademicDepartments().map { dept ->
-      val warwickDepartment = warwickDepartmentsService.findByDepartmentCode(dept.code)
-      DepartmentPresenter.build(
-        dept,
-        warwickDepartment,
-        warwickDepartment?.facultyCode?.let { warwickDepartmentsService.findByFacultyCode(it) })
-    }
+  override fun findAllDepartments(): List<Department> {
+    val departmentCodes =
+      moduleRepository.findDistinctDepartmentCodes() + courseRepository.findDistinctDepartmentCodes()
+
+    return warwickDepartmentsService.findAllDepartments()
+      .filter { dept -> departmentCodes.contains(dept.code) }
+      .map { dept ->
+        Department.build(dept, warwickDepartmentsService.findByFacultyCode(dept.facultyCode)!!)
+      }
+      .sortedBy { it.name }
   }
 
   @Cacheable("faculties")
-  override fun findAllFaculties(): List<FacultyPresenter> =
-    warwickDepartmentsService.findAllFaculties().map { fac -> FacultyPresenter(fac.code, fac.name )}
+  override fun findAllFaculties(): List<Faculty> =
+    findAllDepartments().map { it.faculty }.distinct().sortedBy { it.name }
+
+  @Cacheable("departmentByCode")
+  override fun findByDepartmentCode(code: String): Department? =
+    warwickDepartmentsService.findByDepartmentCode(code)?.let { dept ->
+      Department.build(dept, warwickDepartmentsService.findByFacultyCode(dept.facultyCode)!!)
+    }
+
+  @Cacheable("facultyByCode")
+  override fun findByFacultyCode(code: String): Faculty? =
+    warwickDepartmentsService.findByFacultyCode(code)?.let { fac ->
+      Faculty(fac.code, fac.name)
+    }
 }
 
-data class DepartmentPresenter(
+data class Department(
   val code: String,
   val name: String,
   val shortName: String,
   val veryShortName: String,
-  val faculty: FacultyPresenter
+  val faculty: Faculty
 ) {
   companion object {
     fun build(
-      department: Department,
-      warwickDepartment: WarwickDepartment? = null,
-      faculty: WarwickFaculty? = null
-    ): DepartmentPresenter =
-      DepartmentPresenter(
+      department: WarwickDepartment,
+      faculty: WarwickFaculty
+    ): Department =
+      Department(
         code = department.code,
-        name = warwickDepartment?.name ?: department.name ?: department.code,
-        shortName = warwickDepartment?.shortName ?: department.name ?: department.code,
-        veryShortName = warwickDepartment?.veryShortName ?: department.name ?: department.code,
-        faculty = FacultyPresenter.build(department.faculty, faculty)
+        name = department.name,
+        shortName = department.shortName,
+        veryShortName = department.veryShortName,
+        faculty = Faculty(
+          code = faculty.code,
+          name = faculty.name
+        )
       )
   }
 }
 
-data class FacultyPresenter(val code: String?, val name: String?) {
-  companion object {
-    fun build(faculty: Faculty?, warwickFaculty: WarwickFaculty?): FacultyPresenter {
-      val name = warwickFaculty?.name ?: faculty?.name
-      return FacultyPresenter(
-        code = warwickFaculty?.code ?: faculty?.code,
-        name = name
-      )
-    }
-  }
-}
-
+data class Faculty(val code: String, val name: String)

@@ -40,7 +40,7 @@ class ModuleIntegrationTest : IntegrationTest() {
     assertThat(content("module-code"), equalToCompressingWhiteSpace("CS126-15"))
     assertThat(content("module-title"), equalToCompressingWhiteSpace("Design of Information Structures"))
     assertThat(content("module-department-name"), equalToCompressingWhiteSpace("Computer Science"))
-    assertThat(content("module-faculty-name"), equalToCompressingWhiteSpace("Science"))
+    assertThat(content("module-faculty-name"), equalToCompressingWhiteSpace("Science, Engineering and Medicine"))
     assertThat(content("module-level-name"), equalToCompressingWhiteSpace("Undergraduate Level 1"))
     assertThat(content("module-leader"), equalToCompressingWhiteSpace("John Smith"))
     assertThat(content("module-credit-value"), equalToCompressingWhiteSpace("15"))
@@ -68,7 +68,7 @@ class ModuleIntegrationTest : IntegrationTest() {
       tableCells("module-teaching-split"),
       containsInRelativeOrder(
         "Computer Science", "80%",
-        "Mathematics Institute", "20%"
+        "Warwick Mathematics Institute", "20%"
       )
     )
 
