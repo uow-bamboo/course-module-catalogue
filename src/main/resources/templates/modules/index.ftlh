@@ -91,8 +91,56 @@
           </div>
         </div>
       </div>
-
       <#if results?? && results?has_content>
+        <#if results.lastPage gt 0>
+          <nav aria-label="Pagination buttons" class="navbar">
+            <#if results.lastPage gt 0>
+              <nav aria-label="Pagination buttons">
+                <ul class="pagination" data-current-page="${results.currentPage}">
+                  <#if results.currentPage gt 0>
+                    <li>
+                      <button class="btn button" disabled aria-label="Previous" value="${results.currentPage - 1}">
+                        <span>&laquo;</span>
+                      </button>
+                    </li>
+                  <#else>
+                    <li>
+                      <button class="btn button disabled" disabled>
+                        <span aria-hidden="true">&laquo;</span>
+                      </button>
+                    </li>
+                  </#if>
+                  <#list results.pageRange as page>
+                    <#if page == results.currentPage>
+                      <li>
+                        <button class="btn active" aria-label="${page + 1}" name="page" value="${page}">
+                          ${page + 1}
+                        </button>
+                      </li>
+                    <#else>
+                      <li>
+                        <button class="btn" name="page" aria-label="${page + 1}" value="${page}">
+                          ${page + 1}
+                        </button>
+                      </li>
+                    </#if>
+                  </#list>
+                  <#if results.currentPage != results.lastPage>
+                    <li>
+                      <button class="btn button" disabled aria-label="Next" value="${results.currentPage + 1}">
+                        <span>&raquo;</span>
+                      </button>
+                    </li>
+                  <#else>
+                    <li>
+                      <button class="btn button disabled" disabled><span aria-hidden="true">&raquo;</span></button>
+                    </li>
+                  </#if>
+                </ul>
+              </nav>
+            </#if>
+          </nav>
+        </#if>
         <table class="table table-striped">
           <thead>
           <tr>
@@ -101,8 +149,8 @@
           </tr>
           </thead>
           <tbody>
-          <#list results as module>
-            <tr>
+          <#list results.modules as module>
+            <tr class="module">
               <td>
                 <a href="/modules/${query.academicYear.startYear?c}/${module.code}">${module.code}</a>
               </td>

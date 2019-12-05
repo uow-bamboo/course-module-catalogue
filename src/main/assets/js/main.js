@@ -1,6 +1,5 @@
 /* eslint-env browser */
 import './polyfills';
-
 import $ from 'jquery';
 import * as flexiPicker from './flexi-picker';
 

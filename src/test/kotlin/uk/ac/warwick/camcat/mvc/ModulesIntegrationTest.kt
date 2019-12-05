@@ -1,8 +1,7 @@
 package uk.ac.warwick.camcat.mvc
 
-import com.gargoylesoftware.htmlunit.html.HtmlButton
-import com.gargoylesoftware.htmlunit.html.HtmlPage
-import com.gargoylesoftware.htmlunit.html.HtmlTextInput
+import com.gargoylesoftware.htmlunit.html.*
+import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLUListElement
 import org.hamcrest.Matchers.*
 import org.junit.Assert.assertThat
 import org.junit.Test
@@ -91,4 +90,46 @@ class ModulesIntegrationTest : IntegrationTest() {
 
     assertThat(headings, hasSize(1))
   }
+
+  @Test
+  @WithMockUser(roles = [Role.user])
+  fun testPagination() {
+    var page: HtmlPage = webClient.getPage("http://localhost/modules")
+
+    var pageButtons = page
+      .getByXPath<HtmlUnorderedList>("//ul[contains(@class, 'pagination')]")
+      .first()
+      .getElementsByTagName("button")
+
+    assertThat(pageButtons.map { it.textContent.trim() }, containsInRelativeOrder("«", "1", "2", "»"))
+
+    // 20 modules per page, 2 links per module
+    assertThat(page.getByXPath<HtmlTableRow>("//tr[contains(@class, 'module')]"), hasSize(20))
+
+    // previous button should be disabled on first page
+    assert(pageButtons.first().hasAttribute("disabled"))
+
+    // button for current page should have active class
+    assert(pageButtons[1].getAttribute("class").contains("active"))
+
+    // page 1 should have value of 0
+    assert(pageButtons[1].getAttribute("value") == "0")
+    assert(pageButtons[1].textContent.trim() == "1")
+
+    // go to last page
+    // page = pageButtons[2].click() // this does not work for unknown reason
+    page = webClient.getPage("http://localhost/modules/?page=1")
+
+    pageButtons = page
+      .getByXPath<HtmlUnorderedList>("//ul[contains(@class, 'pagination')]")
+      .first()
+      .getElementsByTagName("button")
+
+    // 10 modules on last page
+    assertThat(page.getByXPath<HtmlTableRow>("//tr[contains(@class, 'module')]"), hasSize(11))
+    assert(pageButtons.last().hasAttribute("disabled")) // next button should be disabled on last page
+
+
+  }
+
 }

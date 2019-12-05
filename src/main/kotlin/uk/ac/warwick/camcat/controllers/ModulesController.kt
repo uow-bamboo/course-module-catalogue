@@ -2,6 +2,8 @@ package uk.ac.warwick.camcat.controllers
 
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.MediaType
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.ModelAndView
@@ -13,6 +15,8 @@ import uk.ac.warwick.camcat.sits.repositories.AssessmentTypeRepository
 import uk.ac.warwick.camcat.sits.repositories.LevelRepository
 import uk.ac.warwick.camcat.sits.repositories.ModuleRepository
 import uk.ac.warwick.util.termdates.AcademicYear
+import kotlin.math.max
+import kotlin.math.min
 
 @Controller
 @RequestMapping("/modules")
@@ -44,13 +48,28 @@ class ModulesController(
   fun creditValueOptions() = moduleRepository.findCreditValues()
 
   @ModelAttribute("results")
-  fun results(@ModelAttribute("query") query: ModuleQuery? = null): List<Module>? {
-    if (query != null) {
-      return moduleSearchService.query(query, PageRequest.of(0, 50))?.toList()
-    }
+  fun results(@ModelAttribute("query") query: ModuleQuery? = null, page: Pageable): PageableModuleResults? {
+    if (query == null) return null
+    val serviceResult = moduleSearchService.query(query, page) ?: Page.empty()
+    if (serviceResult.isEmpty) return null
+    val currentPage = serviceResult.pageable.pageNumber
+    val lastPage = serviceResult.totalPages - 1
+    val pageRange = (max(currentPage - 5, 0)..min(currentPage + 5, lastPage)).toList()
 
-    return null
+    return PageableModuleResults(
+      currentPage = currentPage,
+      lastPage = lastPage,
+      pageRange = pageRange,
+      modules = serviceResult.toList()
+    )
   }
+
+  data class PageableModuleResults(
+    val currentPage: Int,
+    val lastPage: Int,
+    val pageRange: List<Int>,
+    val modules: List<Module>
+  )
 
   @GetMapping
   fun index() = ModelAndView("modules/index")
