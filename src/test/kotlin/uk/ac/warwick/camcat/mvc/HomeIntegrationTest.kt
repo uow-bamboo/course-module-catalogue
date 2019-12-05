@@ -21,7 +21,7 @@ class HomeIntegrationTest : IntegrationTest() {
   @WithAnonymousUser
   fun homeSignedOut() {
     mvc.get("/").andExpect {
-      status { isForbidden }
+      status { isOk }
     }
   }
 }
