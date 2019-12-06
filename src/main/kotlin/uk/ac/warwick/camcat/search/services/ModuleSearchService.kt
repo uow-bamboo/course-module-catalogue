@@ -1,6 +1,7 @@
 package uk.ac.warwick.camcat.search.services
 
 import org.apache.lucene.search.join.ScoreMode
+import org.elasticsearch.action.search.SearchResponse
 import org.elasticsearch.index.query.Operator
 import org.elasticsearch.index.query.QueryBuilders.*
 import org.elasticsearch.search.aggregations.AggregationBuilders.nested
@@ -22,7 +23,7 @@ import uk.ac.warwick.camcat.search.queries.ModuleQuery
 import org.elasticsearch.index.query.SimpleQueryStringFlag as Flag
 
 interface ModuleSearchService {
-  fun query(query: ModuleQuery, page: Pageable = Pageable.unpaged()): ModuleSearchResult?
+  fun query(query: ModuleQuery, page: Pageable = Pageable.unpaged()): ModuleSearchResult
 }
 
 @Service
@@ -31,57 +32,54 @@ class ElasticsearchModuleSearchService(
   private val resultsMapper: ResultsMapper
 ) :
   ModuleSearchService {
-  override fun query(query: ModuleQuery, page: Pageable): ModuleSearchResult? {
+  override fun query(query: ModuleQuery, page: Pageable): ModuleSearchResult {
+    fun queryForTerms(query: ModuleQuery, aggregationName: String): Collection<String> =
+      elasticsearch.query(buildQuery(query, page)) { response -> terms(aggregationName, response) }
+
     val searchQuery = buildQuery(query, page)
 
-    fun terms(aggregationName: String, aggregations: Aggregations): Collection<String> =
-      aggregations.get<Terms>(aggregationName).buckets.map { it.keyAsString }
-
-    if (searchQuery != null) {
-      var result = elasticsearch.query(searchQuery) { searchResponse ->
-        val assessmentComponentsAggregations = searchResponse.aggregations.get<Nested>("assessment_components").aggregations
-
-        ModuleSearchResult(
-          page = resultsMapper.mapResults(searchResponse, Module::class.java, page),
-          assessmentTypeCodes = terms("type_codes", assessmentComponentsAggregations),
-          departmentCodes = terms("department_codes", searchResponse.aggregations),
-          levelCodes = terms("level_codes", searchResponse.aggregations),
-          creditValues = terms("credit_values", searchResponse.aggregations)
-        )
-      }
-
-      if (!query.department.isNullOrBlank()) {
-        result = result.copy(departmentCodes = elasticsearch.query(buildQuery(query.copy(department = null), page)) { searchResponse ->
-          terms("department_codes", searchResponse.aggregations)
-        })
-      }
-
-      if (!query.assessmentType.isNullOrBlank()) {
-        result = result.copy(assessmentTypeCodes = elasticsearch.query(buildQuery(query.copy(assessmentType = null), page)) { searchResponse ->
-          val assessmentComponentsAggregations = searchResponse.aggregations.get<Nested>("assessment_components").aggregations
-          terms("type_codes", assessmentComponentsAggregations)
-        })
-      }
-
-      if (!query.level.isNullOrBlank()) {
-        result = result.copy(levelCodes = elasticsearch.query(buildQuery(query.copy(level = null), page)) { searchResponse ->
-          terms("level_codes", searchResponse.aggregations)
-        })
-      }
-
-      if (query.creditValue != null) {
-        result = result.copy(creditValues = elasticsearch.query(buildQuery(query.copy(creditValue = null), page)) { searchResponse ->
-          terms("credit_values", searchResponse.aggregations)
-        })
-      }
-
-      return result
+    var result = elasticsearch.query(searchQuery) { searchResponse ->
+      ModuleSearchResult(
+        page = resultsMapper.mapResults(searchResponse, Module::class.java, page),
+        assessmentTypeCodes = terms("assessment_components.type_codes", searchResponse),
+        departmentCodes = terms("department_codes", searchResponse),
+        levelCodes = terms("level_codes", searchResponse),
+        creditValues = terms("credit_values", searchResponse)
+      )
     }
 
-    return null
+    if (!query.department.isNullOrBlank()) {
+      result = result.copy(departmentCodes = queryForTerms(query.copy(department = null), "department_codes"))
+    }
+
+    if (!query.assessmentType.isNullOrBlank()) {
+      result = result.copy(
+        assessmentTypeCodes = queryForTerms(query.copy(assessmentType = null), "assessment_components.type_codes")
+      )
+    }
+
+    if (!query.level.isNullOrBlank()) {
+      result = result.copy(levelCodes = queryForTerms(query.copy(level = null), "level_codes"))
+    }
+
+    if (query.creditValue != null) {
+      result = result.copy(creditValues = queryForTerms(query.copy(creditValue = null), "credit_values"))
+    }
+
+    return result
   }
 
-  fun buildQuery(query: ModuleQuery, page: Pageable): SearchQuery? {
+  private fun terms(aggregationName: String, searchResponse: SearchResponse): Collection<String> {
+    val path = aggregationName.split(".")
+
+    val aggregations = path.dropLast(1).fold<String, Aggregations>(searchResponse.aggregations) { aggregations, it ->
+      aggregations.get<Nested>(it).aggregations
+    }
+
+    return aggregations.get<Terms>(path.last()).buckets.map { it.keyAsString }
+  }
+
+  private fun buildQuery(query: ModuleQuery, page: Pageable): SearchQuery {
     val boolQuery = boolQuery()
 
     boolQuery.must(termQuery("academicYear", query.academicYear.startYear))
@@ -130,29 +128,19 @@ class ElasticsearchModuleSearchService(
       )
     }
 
-    if (boolQuery.hasClauses()) {
-      return NativeSearchQueryBuilder()
-        .withQuery(boolQuery)
-        .withSort(scoreSort())
-        .withSort(fieldSort("code"))
-        .withPageable(page)
-        .addAggregation(
-          nested("assessment_components", "assessmentComponents")
-            .subAggregation(terms("type_codes").field("assessmentComponents.typeCode").size(1000))
-        )
-        .addAggregation(
-          terms("department_codes").field("departmentCode").size(1000)
-        )
-        .addAggregation(
-          terms("level_codes").field("levelCode").size(1000)
-        )
-        .addAggregation(
-          terms("credit_values").field("creditValue").size(1000)
-        )
-        .build()
-    }
-
-    return null
+    return NativeSearchQueryBuilder()
+      .withQuery(boolQuery)
+      .withSort(scoreSort())
+      .withSort(fieldSort("code"))
+      .withPageable(page)
+      .addAggregation(
+        nested("assessment_components", "assessmentComponents")
+          .subAggregation(terms("type_codes").field("assessmentComponents.typeCode").size(1000))
+      )
+      .addAggregation(terms("department_codes").field("departmentCode").size(1000))
+      .addAggregation(terms("level_codes").field("levelCode").size(1000))
+      .addAggregation(terms("credit_values").field("creditValue").size(1000))
+      .build()
   }
 }
 

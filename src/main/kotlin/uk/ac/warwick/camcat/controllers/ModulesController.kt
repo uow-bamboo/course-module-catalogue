@@ -16,7 +16,6 @@ import uk.ac.warwick.camcat.sits.entities.AssessmentType
 import uk.ac.warwick.camcat.sits.entities.Level
 import uk.ac.warwick.camcat.sits.repositories.AssessmentTypeRepository
 import uk.ac.warwick.camcat.sits.repositories.LevelRepository
-import uk.ac.warwick.camcat.sits.repositories.ModuleRepository
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.math.BigDecimal
 import kotlin.math.max
@@ -25,11 +24,10 @@ import kotlin.math.min
 @Controller
 @RequestMapping("/modules")
 class ModulesController(
+  private val moduleSearchService: ModuleSearchService,
   private val departmentService: DepartmentService,
   private val levelRepository: LevelRepository,
-  private val assessmentTypeRepository: AssessmentTypeRepository,
-  private val moduleSearchService: ModuleSearchService,
-  private val moduleRepository: ModuleRepository
+  private val assessmentTypeRepository: AssessmentTypeRepository
 ) {
   @ModelAttribute("academicYears")
   fun academicYears() = listOf(
@@ -37,9 +35,8 @@ class ModulesController(
   )
 
   @ModelAttribute("results")
-  fun results(@ModelAttribute("query") query: ModuleQuery? = null, page: Pageable): PageableModuleResults? {
-    if (query == null) return null
-    val result = moduleSearchService.query(query, page) ?: return null
+  fun results(@ModelAttribute("query") query: ModuleQuery, page: Pageable): PageableModuleResults {
+    val result = moduleSearchService.query(query, page)
 
     val currentPage = result.page.pageable.pageNumber
     val lastPage = result.page.totalPages - 1
@@ -51,43 +48,7 @@ class ModulesController(
       pageRange = pageRange,
       modules = result.page.toList(),
       result = result,
-      filterOptions = getFilterOptions(result)
-    )
-  }
-
-  fun getFilterOptions(result: ModuleSearchResult?): FilterOptions {
-    val departments = if (result != null) {
-      departmentService.findAllDepartments().filter { result.departmentCodes.contains(it.code) }
-    } else {
-      departmentService.findAllDepartments()
-    }
-
-    val faculties = departmentService.findAllFaculties().filter { f -> departments.any { d -> d.faculty == f } }
-
-    val assessmentTypes = if (result != null) {
-      assessmentTypeRepository.findAll().filter { result.assessmentTypeCodes.contains(it.code) }
-    } else {
-      assessmentTypeRepository.findAll().toList()
-    }
-
-    val levels = if (result != null) {
-      levelRepository.findAll().filter { result.levelCodes.contains(it.code) }
-    } else {
-      levelRepository.findAll().toList()
-    }
-
-    val creditValues = if (result != null) {
-      moduleRepository.findCreditValues().filter { result.creditValues.contains(it.toString()) }
-    } else {
-      moduleRepository.findCreditValues()
-    }
-
-    return FilterOptions(
-      faculties = faculties,
-      departments = departments,
-      assessmentTypes = assessmentTypes,
-      levels = levels,
-      creditValues = creditValues
+      filterOptions = buildFilterOptions(result)
     )
   }
 
@@ -97,8 +58,8 @@ class ModulesController(
   @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody
   @CrossOrigin
-  fun indexJson(@ModelAttribute("results", binding = false) results: List<Module>?) =
-    results.orEmpty().map { module ->
+  fun indexJson(@ModelAttribute("results", binding = false) results: PageableModuleResults) =
+    results.modules.map { module ->
       ModuleResult(
         code = module.code,
         academicYear = module.academicYear,
@@ -106,6 +67,18 @@ class ModulesController(
         departmentCode = module.departmentCode
       )
     }
+
+  private fun buildFilterOptions(result: ModuleSearchResult): FilterOptions {
+    val departments = departmentService.findAllDepartments().filter { result.departmentCodes.contains(it.code) }
+
+    return FilterOptions(
+      faculties = departmentService.findAllFaculties().filter { f -> departments.any { d -> d.faculty == f } },
+      departments = departments,
+      assessmentTypes = assessmentTypeRepository.findAll().filter { result.assessmentTypeCodes.contains(it.code) },
+      levels = levelRepository.findAll().filter { result.levelCodes.contains(it.code) },
+      creditValues = result.creditValues.map(::BigDecimal).sorted()
+    )
+  }
 }
 
 data class PageableModuleResults(
