@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 import java.io.OutputStream
 
 interface PdfService {
-  fun render(template: String, model: Any, outputStream: OutputStream)
+  fun render(template: String, model: Map<String, Any>, outputStream: OutputStream)
 
   fun write(html: String, outputStream: OutputStream)
 }
@@ -17,7 +17,7 @@ class FreeMarkerPdfService(
 ) : PdfService {
   private val converterProperties = ConverterProperties()
 
-  override fun render(template: String, model: Any, outputStream: OutputStream) {
+  override fun render(template: String, model: Map<String, Any>, outputStream: OutputStream) {
     write(templateRenderingService.render(template, model), outputStream)
   }
 

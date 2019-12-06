@@ -13,6 +13,9 @@ spring:
   mvc:
     contentnegotiation:
       favor-path-extension: true
+      media-types:
+        json: application/json
+        pdf: application/pdf
     pathmatch:
       use-suffix-pattern: true
       use-registered-suffix-pattern: true
