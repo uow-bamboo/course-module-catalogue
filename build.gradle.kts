@@ -4,11 +4,11 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
-  id("org.springframework.boot") version "2.2.1.RELEASE"
+  id("org.springframework.boot") version "2.2.2.RELEASE"
   id("io.spring.dependency-management") version "1.0.8.RELEASE"
-  kotlin("jvm") version "1.3.50"
-  kotlin("plugin.spring") version "1.3.50"
-  kotlin("plugin.jpa") version "1.3.50"
+  kotlin("jvm") version "1.3.61"
+  kotlin("plugin.spring") version "1.3.61"
+  kotlin("plugin.jpa") version "1.3.61"
   id("com.moowork.node") version "1.3.1"
 }
 
