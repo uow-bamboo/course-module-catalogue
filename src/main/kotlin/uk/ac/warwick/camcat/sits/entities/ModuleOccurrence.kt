@@ -1,16 +1,16 @@
 package uk.ac.warwick.camcat.sits.entities
 
-import org.hibernate.annotations.Immutable
-import org.hibernate.annotations.NotFound
-import org.hibernate.annotations.NotFoundAction
-import org.hibernate.annotations.Type
+import org.hibernate.annotations.*
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.io.Serializable
 import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.Table
 
 @Entity
 @Immutable
 @Table(name = "CAM_MAV")
+@Where(clause = "AYR_CODE >= '20/21'")
 data class ModuleOccurrence(
   @EmbeddedId
   val key: ModuleOccurrenceKey,
