@@ -16,6 +16,9 @@ interface ModuleRepository : CrudRepository<Module, String> {
   @EntityGraph(attributePaths = ["assessmentPattern.components"])
   fun findByCode(code: String): Module?
 
+  @Query("select code from Module where code like :pattern order by code desc")
+  fun findAllCodesLike(pattern: String): Collection<String>
+
   @Query("select distinct m.departmentCode from Module m")
   fun findDistinctDepartmentCodes(): Set<String>
 

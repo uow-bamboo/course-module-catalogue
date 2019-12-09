@@ -10,6 +10,8 @@ import uk.ac.warwick.util.termdates.AcademicYear
 interface ModuleService {
   fun findByModuleCode(code: String): Module?
 
+  fun findAllCodesByStemCode(stemCode: String): Collection<String>
+
   fun findAllWithOccurrenceInAcademicYear(academicYear: AcademicYear): Streamable<Module>
 
   fun findAssessmentComponents(moduleCode: String, academicYear: AcademicYear): Collection<AssessmentComponent>
@@ -48,6 +50,8 @@ class DatabaseModuleService(
 
   @Cacheable("module")
   override fun findByModuleCode(code: String): Module? = moduleRepository.findByCode(code)
+
+  override fun findAllCodesByStemCode(stemCode: String): Collection<String> = moduleRepository.findAllCodesLike("$stemCode-%")
 
   @Cacheable("moduleDescriptions")
   override fun findDescriptions(moduleCode: String, academicYear: AcademicYear): Collection<ModuleDescription> =
