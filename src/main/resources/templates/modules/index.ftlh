@@ -1,7 +1,7 @@
 <#include '*/layout.ftlh'>
 
 <@layout title="Modules">
-  <form method="get" name="modules">
+  <form method="get" name="modules" class="modules-search-form">
     <div class="form-group">
       <@spring.bind "query.keywords" />
       <label for="keywords" class="sr-only">Search for modules</label>
@@ -26,26 +26,20 @@
     </ul>
 
     <div class="tab-content">
-
       <div class="form-horizontal">
         <div class="form-group">
           <div class="col-sm-3">
-            <@spring.bind "query.department" />
-            <label for="department" class="sr-only">Department</label>
-            <select name="${spring.status.expression}" id="department" class="form-control">
-              <option value="">Any department</option>
+            <@spring.bind "query.departments" />
+            <label for="departments" class="sr-only">Department</label>
+            <select name="${spring.status.expression}" id="departments" class="form-control multiselect department hidden"
+                    multiple="multiple">
               <#list results.filterOptions.faculties as faculty>
                 <#assign facultyDepartments=results.filterOptions.departments?filter(d -> d.faculty == faculty) />
                 <optgroup label="${faculty.name!""}">
-                  <#if facultyDepartments?size gt 1>
-                    <option value="${faculty.code}"
-                            <#if (spring.status.value!"") == faculty.code>selected</#if>
-                    >Any department in ${faculty.name}</option>
-                  </#if>
                   <#list facultyDepartments as department>
                     <option value="${department.code}"
-                            <#if (spring.status.value!"") == department.code>selected</#if>
-                    >${department.name}</option>
+                            <#if query.departments?seq_contains(department.code)>selected</#if>
+                    >${department.shortName}</option>
                   </#list>
                 </optgroup>
               </#list>
@@ -53,39 +47,39 @@
           </div>
 
           <div class="col-sm-3">
-            <@spring.bind "query.level" />
-            <label for="level" class="sr-only">Level</label>
-            <select name="${spring.status.expression}" id="level" class="form-control">
-              <option value="">Any level</option>
+            <@spring.bind "query.levels" />
+            <label for="levels" class="sr-only">Level</label>
+            <select name="${spring.status.expression}" id="levels" class="form-control multiselect level hidden"
+                    multiple="multiple">
               <#list results.filterOptions.levels as level>
                 <option value="${level.code}"
-                        <#if (spring.status.value!"") == level.code>selected</#if>
+                        <#if query.levels?seq_contains(level.code)>selected</#if>
                 >${level.name}</option>
               </#list>
             </select>
           </div>
 
           <div class="col-sm-3">
-            <@spring.bind "query.creditValue" />
-            <label for="creditValue" class="sr-only">Credit value</label>
-            <select name="${spring.status.expression}" id="creditValue" class="form-control">
-              <option value="">Any credit value</option>
+            <@spring.bind "query.creditValues" />
+            <label for="creditValues" class="sr-only">Credit value</label>
+            <select name="${spring.status.expression}" id="creditValues" class="form-control multiselect creditValue hidden"
+                    multiple="multiple">
               <#list results.filterOptions.creditValues as creditValue>
                 <option value="${creditValue}"
-                        <#if spring.status.value?? && spring.status.value == creditValue?c>selected</#if>
+                        <#if query.creditValues?seq_contains(creditValue)>selected</#if>
                 >${creditValue}</option>
               </#list>
             </select>
           </div>
 
           <div class="col-sm-3">
-            <@spring.bind "query.assessmentType" />
-            <label for="assessmentType" class="sr-only">Assessment type</label>
-            <select name="${spring.status.expression}" id="assessmentType" class="form-control">
-              <option value="">Any assessment type</option>
+            <@spring.bind "query.assessmentTypes" />
+            <label for="assessmentTypes" class="sr-only">Assessment type</label>
+            <select name="${spring.status.expression}" id="assessmentTypes" class="form-control multiselect assessmentType hidden"
+                    multiple="multiple">
               <#list results.filterOptions.assessmentTypes as assessmentType>
                 <option value="${assessmentType.code}"
-                        <#if spring.status.value?? && spring.status.value == assessmentType.code>selected</#if>
+                        <#if query.assessmentTypes?seq_contains(assessmentType.code)>selected</#if>
                 >${assessmentType.name}</option>
               </#list>
             </select>

@@ -42,28 +42,28 @@ class ModulesIntegrationTest : IntegrationTest() {
     var page: HtmlPage = webClient.getPage("http://localhost/modules")
     var form = page.getFormByName("modules")
 
-    form.getSelectByName("department").setSelectedAttribute<HtmlPage>("CS", true)
-    form.getSelectByName("level").setSelectedAttribute<HtmlPage>("1", true)
-    form.getSelectByName("creditValue").setSelectedAttribute<HtmlPage>("15", true)
-    form.getSelectByName("assessmentType").setSelectedAttribute<HtmlPage>("ES", true)
+    form.getSelectByName("departments").setSelectedAttribute<HtmlPage>("CS", true)
+    form.getSelectByName("levels").setSelectedAttribute<HtmlPage>("1", true)
+    form.getSelectByName("creditValues").setSelectedAttribute<HtmlPage>("15", true)
+    form.getSelectByName("assessmentTypes").setSelectedAttribute<HtmlPage>("ES", true)
 
     page = form.getElementsByAttribute<HtmlButton>("button", "type", "submit").first().click()
     form = page.getFormByName("modules")
 
     assertThat(
-      form.getSelectByName("level").selectedOptions,
+      form.getSelectByName("levels").selectedOptions,
       hasItem(hasProperty("text", equalTo("Undergraduate Level 1")))
     )
     assertThat(
-      form.getSelectByName("department").selectedOptions,
-      hasItem(hasProperty("text", equalTo("Computer Science")))
+      form.getSelectByName("departments").selectedOptions,
+      hasItem(hasProperty("text", equalTo("DCS")))
     )
     assertThat(
-      form.getSelectByName("creditValue").selectedOptions,
+      form.getSelectByName("creditValues").selectedOptions,
       hasItem(hasProperty("text", equalTo("15")))
     )
     assertThat(
-      form.getSelectByName("assessmentType").selectedOptions,
+      form.getSelectByName("assessmentTypes").selectedOptions,
       hasItem(hasProperty("text", equalTo("Examination - Summer")))
     )
   }

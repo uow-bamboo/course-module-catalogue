@@ -2,6 +2,7 @@
 import './polyfills';
 import $ from 'jquery';
 import * as flexiPicker from './flexi-picker';
+import './modules';
 
 /**
  * Attach handlers to all elements inside $scope. All jQuery selects
@@ -11,7 +12,8 @@ import * as flexiPicker from './flexi-picker';
  * document dynamically)
  */
 function bindTo($scope) {
-  $('[data-toggle="popover"]', $scope).popover();
+  $('[data-toggle="popover"]', $scope)
+    .popover();
 
   flexiPicker.bindTo($scope);
 }
@@ -35,15 +37,20 @@ $(() => {
 
   $html
     .on('shown.bs.popover', (e) => {
-      const $po = $(e.target).popover().data('bs.popover').tip();
+      const $po = $(e.target)
+        .popover()
+        .data('bs.popover')
+        .tip();
       $po.data('creator', $(e.target));
     })
     .on('click.popoverDismiss', (e) => {
       const $target = $(e.target);
 
       // if clicking anywhere other than the popover itself
-      if ($target.closest('.popover').length === 0 && $(e.target).closest('.has-popover').length === 0) {
-        $('.popover').each((i, popover) => closePopover($(popover)));
+      if ($target.closest('.popover').length === 0 && $(e.target)
+        .closest('.has-popover').length === 0) {
+        $('.popover')
+          .each((i, popover) => closePopover($(popover)));
       } else if ($target.closest('.close').length > 0) {
         closePopover($target.closest('.popover'));
       }
@@ -51,11 +58,8 @@ $(() => {
     .on('keyup.popoverDismiss', (e) => {
       const key = e.which || e.keyCode;
       if (key === 27) {
-        $('.popover').each((i, popover) => closePopover($(popover)));
+        $('.popover')
+          .each((i, popover) => closePopover($(popover)));
       }
     });
-
-  $('form[name=modules] select').on('change', () => {
-    $('form[name=modules]').submit();
-  });
 });

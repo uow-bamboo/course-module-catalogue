@@ -48,22 +48,22 @@ class ElasticsearchModuleSearchService(
       )
     }
 
-    if (!query.department.isNullOrBlank()) {
-      result = result.copy(departmentCodes = queryForTerms(query.copy(department = null), "department_codes"))
+    if (query.departments.isNotEmpty()) {
+      result = result.copy(departmentCodes = queryForTerms(query.copy(departments = emptyList()), "department_codes"))
     }
 
-    if (!query.assessmentType.isNullOrBlank()) {
+    if (query.assessmentTypes.isNotEmpty()) {
       result = result.copy(
-        assessmentTypeCodes = queryForTerms(query.copy(assessmentType = null), "assessment_components.type_codes")
+        assessmentTypeCodes = queryForTerms(query.copy(assessmentTypes = emptyList()), "assessment_components.type_codes")
       )
     }
 
-    if (!query.level.isNullOrBlank()) {
-      result = result.copy(levelCodes = queryForTerms(query.copy(level = null), "level_codes"))
+    if (query.levels.isNotEmpty()) {
+      result = result.copy(levelCodes = queryForTerms(query.copy(levels = emptyList()), "level_codes"))
     }
 
-    if (query.creditValue != null) {
-      result = result.copy(creditValues = queryForTerms(query.copy(creditValue = null), "credit_values"))
+    if (query.creditValues.isNotEmpty()) {
+      result = result.copy(creditValues = queryForTerms(query.copy(creditValues = emptyList()), "credit_values"))
     }
 
     return result
@@ -84,27 +84,26 @@ class ElasticsearchModuleSearchService(
 
     boolQuery.must(termQuery("academicYear", query.academicYear.startYear))
 
-    if (!query.department.isNullOrBlank()) {
-      if (query.department.length == 1) {
-        boolQuery.must(termQuery("facultyCode", query.department))
-      } else {
-        boolQuery.must(termQuery("departmentCode", query.department))
-      }
+    if (query.departments.any { it.isNotBlank() }) {
+      val deptBoolQuery = boolQuery()
+      deptBoolQuery.should(termsQuery("facultyCode", query.departments.filter { it.isNotBlank() && it.length == 1 }))
+      deptBoolQuery.should(termsQuery("departmentCode", query.departments.filter { it.isNotBlank() && it.length > 1 }))
+      boolQuery.must(deptBoolQuery)
     }
 
-    if (!query.level.isNullOrBlank()) {
-      boolQuery.must(termQuery("levelCode", query.level))
+    if (query.levels.any { it.isNotBlank() }) {
+      boolQuery.must(termsQuery("levelCode", query.levels.filter { it.isNotBlank() }))
     }
 
-    if (query.creditValue != null) {
-      boolQuery.must(termQuery("creditValue", query.creditValue))
+    if (query.creditValues.isNotEmpty()) {
+      boolQuery.must(termsQuery("creditValue", query.creditValues))
     }
 
-    if (!query.assessmentType.isNullOrBlank()) {
+    if (query.assessmentTypes.any { it.isNotBlank() }) {
       boolQuery.must(
         nestedQuery(
           "assessmentComponents",
-          termQuery("assessmentComponents.typeCode", query.assessmentType),
+          termsQuery("assessmentComponents.typeCode", query.assessmentTypes.filter { it.isNotBlank() }),
           ScoreMode.Total
         )
       )

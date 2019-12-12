@@ -8,6 +8,7 @@
 @import "sysadmin-notices";
 @import "error-pages";
 @import "flexi-picker";
+@import "~bootstrap-multiselect/dist/css/bootstrap-multiselect.css";
 
 @id7-ignore-id6-legacy: true;
 @id7-image-root-dir: './lib/id7/images';
@@ -87,6 +88,42 @@ dt, dd {
     color: #fff;
   }
 }
+
+.multiselect-dropdown-menu:extend(.dropdown-menu) {
+  max-height: 50vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+.multiselect-container > li.in-optgroup {
+  padding-left: 15px;
+}
+
+.multiselect-container > li.multiselect-group label {
+  margin: 0;
+  padding: 3px;
+  height: 100%;
+  font-weight: 700;
+}
+
+.multiselect-container > li > a {
+  text-decoration: none;
+}
+
+.multiselect-container > li > a > label {
+  margin: 0;
+  height: 100%;
+  cursor: pointer;
+  font-weight: 400;
+  padding: 3px;
+  display: flex;
+}
+
+.multiselect-container > li > a > label > input[type=checkbox] {
+  margin-right: 3px;
+}
+
 
 summary {
   cursor: pointer;
