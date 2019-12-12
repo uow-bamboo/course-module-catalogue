@@ -44,6 +44,7 @@ class ModuleIntegrationTest : IntegrationTest() {
     assertThat(content("module-level-name"), equalToCompressingWhiteSpace("Undergraduate Level 1"))
     assertThat(content("module-leader"), equalToCompressingWhiteSpace("John Smith"))
     assertThat(content("module-credit-value"), equalToCompressingWhiteSpace("15"))
+    assertThat(content("module-duration-value"), equalToCompressingWhiteSpace("7 weeks"))
     assertThat(
       (page.getHtmlElementById("module-web-page") as HtmlAnchor).hrefAttribute,
       equalTo("https://warwick.ac.uk/fac/sci/dcs/teaching/material/cs126/")
