@@ -5,7 +5,7 @@
 
 <#if module.url??>
   <p>
-    <a href="${module.url}" id="module-web-page">Module web page</a>
+    <a href="${module.url}" id="module-web-page" target="_blank">Module web page</a>
   </p>
 </#if>
 
@@ -37,7 +37,7 @@
   </#if>
   <#if module.readingListUrl??>
     <p>
-      <a href="${module.readingListUrl}">View reading list on Talis Aspire</a>
+      <a href="${module.readingListUrl}" target="_blank">View reading list on Talis Aspire</a>
     </p>
   </#if>
 </#if>
