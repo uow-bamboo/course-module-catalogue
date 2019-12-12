@@ -85,6 +85,7 @@ dependencies {
   testImplementation("net.sourceforge.htmlunit:htmlunit")
 
   implementation("com.vladsch.flexmark:flexmark-all:0.50.44")
+  implementation("com.github.mfornos:humanize-slim:1.2.2")
 }
 
 tasks.withType<KotlinCompile> {

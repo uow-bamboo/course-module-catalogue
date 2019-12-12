@@ -13,12 +13,12 @@
     Students can register for this module without taking any assessment.
   </p>
 </#if>
-<table class="table table-bordered" id="module-assessment">
+<table class="table table-bordered table-striped" id="module-assessment">
   <thead>
   <tr>
     <th>Assessment</th>
-    <th>Type</th>
     <th>Weighting</th>
+    <th>Study time</th>
   </tr>
   </thead>
   <tbody>
@@ -26,21 +26,25 @@
     <tr>
     <#list group.components as component>
       <tr>
-        <td>${component.name!""}</td>
-        <td>${component.type!""}</td>
+        <td>
+          ${component.name!""}
+        </td>
         <td>
           <#if component.weighting??>
             ${component.weighting}%
           </#if>
         </td>
+        <td>
+          ${component.studyTime!""}
+        </td>
       </tr>
-      <#if component.description??>
         <tr>
           <td colspan="3">
-            ${renderMarkdown(component.description)}
+            <#if component.description??>
+              ${renderMarkdown(component.description)}
+            </#if>
           </td>
         </tr>
-      </#if>
     </#list>
   </#list>
   </tbody>
