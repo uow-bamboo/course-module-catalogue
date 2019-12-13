@@ -30,6 +30,17 @@ class TriggerIndexModulesJobController(
   fun trigger(): View {
     scheduler.triggerJob(jobKey("IndexModulesJob", "Indexing"))
 
-    return RedirectView("/sysadmin")
+    return RedirectView("/sysadmin/index/modules")
   }
+
+  @GetMapping
+  fun ok() = ModelAndView(
+    "alert", mapOf(
+      "class" to "success",
+      "title" to "Job triggered",
+      "icon" to "check-circle",
+      "message" to "Triggered the module indexing job",
+      "continue" to "/sysadmin"
+    )
+  )
 }
