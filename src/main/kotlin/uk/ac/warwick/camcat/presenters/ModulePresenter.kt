@@ -12,6 +12,7 @@ import uk.ac.warwick.camcat.sits.services.RelatedModules
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.math.BigDecimal
 import java.time.Duration
+import java.time.Period
 
 @Component
 class ModulePresenterFactory(
@@ -73,7 +74,8 @@ class ModulePresenter(
   val level = primaryOccurrence?.level
   val leader = primaryOccurrence?.moduleLeaderPersonnelCode?.let(userPresenterFactory::buildFromPersonnelCode)
 
-  val duration = "Not yet in SITS" // TODO MA-634
+  val duration = primaryOccurrence?.moduleDuration?.let(DurationFormatter::durationInDaysOrWeeks)
+
   val locations = descriptions("MA010").map(::StudyLocation)
     .sortedWith(compareBy(StudyLocation::primary).reversed().thenBy(StudyLocation::name))
 

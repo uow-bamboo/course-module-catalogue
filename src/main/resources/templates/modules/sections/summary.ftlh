@@ -30,7 +30,7 @@
 
   <#if module.duration??>
     <dt>Module duration</dt>
-    <dd>${module.duration}</dd>
+    <dd id="module-duration-value">${module.duration}</dd>
   </#if>
 
   <dt>Study locations</dt>

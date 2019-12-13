@@ -34,6 +34,9 @@ data class ModuleOccurrence(
   @Column(name = "PRS_CODE")
   val moduleLeaderPersonnelCode: String?,
 
+  @Column(name = "MAV_UDF8")
+  val moduleDuration: String?,
+
   @OneToOne
   @JoinColumns(
     JoinColumn(name = "MOD_CODE", referencedColumnName = "MOD_CODE", insertable = false, updatable = false),

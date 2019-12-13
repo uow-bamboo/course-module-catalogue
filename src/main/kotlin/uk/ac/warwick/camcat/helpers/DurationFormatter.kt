@@ -2,6 +2,7 @@ package uk.ac.warwick.camcat.helpers
 
 import java.math.BigDecimal
 import java.time.Duration
+import java.time.Period
 
 object DurationFormatter {
   fun format(duration: Duration): String {
@@ -21,4 +22,15 @@ object DurationFormatter {
 
     return string.trimEnd()
   }
+
+  fun durationInDaysOrWeeks(code: String): String? = Period.parse(code)?.days?.let { d ->
+    return if (d == 1) {
+      "1 day"
+    } else if (d == 7) {
+      "1 week"
+    } else if (d % 7 == 0) {
+      "${d / 7} weeks"
+    } else "$d days"
+  }
+
 }
