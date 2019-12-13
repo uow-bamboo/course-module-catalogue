@@ -10,9 +10,9 @@ import javax.persistence.Table
 @Entity
 @Immutable
 @Table(name = "CAM_MMR")
-data class ModuleRule(
+data class ModuleModuleRule(
   @EmbeddedId
-  val key: ModuleRuleKey,
+  val key: ModuleModuleRuleKey,
 
   @Column(name = "MMR_AYRC")
   @Type(type = "uk.ac.warwick.camcat.sits.types.AcademicYearType")
@@ -37,7 +37,7 @@ data class ModuleRule(
     JoinColumn(name = "MOD_CODE", referencedColumnName = "MOD_CODE", insertable = false, updatable = false),
     JoinColumn(name = "MMR_CODE", referencedColumnName = "MMR_CODE", insertable = false, updatable = false)
   )
-  val elements: Collection<ModuleRuleBody>,
+  val elements: Collection<ModuleModuleRuleBody>,
 
   @ManyToOne
   @NotFound(action = NotFoundAction.IGNORE)
@@ -47,12 +47,10 @@ data class ModuleRule(
 
 
 @Embeddable
-data class ModuleRuleKey(
-  @ManyToOne
-  @JoinColumn(name = "MOD_CODE", insertable = false, updatable = false)
-  @NotFound(action = NotFoundAction.IGNORE)
-  val module: Module,
+data class ModuleModuleRuleKey(
+  @Column(name = "MOD_CODE")
+  val moduleCode: String,
 
   @Column(name = "MMR_CODE")
-  val moduleRuleCode: String
+  val moduleModuleRuleCode: String
 ) : Serializable

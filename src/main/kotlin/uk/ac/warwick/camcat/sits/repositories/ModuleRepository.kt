@@ -81,7 +81,7 @@ interface ModuleRepository : CrudRepository<Module, String> {
   ): Collection<Module>
 
   @Query(
-    """select module from ModuleRule rule
+    """select module from ModuleModuleRule rule
       join rule.type type
       join rule.elements body
       join body.formedModuleCollection fmc

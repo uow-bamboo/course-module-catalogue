@@ -40,5 +40,5 @@ data class FormedModuleCollection(
   @Fetch(FetchMode.SELECT)
   @NotFound(action = NotFoundAction.IGNORE)
   @JoinColumn(name = "FMC_CODE")
-  val moduleRuleElements: Collection<ModuleRuleBody>
+  val moduleRuleElements: Collection<ModuleModuleRuleBody>
 ) : Serializable

@@ -24,7 +24,7 @@ interface ModuleService {
 
   fun findRelatedModules(moduleCode: String, academicYear: AcademicYear): RelatedModules
 
-  fun findRules(moduleCode: String, academicYear: AcademicYear): Collection<ModuleRule>
+  fun findRules(moduleCode: String, academicYear: AcademicYear): Collection<ModuleModuleRule>
 
   fun findModulesByCourseYearSelectionBlock(
     courseCode: String,
@@ -78,7 +78,7 @@ class DatabaseModuleService(
     )
 
   @Cacheable("moduleRules")
-  override fun findRules(moduleCode: String, academicYear: AcademicYear): Collection<ModuleRule> =
+  override fun findRules(moduleCode: String, academicYear: AcademicYear): Collection<ModuleModuleRule> =
     ruleRepository.findAllByModuleCodeAndAcademicYear(moduleCode, academicYear)
 
   override fun findModulesByCourseYearSelectionBlock(
