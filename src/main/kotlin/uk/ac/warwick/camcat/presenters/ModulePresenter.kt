@@ -63,16 +63,6 @@ class ModulePresenter(
   private fun description(code: String): ModuleDescription? = descriptions(code).firstOrNull()
   private fun descriptionText(code: String): String? = description(code)?.description
 
-  private fun durationInDaysOrWeeks(code: String): String? = Period.parse(code)?.days?.let { d ->
-    return if (d == 1) {
-      "1 day"
-    } else if (d == 7) {
-      "1 week"
-    } else if (d % 7 == 0) {
-      "${d / 7} weeks"
-    } else "$d days"
-  }
-
   val code = module.code
   val stemCode = module.code.take(5)
   val title = module.title ?: "Untitled module"
@@ -84,7 +74,7 @@ class ModulePresenter(
   val level = primaryOccurrence?.level
   val leader = primaryOccurrence?.moduleLeaderPersonnelCode?.let(userPresenterFactory::buildFromPersonnelCode)
 
-  val duration = primaryOccurrence?.moduleDuration?.let(::durationInDaysOrWeeks)
+  val duration = primaryOccurrence?.moduleDuration?.let(DurationFormatter::durationInDaysOrWeeks)
 
   val locations = descriptions("MA010").map(::StudyLocation)
     .sortedWith(compareBy(StudyLocation::primary).reversed().thenBy(StudyLocation::name))
