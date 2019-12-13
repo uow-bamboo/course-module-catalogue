@@ -20,7 +20,6 @@ import org.springframework.data.elasticsearch.core.query.SearchQuery
 import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.search.documents.Module
 import uk.ac.warwick.camcat.search.queries.ModuleQuery
-import org.elasticsearch.index.query.SimpleQueryStringFlag as Flag
 
 interface ModuleSearchService {
   fun query(query: ModuleQuery, page: Pageable = Pageable.unpaged()): ModuleSearchResult
@@ -121,7 +120,6 @@ class ElasticsearchModuleSearchService(
               .field("facultyName")
               .field("text")
               .defaultOperator(Operator.AND)
-              .flags(Flag.AND, Flag.OR, Flag.NOT, Flag.PHRASE, Flag.PRECEDENCE)
           )
           .add(matchPhraseQuery("leaderName", query.keywords).slop(2).boost(10F))
       )
