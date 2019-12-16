@@ -63,7 +63,7 @@
         <ul>
           <#list departments?filter(d -> d.faculty == faculty) as department>
             <li>
-              <a href="/modules/?department=${department.code}">${department.name}</a>
+              <a href="/modules/?departments=${department.code}">${department.name}</a>
             </li>
           </#list>
         </ul>
