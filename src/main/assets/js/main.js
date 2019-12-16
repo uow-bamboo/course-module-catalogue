@@ -1,4 +1,5 @@
 /* eslint-env browser */
+import '@universityofwarwick/statuspage-widget/dist/main';
 import './polyfills';
 import $ from 'jquery';
 import * as flexiPicker from './flexi-picker';
