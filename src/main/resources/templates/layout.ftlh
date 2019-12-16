@@ -156,9 +156,7 @@
   <script type="text/javascript" src="<@spring.url "/assets/main.js" />"></script>
   <div class="statuspage-embed-container"
        data-api-base="https://status.warwick.ac.uk/api"
-<#--       data-components='["d2qf6z05sn9s"]'-->
-                 data-test-mode="true"
-
+       data-components='["d2qf6z05sn9s"]'
   ></div>
   </body>
   </html>
