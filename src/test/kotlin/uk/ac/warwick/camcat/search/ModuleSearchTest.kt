@@ -13,24 +13,35 @@ class ModuleSearchTest : IntegrationTest() {
   lateinit var moduleSearchService: ModuleSearchService
 
   @Test
-  fun testQuery() {
+  fun testQueryWithWholeNumberCreditValue() {
     val results =
       moduleSearchService.query(ModuleQuery(keywords = "CS126-15", academicYear = AcademicYear.starting(2020)))
-
     assertEquals(1, results.page.content.size)
-
     val result = results.page.content.first()!!
-
     assertEquals(2020, result.academicYear)
     assertEquals("CS126-15", result.code)
     assertEquals("Design of Information Structures", result.title)
   }
 
   @Test
-  fun testNoResultsWhenNoOccurrence() {
+  fun testQueryWithNonWholeNumberCreditValue() {
     val results =
-      moduleSearchService.query(ModuleQuery(keywords = "CS126-15", academicYear = AcademicYear.starting(2021)))
+      moduleSearchService.query(ModuleQuery(keywords = "CS126-7.5", academicYear = AcademicYear.starting(2020)))
+    assertEquals(1, results.page.content.size)
+    val result = results.page.content.first()!!
+    assertEquals(2020, result.academicYear)
+    assertEquals("CS126-7.5", result.code)
+    assertEquals("Design of Seven and Half", result.title)
+  }
 
+  @Test
+  fun testNoResultsWhenNoOccurrence() {
+    var results =
+      moduleSearchService.query(ModuleQuery(keywords = "CS126-15", academicYear = AcademicYear.starting(2021)))
+    assertEquals(0, results.page.content.size)
+
+    results =
+      moduleSearchService.query(ModuleQuery(keywords = "CS126-7.5", academicYear = AcademicYear.starting(2021)))
     assertEquals(0, results.page.content.size)
   }
 }
