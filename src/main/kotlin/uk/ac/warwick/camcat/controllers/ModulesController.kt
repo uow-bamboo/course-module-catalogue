@@ -18,6 +18,7 @@ import uk.ac.warwick.camcat.sits.repositories.AssessmentTypeRepository
 import uk.ac.warwick.camcat.sits.repositories.LevelRepository
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.math.BigDecimal
+import javax.servlet.http.HttpServletResponse
 import kotlin.math.max
 import kotlin.math.min
 
@@ -35,13 +36,17 @@ class ModulesController(
   )
 
   @ModelAttribute("results")
-  fun results(@ModelAttribute("query") query: ModuleQuery, page: Pageable): PageableModuleResults {
+  fun results(@ModelAttribute("query") query: ModuleQuery, page: Pageable, response: HttpServletResponse): PageableModuleResults {
     val result = moduleSearchService.query(query, page)
 
     val currentPage = result.page.pageable.pageNumber
     val lastPage = result.page.totalPages - 1
     val pageRange = (max(currentPage - 5, 0)..min(currentPage + 5, lastPage)).toList()
 
+    if (result.page.toList().size == 1 && query.keywords?.trim() == result.page.first().code) {
+      // user typed in an exact module code, and result is unique
+      response.sendRedirect("/modules/${query.academicYear.startYear}/${result.page.first().code}")
+    }
     return PageableModuleResults(
       currentPage = currentPage,
       lastPage = lastPage,
