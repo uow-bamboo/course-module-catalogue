@@ -43,7 +43,8 @@ class ModulesController(
     val lastPage = result.page.totalPages - 1
     val pageRange = (max(currentPage - 5, 0)..min(currentPage + 5, lastPage)).toList()
 
-    if (result.page.toList().size == 1 && query.keywords?.trim() == result.page.first().code) {
+    if (result.page.toList().size == 1 &&
+      query.keywords?.trim()?.toLowerCase() == result.page.first().code.toLowerCase()) {
       // user typed in an exact module code, and result is unique
       response.sendRedirect("/modules/${query.academicYear.startYear}/${result.page.first().code}")
     }
