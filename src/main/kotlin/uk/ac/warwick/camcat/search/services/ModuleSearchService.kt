@@ -112,7 +112,7 @@ class ElasticsearchModuleSearchService(
       boolQuery.must(
         disMaxQuery()
           .add(wildcardQuery("code",
-            query.keywords.toUpperCase().filter { it.isLetterOrDigit() || it == '-' } + "*").boost(100F))
+            query.keywords.toUpperCase().filter { it.isLetterOrDigit() || it == '-' || it == '.' } + "*").boost(100F))
           .add(
             simpleQueryStringQuery(query.keywords)
               .field("title", 10F)

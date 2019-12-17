@@ -38,7 +38,6 @@ class ModuleController(
     response: HttpServletResponse
   ) {
     response.setHeader(CONTENT_DISPOSITION, "attachment; filename=${module.code}-${academicYear.startYear}.pdf")
-
     pdfService.render(
       "modules/show.pdf",
       mapOf("module" to module, "academicYear" to academicYear),

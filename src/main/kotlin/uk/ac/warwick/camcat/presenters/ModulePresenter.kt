@@ -1,12 +1,12 @@
 package uk.ac.warwick.camcat.presenters
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import humanize.Humanize.pluralize
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import uk.ac.warwick.camcat.helpers.DurationFormatter
-import uk.ac.warwick.camcat.services.Department
-import uk.ac.warwick.camcat.services.DepartmentService
-import uk.ac.warwick.camcat.services.Faculty
+import uk.ac.warwick.camcat.services.*
+import uk.ac.warwick.camcat.services.AssessmentType
 import uk.ac.warwick.camcat.sits.entities.*
 import uk.ac.warwick.camcat.sits.repositories.ModuleAvailability
 import uk.ac.warwick.camcat.sits.services.ModuleService
@@ -21,6 +21,7 @@ class ModulePresenterFactory(
   private val userPresenterFactory: UserPresenterFactory,
   private val departmentService: DepartmentService,
   private val moduleService: ModuleService,
+  private val assessmentTypeService: ModuleApprovalAssessmentTypeService,
   @Value("#{variableTtlCacheFactory.getCache('module')}") private val cache: VariableTtlCacheDecorator
 ) {
   fun build(moduleCode: String, academicYear: AcademicYear): ModulePresenter? = cache.get("$moduleCode,$academicYear") {
@@ -119,7 +120,7 @@ class ModulePresenterFactory(
     val postRequisiteModules = relatedModules.postRequisites.map(AssociatedModulePresenter.Companion::build)
     val antiRequisiteModules = relatedModules.antiRequisites.map(AssociatedModulePresenter.Companion::build)
 
-    val assessmentGroups = listOf(AssessmentGroupPresenter.build(assessmentComponents))
+    val assessmentGroups = listOf(AssessmentGroupPresenter.build(assessmentComponents, assessmentTypeService))
 
     val costs = descriptions("MA031").map(ModuleCost.Companion::build)
 
@@ -127,7 +128,7 @@ class ModulePresenterFactory(
 
     val teachingSplits = topics.filter { it.teachingDepartmentCode != null }.mapNotNull { top ->
       val department = departmentService.findByDepartmentCode(top.teachingDepartmentCode!!)
-      departmentService.findAllFaculties()
+
 
       if (department != null) TopicPresenter.build(top, department)
       else null
@@ -250,32 +251,56 @@ data class StudyLocation(
 }
 
 data class AssessmentGroupPresenter(
-  val components: List<AssessmentComponentPresenter>
+  val components: Collection<AssessmentComponentPresenter>
 ) {
   companion object {
-    fun build(components: Collection<AssessmentComponent>) = AssessmentGroupPresenter(
-      components = components.sortedBy { it.key.sequence }.map(AssessmentComponentPresenter.Companion::build)
-    )
+    fun build(components: Collection<AssessmentComponent>, assessmentTypeService: ModuleApprovalAssessmentTypeService) =
+      AssessmentGroupPresenter(
+        components = components
+          .sortedBy { it.key.sequence }
+          .map { component ->
+            AssessmentComponentPresenter.build(
+              component,
+              component.type?.let { ast -> assessmentTypeService.findByCode(ast.code) })
+          }
+      )
   }
 }
 
 data class AssessmentComponentPresenter(
   val name: String?,
-  val typeCode: String?,
+  @JsonIgnore val typeCode: String?,
   val type: String?,
-  val weighting: Int?,
-  val description: String?
+  val weighting: Int,
+  val description: String?,
+  val length: String?,
+  val studyTime: String?
 ) {
   companion object {
-    fun build(component: AssessmentComponent) = AssessmentComponentPresenter(
-      name = component.name,
-      typeCode = component.type?.code,
-      type = component.type?.name,
-      weighting = component.weighting,
-      description = component.description?.text
-    )
+    fun build(component: AssessmentComponent, type: AssessmentType?) =
+      AssessmentComponentPresenter(
+        name = component.name,
+        typeCode = component.type?.code,
+        type = component.type?.name,
+        weighting = component.weighting ?: 0,
+        description = component.description?.text.takeUnless { it == component.name },
+        length = component.length?.let { length ->
+          when (type?.lengthType) {
+            AssessmentLengthType.ExamDuration, AssessmentLengthType.Duration ->
+              DurationFormatter.format(Duration.ofMinutes(length))
+            AssessmentLengthType.WordCount ->
+              pluralize("1 word", "{0} words", "Unspecified word count", length)
+            else ->
+              component.duration?.let(DurationFormatter::format)
+          }
+        },
+        studyTime = component.studyHours?.let { hours ->
+          DurationFormatter.format(Duration.ofMinutes(hours.multiply(BigDecimal(60)).toLong()))
+        }
+      )
   }
 }
+
 
 data class ModuleCost(
   val category: String,
@@ -317,9 +342,9 @@ object SessionStudyAmount {
       value?.let { Duration.ofMinutes((BigDecimal(it) * BigDecimal(60)).toLong()) } ?: Duration.ZERO
 
     fun describe(sessions: Int, duration: Duration) =
-      if (sessions == 0) null else "$sessions session${if (sessions != 1) "s" else ""} of ${DurationFormatter.format(
+      if (sessions == 0) null else pluralize("1 session of ", "{0} sessions of ", "", sessions) +DurationFormatter.format(
         duration
-      )}"
+      )
 
     val requiredSessions = mds.udf1?.toInt() ?: 0
     val requiredSessionDuration: Duration = duration(mds.udf2)

@@ -153,8 +153,11 @@
   </div>
   <div class="id7-right-border"></div>
 
-  <script type="text/javascript" src="<@spring.url "/assets/lib/id7/js/id7-bundle.js" />"></script>
   <script type="text/javascript" src="<@spring.url "/assets/main.js" />"></script>
+  <div class="statuspage-embed-container"
+       data-api-base="https://status.warwick.ac.uk/api"
+       data-components='["d2qf6z05sn9s"]'
+  ></div>
   </body>
   </html>
 </#macro>

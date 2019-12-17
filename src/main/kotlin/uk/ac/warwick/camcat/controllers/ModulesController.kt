@@ -18,6 +18,7 @@ import uk.ac.warwick.camcat.sits.services.AssessmentTypeService
 import uk.ac.warwick.camcat.sits.services.LevelService
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.math.BigDecimal
+import javax.servlet.http.HttpServletResponse
 import kotlin.math.max
 import kotlin.math.min
 
@@ -53,7 +54,17 @@ class ModulesController(
   }
 
   @GetMapping
-  fun index() = ModelAndView("modules/index")
+  fun index(
+    @ModelAttribute("results", binding = false) results: PageableModuleResults,
+    @ModelAttribute("query", binding = false) query: ModuleQuery): ModelAndView {
+    val result = results.result
+    if (result.page.toList().size == 1 &&
+      query.keywords?.trim()?.toLowerCase() == result.page.first().code.toLowerCase()) {
+      // user typed in an exact module code, and result is unique
+      return ModelAndView("redirect:/modules/${query.academicYear.startYear}/${result.page.first().code}")
+    }
+    return ModelAndView("modules/index")
+  }
 
   @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseBody

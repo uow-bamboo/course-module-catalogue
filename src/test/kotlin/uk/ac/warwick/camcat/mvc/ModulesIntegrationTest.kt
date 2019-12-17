@@ -127,9 +127,35 @@ class ModulesIntegrationTest : IntegrationTest() {
       .getElementsByTagName("button")
 
     // 10 modules on last page
-    assertThat(page.getByXPath<HtmlTableRow>("//tr[contains(@class, 'module')]"), hasSize(11))
+    assertThat(page.getByXPath<HtmlTableRow>("//tr[contains(@class, 'module')]"), hasSize(12))
     assert(pageButtons.last().hasAttribute("disabled")) // next button should be disabled on last page
     assert(!pageButtons.first().hasAttribute("disabled")) // previous button should not be disabled on last page
+  }
+
+  @Test
+  @WithMockUser(roles = [Role.user])
+  fun testRedirectToModulePageIfUserInputModuleCodeAndGotUniqueResult() {
+    // upper case search through form
+    var page: HtmlPage = webClient.getPage("http://localhost")
+    var form = page.getFormByName("modules")
+    form.getInputByName<HtmlTextInput>("keywords").valueAttribute = "CS126-15"
+    page = form.getElementsByAttribute<HtmlButton>("button", "type", "submit").first().click()
+    assertThat(page.url.path, equalTo("/modules/2020/CS126-15"))
+
+    // lower case search through form
+    page = webClient.getPage("http://localhost")
+    form = page.getFormByName("modules")
+    form.getInputByName<HtmlTextInput>("keywords").valueAttribute = "cs126-15"
+    page = form.getElementsByAttribute<HtmlButton>("button", "type", "submit").first().click()
+    assertThat(page.url.path, equalTo("/modules/2020/CS126-15"))
+
+    // upper case with direct url
+    page = webClient.getPage("http://localhost/modules?keywords=CS126-7.5")
+    assertThat(page.url.path, equalTo("/modules/2020/CS126-7.5"))
+
+    // lower case with direct url
+    page = webClient.getPage("http://localhost/modules?keywords=cs126-7.5")
+    assertThat(page.url.path, equalTo("/modules/2020/CS126-7.5"))
   }
 
 }
