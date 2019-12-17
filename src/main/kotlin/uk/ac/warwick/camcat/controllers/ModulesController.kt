@@ -36,7 +36,7 @@ class ModulesController(
   )
 
   @ModelAttribute("results")
-  fun results(@ModelAttribute("query") query: ModuleQuery, page: Pageable, response: HttpServletResponse): PageableModuleResults {
+  fun results(@ModelAttribute("query") query: ModuleQuery, page: Pageable): PageableModuleResults {
     val result = moduleSearchService.query(query, page)
 
     val currentPage = result.page.pageable.pageNumber
