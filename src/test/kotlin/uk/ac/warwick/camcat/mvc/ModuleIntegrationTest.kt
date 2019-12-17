@@ -89,9 +89,9 @@ class ModuleIntegrationTest : IntegrationTest() {
     assertThat(
       tableCells("module-assessment"),
       containsInRelativeOrder(
-        "1000 word essay", "Essay", "50%",
+        "1000 word essay", "50%",
         "Students write an essay",
-        "2 hour exam", "Examination - Summer", "50%",
+        "2 hour exam", "50%",
         "Students sit an exam"
       )
     )

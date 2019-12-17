@@ -3,6 +3,7 @@ package uk.ac.warwick.camcat.sits.entities
 import org.hibernate.annotations.*
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.io.Serializable
+import java.math.BigDecimal
 import java.time.Duration
 import javax.persistence.*
 import javax.persistence.Entity
@@ -75,7 +76,13 @@ data class AssessmentComponent(
     JoinColumn(name = "MAB_SEQ", referencedColumnName = "MAB_MABS", insertable = false, updatable = false)
   )
   @NotFound(action = NotFoundAction.IGNORE)
-  val description: AssessmentComponentDescription?
+  val description: AssessmentComponentDescription?,
+
+  @Column(name = "MAB_UDF5")
+  val length: Long?,
+
+  @Column(name = "MAB_UDF6")
+  val studyHours: BigDecimal?
 )
 
 @Embeddable

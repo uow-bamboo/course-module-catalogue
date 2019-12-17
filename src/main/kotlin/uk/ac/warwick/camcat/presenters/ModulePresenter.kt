@@ -1,10 +1,11 @@
 package uk.ac.warwick.camcat.presenters
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import humanize.Humanize.pluralize
 import org.springframework.stereotype.Component
 import uk.ac.warwick.camcat.helpers.DurationFormatter
-import uk.ac.warwick.camcat.services.Department
-import uk.ac.warwick.camcat.services.DepartmentService
+import uk.ac.warwick.camcat.services.*
+import uk.ac.warwick.camcat.services.AssessmentType
 import uk.ac.warwick.camcat.sits.entities.*
 import uk.ac.warwick.camcat.sits.repositories.ModuleAvailability
 import uk.ac.warwick.camcat.sits.services.ModuleService
@@ -18,7 +19,8 @@ import java.time.Period
 class ModulePresenterFactory(
   private val userPresenterFactory: UserPresenterFactory,
   private val departmentService: DepartmentService,
-  private val moduleService: ModuleService
+  private val moduleService: ModuleService,
+  private val assessmentTypeService: AssessmentTypeService
 ) {
   fun build(moduleCode: String, academicYear: AcademicYear): ModulePresenter? =
     moduleService.findByModuleCode(moduleCode)?.let { module ->
@@ -37,7 +39,8 @@ class ModulePresenterFactory(
         availability = moduleService.findAvailability(module.code, academicYear),
         assessmentComponents = moduleService.findAssessmentComponents(module.code, academicYear),
         userPresenterFactory = userPresenterFactory,
-        departmentService = departmentService
+        departmentService = departmentService,
+        assessmentTypeService = assessmentTypeService
       )
     }
 }
@@ -51,7 +54,8 @@ class ModulePresenter(
   availability: Collection<ModuleAvailability>,
   assessmentComponents: Collection<AssessmentComponent>,
   userPresenterFactory: UserPresenterFactory,
-  departmentService: DepartmentService
+  departmentService: DepartmentService,
+  assessmentTypeService: AssessmentTypeService
 ) {
   private val sortedOccurrences = occurrenceCollection.sortedBy { it.key.occurrenceCode }
   private val primaryOccurrence =
@@ -122,7 +126,7 @@ class ModulePresenter(
   val postRequisiteModules = relatedModules.postRequisites.map(::AssociatedModulePresenter)
   val antiRequisiteModules = relatedModules.antiRequisites.map(::AssociatedModulePresenter)
 
-  val assessmentGroups = listOf(AssessmentGroupPresenter(assessmentComponents))
+  val assessmentGroups = listOf(AssessmentGroupPresenter.build(assessmentComponents, assessmentTypeService))
 
   val costs = descriptions("MA031").map(::ModuleCost)
 
@@ -130,7 +134,6 @@ class ModulePresenter(
 
   val teachingSplits = topics.filter { it.teachingDepartmentCode != null }.mapNotNull { top ->
     val department = departmentService.findByDepartmentCode(top.teachingDepartmentCode!!)
-    departmentService.findAllFaculties()
 
     if (department != null) TopicPresenter(top, department)
     else null
@@ -156,17 +159,57 @@ class StudyLocation(description: ModuleDescription) {
   val primary = description.udf5 == true
 }
 
-class AssessmentGroupPresenter(components: Collection<AssessmentComponent>) {
-  val components = components.sortedBy { it.key.sequence }.map(::AssessmentComponentPresenter)
+data class AssessmentGroupPresenter(
+  val components: Collection<AssessmentComponentPresenter>
+) {
+  companion object {
+    fun build(components: Collection<AssessmentComponent>, assessmentTypeService: AssessmentTypeService) =
+      AssessmentGroupPresenter(
+        components = components
+          .sortedBy { it.key.sequence }
+          .map { component ->
+            AssessmentComponentPresenter.build(
+              component,
+              component.type?.let { ast -> assessmentTypeService.findByCode(ast.code) })
+          }
+      )
+  }
 }
 
-class AssessmentComponentPresenter(component: AssessmentComponent) {
-  val name = component.name
-  val typeCode = component.type?.code
-  val type = component.type?.name
-  val weighting = component.weighting
-  val description = component.description?.text
+data class AssessmentComponentPresenter(
+  val name: String?,
+  @JsonIgnore val typeCode: String?,
+  val type: String?,
+  val weighting: Int,
+  val description: String?,
+  val length: String?,
+  val studyTime: String?
+) {
+  companion object {
+    fun build(component: AssessmentComponent, type: AssessmentType?) =
+      AssessmentComponentPresenter(
+        name = component.name,
+        typeCode = component.type?.code,
+        type = component.type?.name,
+        weighting = component.weighting ?: 0,
+        description = component.description?.text.takeUnless { it == component.name },
+        length = component.length?.let { length ->
+          when (type?.lengthType) {
+            AssessmentLengthType.ExamDuration, AssessmentLengthType.Duration ->
+              DurationFormatter.format(Duration.ofMinutes(length))
+            AssessmentLengthType.WordCount ->
+              pluralize("1 word", "{0} words", "Unspecified word count", length)
+            else ->
+              component.duration?.let(DurationFormatter::format)
+          }
+        },
+        studyTime = component.studyHours?.let { hours ->
+          DurationFormatter.format(Duration.ofMinutes(hours.multiply(BigDecimal(60)).toLong()))
+        }
+      )
+  }
 }
+
 
 class ModuleCost(mds: ModuleDescription) {
   val category = mds.title ?: "Other"
@@ -200,9 +243,8 @@ class SessionStudyAmount(override val type: String, mds: ModuleDescription) : St
     value?.let { Duration.ofMinutes((BigDecimal(it) * BigDecimal(60)).toLong()) } ?: Duration.ZERO
 
   private fun describe(sessions: Int, duration: Duration) =
-    if (sessions == 0) null else "$sessions session${if (sessions != 1) "s" else ""} of ${DurationFormatter.format(
-      duration
-    )}"
+    if (sessions == 0) null
+    else pluralize("1 session of ", "{0} sessions of ", "", sessions) + DurationFormatter.format(duration)
 
   val requiredSessions = mds.udf1?.toInt() ?: 0
   val requiredSessionDuration: Duration = duration(mds.udf2)
