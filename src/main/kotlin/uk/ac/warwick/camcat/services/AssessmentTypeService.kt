@@ -24,7 +24,7 @@ class ModuleApprovalAssessmentTypeRepository(
 ) {
   @Cacheable("assessmentTypes")
   fun findAll(): Map<String, AssessmentType> {
-    httpClient.execute(HttpGet("https://moduleapproval-test.warwick.ac.uk/api/v1/assessment_types")).use { response ->
+    httpClient.execute(HttpGet("https://moduleapproval.warwick.ac.uk/api/v1/assessment_types")).use { response ->
       val string = EntityUtils.toString(response.entity)
       val assessmentTypeList = objectMapper.readValue<List<AssessmentType>>(string)
 
