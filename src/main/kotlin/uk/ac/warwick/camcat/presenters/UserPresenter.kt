@@ -7,7 +7,7 @@ import uk.ac.warwick.userlookup.UserLookupInterface
 
 @Component
 class UserPresenterFactory(private val userLookup: UserLookupInterface) {
-  fun buildFromPersonnelCode(personnelCode: String): UserPresenter = UserPresenter(
+  fun buildFromPersonnelCode(personnelCode: String): UserPresenter = UserPresenter.build(
     if (personnelCode.length == 9) {
       val universityId = personnelCode.drop(2)
 
@@ -16,8 +16,17 @@ class UserPresenterFactory(private val userLookup: UserLookupInterface) {
   )
 }
 
-class UserPresenter(user: User) {
-  val universityId = user.warwickId
-  val name = user.fullName
-  val email = user.email
+data class UserPresenter(
+  val universityId: String,
+  val name: String?,
+  val email: String?
+) {
+  companion object {
+    fun build(user: User): UserPresenter = UserPresenter(
+      universityId = user.warwickId,
+      name = user.fullName,
+      email = user.email
+    )
+  }
 }
+

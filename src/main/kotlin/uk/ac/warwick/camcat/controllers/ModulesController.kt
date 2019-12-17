@@ -14,8 +14,8 @@ import uk.ac.warwick.camcat.services.DepartmentService
 import uk.ac.warwick.camcat.services.Faculty
 import uk.ac.warwick.camcat.sits.entities.AssessmentType
 import uk.ac.warwick.camcat.sits.entities.Level
-import uk.ac.warwick.camcat.sits.repositories.AssessmentTypeRepository
-import uk.ac.warwick.camcat.sits.repositories.LevelRepository
+import uk.ac.warwick.camcat.sits.services.AssessmentTypeService
+import uk.ac.warwick.camcat.sits.services.LevelService
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.math.BigDecimal
 import kotlin.math.max
@@ -26,8 +26,8 @@ import kotlin.math.min
 class ModulesController(
   private val moduleSearchService: ModuleSearchService,
   private val departmentService: DepartmentService,
-  private val levelRepository: LevelRepository,
-  private val assessmentTypeRepository: AssessmentTypeRepository
+  private val levelService: LevelService,
+  private val assessmentTypeService: AssessmentTypeService
 ) {
   @ModelAttribute("academicYears")
   fun academicYears() = listOf(
@@ -74,8 +74,8 @@ class ModulesController(
     return FilterOptions(
       faculties = departmentService.findAllFaculties().filter { f -> departments.any { d -> d.faculty == f } },
       departments = departments,
-      assessmentTypes = assessmentTypeRepository.findAll().filter { result.assessmentTypeCodes.contains(it.code) },
-      levels = levelRepository.findAll().filter { result.levelCodes.contains(it.code) },
+      assessmentTypes = assessmentTypeService.findAll().filter { result.assessmentTypeCodes.contains(it.code) },
+      levels = levelService.findAll().filter { result.levelCodes.contains(it.code) },
       creditValues = result.creditValues.map(::BigDecimal).sorted()
     )
   }

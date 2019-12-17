@@ -1,9 +1,10 @@
 package uk.ac.warwick.camcat.services
 
-import org.springframework.cache.annotation.Cacheable
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.sits.repositories.CourseRepository
 import uk.ac.warwick.camcat.sits.repositories.ModuleRepository
+import uk.ac.warwick.camcat.system.cache.VariableTtlCacheDecorator
 
 interface DepartmentService {
   /**
@@ -25,36 +26,36 @@ interface DepartmentService {
 class CourseModuleDepartmentService(
   private val warwickDepartmentsService: WarwickDepartmentsService,
   private val moduleRepository: ModuleRepository,
-  private val courseRepository: CourseRepository
+  private val courseRepository: CourseRepository,
+  @Value("#{variableTtlCacheFactory.getCache('departments')}") private val cache: VariableTtlCacheDecorator
 ) : DepartmentService {
-  @Cacheable("departments")
-  override fun findAllDepartments(): List<Department> {
+  override fun findAllDepartments(): List<Department> = cache.get("allDepartments") {
     val departmentCodes =
       moduleRepository.findDistinctDepartmentCodes() + courseRepository.findDistinctDepartmentCodes()
 
-    return warwickDepartmentsService.findAllDepartments()
+    warwickDepartmentsService.findAllDepartments()
       .filter { dept -> departmentCodes.contains(dept.code) }
       .map { dept ->
         Department.build(dept, warwickDepartmentsService.findByFacultyCode(dept.facultyCode)!!)
       }
       .sortedBy { it.name }
-  }
+  }.orEmpty()
 
-  @Cacheable("faculties")
-  override fun findAllFaculties(): List<Faculty> =
+  override fun findAllFaculties(): List<Faculty> = cache.get("allFaculties") {
     findAllDepartments().map { it.faculty }.distinct().sortedBy { it.name }
+  }.orEmpty()
 
-  @Cacheable("departmentByCode")
-  override fun findByDepartmentCode(code: String): Department? =
+  override fun findByDepartmentCode(code: String): Department? = cache.get("departmentByCode($code)") {
     warwickDepartmentsService.findByDepartmentCode(code)?.let { dept ->
       Department.build(dept, warwickDepartmentsService.findByFacultyCode(dept.facultyCode)!!)
     }
+  }
 
-  @Cacheable("facultyByCode")
-  override fun findByFacultyCode(code: String): Faculty? =
+  override fun findByFacultyCode(code: String): Faculty? = cache.get("facultyByCode($code)") {
     warwickDepartmentsService.findByFacultyCode(code)?.let { fac ->
       Faculty(fac.code, fac.name)
     }
+  }
 }
 
 data class Department(

@@ -6,5 +6,5 @@ import uk.ac.warwick.camcat.sits.entities.Level
 
 interface LevelRepository : CrudRepository<Level, String> {
   @Query("from Level where inUse = true order by name")
-  override fun findAll(): Iterable<Level>
+  override fun findAll(): List<Level>
 }
