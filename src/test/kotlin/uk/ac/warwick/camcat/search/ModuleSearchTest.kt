@@ -13,20 +13,22 @@ class ModuleSearchTest : IntegrationTest() {
   lateinit var moduleSearchService: ModuleSearchService
 
   @Test
-  fun testQuery() {
-    var results =
+  fun testQueryWithWholeNumberCreditValue() {
+    val results =
       moduleSearchService.query(ModuleQuery(keywords = "CS126-15", academicYear = AcademicYear.starting(2020)))
     assertEquals(1, results.page.content.size)
-    var result = results.page.content.first()!!
+    val result = results.page.content.first()!!
     assertEquals(2020, result.academicYear)
     assertEquals("CS126-15", result.code)
     assertEquals("Design of Information Structures", result.title)
+  }
 
-    // test non-whole number credit value
-    results =
+  @Test
+  fun testQueryWithNonWholeNumberCreditValue() {
+    val results =
       moduleSearchService.query(ModuleQuery(keywords = "CS126-7.5", academicYear = AcademicYear.starting(2020)))
     assertEquals(1, results.page.content.size)
-    result = results.page.content.first()!!
+    val result = results.page.content.first()!!
     assertEquals(2020, result.academicYear)
     assertEquals("CS126-7.5", result.code)
     assertEquals("Design of Seven and Half", result.title)
