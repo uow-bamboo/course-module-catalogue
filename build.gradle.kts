@@ -72,6 +72,7 @@ dependencies {
   implementation("io.sixhours:memcached-spring-boot-starter:2.0.0-SNAPSHOT")
   implementation("io.sixhours:memcached-spring-boot-autoconfigure:2.0.0-SNAPSHOT")
   implementation("com.amazonaws:elasticache-java-cluster-client")
+  runtimeOnly("org.springframework.cloud:spring-cloud-context") //  // TODO bin this off, it should be optional
   implementation("uk.ac.warwick.util:warwickutils-core:20190916")
   implementation("uk.ac.warwick.util:warwickutils-web:20190916")
   implementation("org.springframework.boot:spring-boot-starter-quartz")
