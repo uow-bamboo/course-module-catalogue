@@ -5,3 +5,5 @@ spring.datasource.sits:
 
 spring.elasticsearch.rest:
   uris: http://127.0.0.1:9201
+
+spring.cache.type: none

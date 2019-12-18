@@ -45,6 +45,10 @@ camcat.roles:
 
 audit.application-key: camcat
 
+memcached.cache:
+  expirations: 172800
+  operation-timeout: 250
+
 ---
 
 spring.profiles: scheduling

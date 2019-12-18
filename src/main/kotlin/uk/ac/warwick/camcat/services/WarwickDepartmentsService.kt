@@ -7,9 +7,10 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.util.EntityUtils
-import org.springframework.cache.annotation.Cacheable
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
+import uk.ac.warwick.camcat.system.cache.VariableTtlCacheDecorator
 
 @Service
 class WarwickDepartmentsService(
@@ -27,27 +28,26 @@ class WarwickDepartmentsService(
 @Component
 class WarwickDepartmentsRepository(
   private val httpClient: CloseableHttpClient,
-  private val objectMapper: ObjectMapper
+  private val objectMapper: ObjectMapper,
+  @Value("#{variableTtlCacheFactory.getCache('warwickDepartments')}") private val cache: VariableTtlCacheDecorator
 ) {
-  @Cacheable("warwickDepartments")
-  fun findAllDepartments(): Map<String, WarwickDepartment> {
+  fun findAllDepartments(): Map<String, WarwickDepartment> = cache.get("allDepartments") {
     httpClient.execute(HttpGet("https://departments.warwick.ac.uk/public/api/department.json")).use { response ->
       val string = EntityUtils.toString(response.entity)
       val departmentList = objectMapper.readValue<List<WarwickDepartment>>(string)
 
-      return departmentList.groupBy { it.code }.mapValues { it.value.first() }
+      departmentList.groupBy { it.code }.mapValues { it.value.first() }
     }
-  }
+  }.orEmpty()
 
-  @Cacheable("warwickFaculties")
-  fun findAllFaculties(): Map<String, WarwickFaculty> {
+  fun findAllFaculties(): Map<String, WarwickFaculty> = cache.get("allFaculties") {
     httpClient.execute(HttpGet("https://departments.warwick.ac.uk/public/api/faculty.json")).use { response ->
       val string = EntityUtils.toString(response.entity)
       val facultyList = objectMapper.readValue<List<WarwickFaculty>>(string)
 
-      return facultyList.groupBy { it.code }.mapValues { it.value.first() }
+      facultyList.groupBy { it.code }.mapValues { it.value.first() }
     }
-  }
+  }.orEmpty()
 }
 
 @JsonIgnoreProperties(ignoreUnknown = true)
