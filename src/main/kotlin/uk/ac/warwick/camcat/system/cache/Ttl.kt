@@ -13,7 +13,7 @@ object Ttl {
   }
 
   fun default(): (Any?) -> Duration = nullableStrategy(
-    nonNull = Duration.ofMinutes(5),
-    isNull = Duration.ofMinutes(20)
+    nonNull = Duration.ofMinutes(20),
+    isNull = Duration.ofMinutes(5)
   )
 }
