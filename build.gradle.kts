@@ -62,7 +62,7 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.security:spring-security-test")
   implementation("org.flywaydb:flyway-core:6.0.3")
-  implementation("uk.ac.warwick.sso:sso-client:2.76")
+  implementation("uk.ac.warwick.sso:sso-client:2.78")
   implementation("io.sixhours:memcached-spring-boot-starter:2.0.0-SNAPSHOT")
   implementation("io.sixhours:memcached-spring-boot-autoconfigure:2.0.0-SNAPSHOT")
   implementation("com.amazonaws:elasticache-java-cluster-client")
