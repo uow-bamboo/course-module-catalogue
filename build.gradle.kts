@@ -34,6 +34,7 @@ repositories {
   maven {
     url = uri("https://oss.jfrog.org/artifactory/libs-snapshot")
   }
+  mavenLocal()
 }
 
 dependencyManagement {
@@ -66,8 +67,8 @@ dependencies {
   implementation("io.sixhours:memcached-spring-boot-autoconfigure:2.0.0-SNAPSHOT")
   implementation("com.amazonaws:elasticache-java-cluster-client")
   runtimeOnly("org.springframework.cloud:spring-cloud-context") //  // TODO bin this off, it should be optional
-  implementation("uk.ac.warwick.util:warwickutils-core:20190916")
-  implementation("uk.ac.warwick.util:warwickutils-web:20190916")
+  implementation("uk.ac.warwick.util:warwickutils-core:20191219")
+  implementation("uk.ac.warwick.util:warwickutils-web:20191219")
   implementation("org.springframework.boot:spring-boot-starter-quartz")
   implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.0")
