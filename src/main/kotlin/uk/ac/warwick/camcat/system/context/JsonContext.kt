@@ -3,6 +3,7 @@ package uk.ac.warwick.camcat.system.context
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
+import com.fasterxml.jackson.datatype.jsr310.deser.DurationDeserializer
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -18,5 +19,6 @@ class JsonContext {
       SimpleModule()
         .addSerializer(AcademicYear::class.java, ToStringSerializer())
         .addSerializer(Duration::class.java, ToStringSerializer())
+        .addDeserializer(Duration::class.java, DurationDeserializer.INSTANCE)
     )
 }

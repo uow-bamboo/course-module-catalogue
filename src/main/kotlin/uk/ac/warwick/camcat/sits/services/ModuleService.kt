@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.sits.services
 
-import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.util.Streamable
 import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.sits.entities.*
@@ -48,24 +47,20 @@ class DatabaseModuleService(
   override fun findAllWithOccurrenceInAcademicYear(academicYear: AcademicYear): Streamable<Module> =
     moduleRepository.findAllWithOccurrenceInAcademicYear(academicYear)
 
-  @Cacheable("module")
   override fun findByModuleCode(code: String): Module? = moduleRepository.findByCode(code)
 
-  override fun findAllCodesByStemCode(stemCode: String): Collection<String> = moduleRepository.findAllCodesLike("$stemCode-%")
+  override fun findAllCodesByStemCode(stemCode: String): Collection<String> =
+    moduleRepository.findAllCodesLike("$stemCode-%")
 
-  @Cacheable("moduleDescriptions")
   override fun findDescriptions(moduleCode: String, academicYear: AcademicYear): Collection<ModuleDescription> =
     descriptionRepository.findAllByModuleCodeAndAcademicYear(moduleCode, academicYear)
 
-  @Cacheable("moduleOccurrences")
   override fun findOccurrences(moduleCode: String, academicYear: AcademicYear): Collection<ModuleOccurrence> =
     occurrenceRepository.findAllByModuleCodeAndAcademicYear(moduleCode, academicYear)
 
-  @Cacheable("moduleTopics")
   override fun findTopics(moduleCode: String, academicYear: AcademicYear): Collection<Topic> =
     topicRepository.findByModuleCodeAndAcademicYear(moduleCode, academicYear)
 
-  @Cacheable("relatedModules")
   override fun findRelatedModules(moduleCode: String, academicYear: AcademicYear): RelatedModules =
     RelatedModules(
       preRequisites = moduleRepository.findModulesInRuleForModule(moduleCode, RuleType.PreRequisite, academicYear),
@@ -77,7 +72,6 @@ class DatabaseModuleService(
       antiRequisites = moduleRepository.findModulesInRuleForModule(moduleCode, RuleType.AntiRequisite, academicYear)
     )
 
-  @Cacheable("moduleRules")
   override fun findRules(moduleCode: String, academicYear: AcademicYear): Collection<ModuleRule> =
     ruleRepository.findAllByModuleCodeAndAcademicYear(moduleCode, academicYear)
 
@@ -95,11 +89,9 @@ class DatabaseModuleService(
     )
   }
 
-  @Cacheable("moduleAvailability")
   override fun findAvailability(moduleCode: String, academicYear: AcademicYear): Collection<ModuleAvailability> =
     moduleRepository.findModuleAvailability(moduleCode, academicYear)
 
-  @Cacheable("moduleAssessmentComponents")
   override fun findAssessmentComponents(
     moduleCode: String,
     academicYear: AcademicYear

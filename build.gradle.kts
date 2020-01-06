@@ -26,17 +26,20 @@ configurations {
   }
 }
 
-val nexusUser: String by project
-val nexusPassword: String by project
-
 repositories {
   mavenCentral()
   maven {
-    credentials {
-      username = nexusUser
-      password = nexusPassword
-    }
-    url = uri("https://mvn.elab.warwick.ac.uk/nexus/content/groups/public")
+    url = uri("https://mvn.elab.warwick.ac.uk/nexus/content/groups/public-anonymous")
+  }
+  maven {
+    url = uri("https://oss.jfrog.org/artifactory/libs-snapshot")
+  }
+  mavenLocal()
+}
+
+dependencyManagement {
+  imports {
+    mavenBom("org.springframework.cloud:spring-cloud-dependencies:Hoxton.RELEASE")
   }
 }
 
@@ -59,10 +62,13 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.security:spring-security-test")
   implementation("org.flywaydb:flyway-core:6.0.3")
-  implementation("uk.ac.warwick.sso:sso-client:2.76")
-  implementation("net.spy:spymemcached:2.12.3")
-  implementation("uk.ac.warwick.util:warwickutils-core:20190916")
-  implementation("uk.ac.warwick.util:warwickutils-web:20190916")
+  implementation("uk.ac.warwick.sso:sso-client:2.78")
+  implementation("io.sixhours:memcached-spring-boot-starter:2.0.0-SNAPSHOT")
+  implementation("io.sixhours:memcached-spring-boot-autoconfigure:2.0.0-SNAPSHOT")
+  implementation("com.amazonaws:elasticache-java-cluster-client")
+  runtimeOnly("org.springframework.cloud:spring-cloud-context") //  // TODO bin this off, it should be optional
+  implementation("uk.ac.warwick.util:warwickutils-core:20191219")
+  implementation("uk.ac.warwick.util:warwickutils-web:20191219")
   implementation("org.springframework.boot:spring-boot-starter-quartz")
   implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.0")
@@ -85,6 +91,7 @@ dependencies {
   testImplementation("net.sourceforge.htmlunit:htmlunit")
 
   implementation("com.vladsch.flexmark:flexmark-all:0.50.44")
+  implementation("com.github.mfornos:humanize-slim:1.2.2")
 }
 
 tasks.withType<KotlinCompile> {

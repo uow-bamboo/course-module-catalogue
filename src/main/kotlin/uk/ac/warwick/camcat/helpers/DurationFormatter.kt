@@ -1,26 +1,19 @@
 package uk.ac.warwick.camcat.helpers
 
-import java.math.BigDecimal
+import humanize.Humanize.pluralize
 import java.time.Duration
 import java.time.Period
 
 object DurationFormatter {
   fun format(duration: Duration): String {
-    val seconds = BigDecimal(duration.seconds)
-    val minutes = seconds.divide(BigDecimal(60)).rem(BigDecimal(60))
-    val hours = seconds.divide(BigDecimal(3600))
+    val seconds = duration.seconds
+    val minutes = (seconds / 60) % 60
+    val hours = seconds / 3600
 
-    var string = ""
-
-    if (hours != BigDecimal.ZERO) {
-      string += "$hours ${if (hours == BigDecimal.ONE) "hour" else "hours"} "
-    }
-
-    if (minutes != BigDecimal.ZERO) {
-      string += "$minutes ${if (minutes == BigDecimal.ONE) "minute" else "minutes"} "
-    }
-
-    return string.trimEnd()
+    return(
+      pluralize("1 hour", "{0} hours", "", hours) +
+      pluralize(" 1 minute", " {0} minutes", "", minutes)
+    ).trim()
   }
 
   fun durationInDaysOrWeeks(code: String): String? = Period.parse(code)?.days?.let { d ->
