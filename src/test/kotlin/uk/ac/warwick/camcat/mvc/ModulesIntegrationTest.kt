@@ -1,7 +1,7 @@
 package uk.ac.warwick.camcat.mvc
 
+import com.gargoylesoftware.htmlunit.TextPage
 import com.gargoylesoftware.htmlunit.html.*
-import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLUListElement
 import org.hamcrest.Matchers.*
 import org.junit.Assert.assertThat
 import org.junit.Test
@@ -156,6 +156,22 @@ class ModulesIntegrationTest : IntegrationTest() {
     // lower case with direct url
     page = webClient.getPage("http://localhost/modules?keywords=cs126-7.5")
     assertThat(page.url.path, equalTo("/modules/2020/CS126-7.5"))
+
+    // with unrelated filter value
+    page = webClient.getPage("http://localhost/modules?keywords=cs126-7.5&departments=SSS")
+    assertThat(page.url.path, equalTo("/modules/2020/CS126-7.5"))
+
+    // with incorrect module code it shoule go 404
+    webClient.options.isThrowExceptionOnFailingStatusCode = false;
+    val unexpectedPage: TextPage = webClient.getPage("http://localhost/modules?keywords=cs765-7.5")
+    assertThat(unexpectedPage.webResponse.statusCode, equalTo(404))
+  }
+
+  @Test
+  @WithMockUser(roles = [Role.user])
+  fun testNotRedirectWithUniqueResultButNonModuleCodeKeywordsInput() {
+    val page: HtmlPage = webClient.getPage("http://localhost/modules?keywords=abstract%20data%20types")
+    assertThat(page.url.toString(), equalTo("http://localhost/modules?keywords=abstract%20data%20types"))
   }
 
 }

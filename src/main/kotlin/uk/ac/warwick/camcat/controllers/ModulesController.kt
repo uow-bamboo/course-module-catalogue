@@ -18,7 +18,6 @@ import uk.ac.warwick.camcat.sits.services.AssessmentTypeService
 import uk.ac.warwick.camcat.sits.services.LevelService
 import uk.ac.warwick.util.termdates.AcademicYear
 import java.math.BigDecimal
-import javax.servlet.http.HttpServletResponse
 import kotlin.math.max
 import kotlin.math.min
 
@@ -30,38 +29,24 @@ class ModulesController(
   private val levelService: LevelService,
   private val assessmentTypeService: AssessmentTypeService
 ) {
+
+  val moduleCodePattern = Regex("^[A-Z]{2}[A-Z\\d]{3}-\\d{1,3}(\\.\\d)?$", RegexOption.IGNORE_CASE)
+
   @ModelAttribute("academicYears")
   fun academicYears() = listOf(
     AcademicYear.starting(2020)
   )
 
   @ModelAttribute("results")
-  fun results(@ModelAttribute("query") query: ModuleQuery, page: Pageable): PageableModuleResults {
-    val result = moduleSearchService.query(query, page)
-
-    val currentPage = result.page.pageable.pageNumber
-    val lastPage = result.page.totalPages - 1
-    val pageRange = (max(currentPage - 5, 0)..min(currentPage + 5, lastPage)).toList()
-
-    return PageableModuleResults(
-      currentPage = currentPage,
-      lastPage = lastPage,
-      pageRange = pageRange,
-      modules = result.page.toList(),
-      result = result,
-      filterOptions = buildFilterOptions(result)
-    )
-  }
+  fun results(@ModelAttribute("query") query: ModuleQuery, page: Pageable): PageableModuleResults =
+    paginateModuleSearchResult(moduleSearchService.query(query, page))
 
   @GetMapping
   fun index(
     @ModelAttribute("results", binding = false) results: PageableModuleResults,
     @ModelAttribute("query", binding = false) query: ModuleQuery): ModelAndView {
-    val result = results.result
-    if (result.page.toList().size == 1 &&
-      query.keywords?.trim()?.toLowerCase() == result.page.first().code.toLowerCase()) {
-      // user typed in an exact module code, and result is unique
-      return ModelAndView("redirect:/modules/${query.academicYear.startYear}/${result.page.first().code}")
+    if (query.keywords?.matches(moduleCodePattern) == true) {
+      return ModelAndView("redirect:/modules/${query.academicYear.startYear}/${query.keywords?.toUpperCase()}")
     }
     return ModelAndView("modules/index")
   }
@@ -90,6 +75,22 @@ class ModulesController(
       creditValues = result.creditValues.map(::BigDecimal).sorted()
     )
   }
+
+  private fun paginateModuleSearchResult(result: ModuleSearchResult): PageableModuleResults {
+    val currentPage = result.page.pageable.pageNumber
+    val lastPage = result.page.totalPages - 1
+    val pageRange = (max(currentPage - 5, 0)..min(currentPage + 5, lastPage)).toList()
+
+    return PageableModuleResults(
+      currentPage = currentPage,
+      lastPage = lastPage,
+      pageRange = pageRange,
+      modules = result.page.toList(),
+      result = result,
+      filterOptions = buildFilterOptions(result)
+    )
+  }
+
 }
 
 data class PageableModuleResults(
