@@ -105,6 +105,12 @@ class ModulePresenterFactory(
       description("MA020")?.let { SessionStudyAmount.build("Fieldwork", it) },
       description("MA021")?.let { SessionStudyAmount.build("External visits", it) },
       description("MA022")?.let { SessionStudyAmount.build("Work-based learning", it) },
+      primaryOccurrence?.details?.assessmentStudyHours?.let {
+        DurationStudyAmount.build(
+          "Assessment",
+          Duration.ofHours(BigDecimal(it).longValueExact())
+        )
+      },
       description("MA026")?.title?.let {
         DurationStudyAmount.build(
           "Private study",

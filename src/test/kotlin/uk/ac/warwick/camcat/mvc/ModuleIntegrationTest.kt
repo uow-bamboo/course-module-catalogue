@@ -78,12 +78,13 @@ class ModuleIntegrationTest : IntegrationTest() {
       containsInRelativeOrder(
         "Lectures", "30 sessions of 1 hour",
         "Practical classes", "8 sessions of 2 hours",
+        "Assessment", "10 hours",
         "Private study", "20 hours"
       )
     )
     assertThat(
       content("module-total-study-hours"),
-      equalToCompressingWhiteSpace("66 hours")
+      equalToCompressingWhiteSpace("76 hours")
     )
 
     assertThat(
