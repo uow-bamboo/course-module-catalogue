@@ -78,8 +78,8 @@ class ModuleIntegrationTest : IntegrationTest() {
       containsInRelativeOrder(
         "Lectures", "30 sessions of 1 hour",
         "Practical classes", "8 sessions of 2 hours",
-        "Assessment", "10 hours",
-        "Private study", "20 hours"
+        "Private study", "20 hours",
+        "Assessment", "10 hours"
       )
     )
     assertThat(

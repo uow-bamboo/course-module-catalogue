@@ -16,6 +16,12 @@ data class ModuleOccurrenceDetails(
   @Column(name = "MAV_CRED")
   val creditValue: Int?,
 
+  @Column(name = "MAV_PLAH")
+  val placementStudyHours: Int?,
+
+  @Column(name = "MAV_INDH")
+  val privateStudyHours: Int?,
+
   @Column(name = "MAV_UDFK")
   val assessmentStudyHours: Int?
 )
