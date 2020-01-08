@@ -14,6 +14,9 @@ data class ModuleOccurrenceDetails(
   val key: ModuleOccurrenceKey,
 
   @Column(name = "MAV_CRED")
-  val creditValue: Int?
+  val creditValue: Int?,
+
+  @Column(name = "MAV_UDFK")
+  val assessmentStudyHours: Int?
 )
 
