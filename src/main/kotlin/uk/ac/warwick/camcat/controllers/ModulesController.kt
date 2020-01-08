@@ -30,8 +30,6 @@ class ModulesController(
   private val assessmentTypeService: AssessmentTypeService
 ) {
 
-  val moduleCodePattern = Regex("^[A-Z]{2}[A-Z\\d]{3}-\\d{1,3}(\\.\\d)?$", RegexOption.IGNORE_CASE)
-
   @ModelAttribute("academicYears")
   fun academicYears() = listOf(
     AcademicYear.starting(2020)
@@ -43,9 +41,15 @@ class ModulesController(
 
   @GetMapping
   fun index(
-    @ModelAttribute("results", binding = false) results: PageableModuleResults,
-    @ModelAttribute("query", binding = false) query: ModuleQuery): ModelAndView {
-    if (query.keywords?.matches(moduleCodePattern) == true) {
+    @ModelAttribute("query", binding = false) query: ModuleQuery, page: Pageable): ModelAndView {
+    val validModuleCode = query.keywords?.let {
+      moduleSearchService.exists(
+        moduleCode = it,
+        academicYear = query.academicYear
+      )
+    } == true
+
+    if (validModuleCode) {
       return ModelAndView("redirect:/modules/${query.academicYear.startYear}/${query.keywords?.toUpperCase()}")
     }
     return ModelAndView("modules/index")

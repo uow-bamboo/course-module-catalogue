@@ -161,10 +161,9 @@ class ModulesIntegrationTest : IntegrationTest() {
     page = webClient.getPage("http://localhost/modules?keywords=cs126-7.5&departments=SSS")
     assertThat(page.url.path, equalTo("/modules/2020/CS126-7.5"))
 
-    // with incorrect module code it shoule go 404
-    webClient.options.isThrowExceptionOnFailingStatusCode = false;
-    val unexpectedPage: TextPage = webClient.getPage("http://localhost/modules?keywords=cs765-7.5")
-    assertThat(unexpectedPage.webResponse.statusCode, equalTo(404))
+    // with incorrect module code it shoudl stay on search page
+    page = webClient.getPage("http://localhost/modules?keywords=cs765-7.5")
+    assertThat(page.url.toURI().toString(), equalTo("http://localhost/modules?keywords=cs765-7.5"))
   }
 
   @Test

@@ -15,22 +15,38 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations
 import org.springframework.data.elasticsearch.core.ResultsMapper
+import org.springframework.data.elasticsearch.core.query.NativeSearchQuery
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder
 import org.springframework.data.elasticsearch.core.query.SearchQuery
 import org.springframework.stereotype.Service
 import uk.ac.warwick.camcat.search.documents.Module
 import uk.ac.warwick.camcat.search.queries.ModuleQuery
+import uk.ac.warwick.util.termdates.AcademicYear
 
 interface ModuleSearchService {
   fun query(query: ModuleQuery, page: Pageable = Pageable.unpaged()): ModuleSearchResult
+  fun exists(moduleCode: String, academicYear: AcademicYear): Boolean
 }
 
 @Service
 class ElasticsearchModuleSearchService(
   private val elasticsearch: ElasticsearchOperations,
   private val resultsMapper: ResultsMapper
-) :
-  ModuleSearchService {
+) : ModuleSearchService {
+
+  val moduleCodePattern = Regex("^[A-Z]{2}[A-Z\\d]{3}-\\d{1,3}(\\.\\d)?$", RegexOption.IGNORE_CASE)
+
+  override fun exists(moduleCode: String, academicYear: AcademicYear): Boolean = when {
+    moduleCodePattern.matches(moduleCode) -> {
+      val boolQuery = boolQuery()
+      boolQuery.must(termQuery("academicYear", academicYear.startYear))
+      boolQuery.must(termsQuery("code", moduleCode.toUpperCase()))
+      val searchQuery = NativeSearchQueryBuilder().withQuery(boolQuery).build() as SearchQuery
+      elasticsearch.query(searchQuery) { it.hits.hits.size == 1 }
+    }
+    else -> false
+  }
+
   override fun query(query: ModuleQuery, page: Pageable): ModuleSearchResult {
     fun queryForTerms(query: ModuleQuery, aggregationName: String): Collection<String> =
       elasticsearch.query(buildQuery(query, page)) { response -> terms(aggregationName, response) }
