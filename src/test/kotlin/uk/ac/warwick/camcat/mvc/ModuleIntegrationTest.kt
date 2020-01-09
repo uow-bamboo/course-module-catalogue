@@ -1,6 +1,5 @@
 package uk.ac.warwick.camcat.mvc
 
-import com.gargoylesoftware.htmlunit.TextPage
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor
 import com.gargoylesoftware.htmlunit.html.HtmlPage
 import com.gargoylesoftware.htmlunit.html.HtmlTable
@@ -31,7 +30,7 @@ class ModuleIntegrationTest : IntegrationTest() {
   @Test
   @WithMockUser(roles = [Role.user])
   fun test() {
-    val page: HtmlPage = webClient.getPage("http://localhost/modules/2020/CS126-15")
+    var page: HtmlPage = webClient.getPage("http://localhost/modules/2020/CS126-15")
 
     fun content(id: String): String = page.getElementById(id).textContent
     fun tableCells(tableId: String): List<String> =
@@ -104,9 +103,12 @@ class ModuleIntegrationTest : IntegrationTest() {
     )
 
     webClient.options.isThrowExceptionOnFailingStatusCode = false
-    val unexpectedPage: TextPage = webClient.getPage("http://localhost/modules/2020/cs333-2")
-    assertThat(unexpectedPage.webResponse.statusCode, equalTo(404))
-    assertThat(unexpectedPage.content, containsString("No module with code CS333-2 exists in the 20/21 academic year."))
+    page = webClient.getPage("http://localhost/modules/2020/cs333-2") as HtmlPage
+    assertThat(page.webResponse.statusCode, equalTo(404))
+    assertThat(
+      content("module-not-found"),
+      stringContainsInOrder("No module with code CS333-2 exists in the 20/21 academic year.")
+    )
   }
 
   @Test
