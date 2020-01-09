@@ -35,7 +35,10 @@ class AppErrorController(
     }
 
     if (throwable is ModuleNotFoundResponseStatusException) {
-      return ModelAndView("errors/moduleNotFound404", mapOf("moduleCode" to throwable.moduleCode))
+      return ModelAndView("errors/moduleNotFound404", mapOf(
+        "moduleCode" to throwable.moduleCode,
+        "academicYear" to throwable.academicYear
+      ))
     }
 
     val warwickAuth = auth as? WarwickAuthentication
