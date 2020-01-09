@@ -1,5 +1,6 @@
 package uk.ac.warwick.camcat.mvc
 
+import com.gargoylesoftware.htmlunit.TextPage
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor
 import com.gargoylesoftware.htmlunit.html.HtmlPage
 import com.gargoylesoftware.htmlunit.html.HtmlTable
@@ -101,6 +102,11 @@ class ModuleIntegrationTest : IntegrationTest() {
       content("module-core-availability"),
       stringContainsInOrder("Year 1 of", "UCSA-G500", "Computer Science")
     )
+
+    webClient.options.isThrowExceptionOnFailingStatusCode = false
+    val unexpectedPage: TextPage = webClient.getPage("http://localhost/modules/2020/cs333-2")
+    assertThat(unexpectedPage.webResponse.statusCode, equalTo(404))
+    assertThat(unexpectedPage.content, containsString("No module with code CS333-2 exists in the 20/21 academic year."))
   }
 
   @Test
